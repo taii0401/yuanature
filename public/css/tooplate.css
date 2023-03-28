@@ -28,7 +28,7 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
-    background-color: #bed0c0;
+    background-color: #fff;
     padding-left: 0px;
     padding-right: 0px;
 }
@@ -42,9 +42,71 @@ a:focus {
     text-decoration: none;
 }
 
+
+/* header start */
+
+.header-outs {
+    background-color: #052814;
+    background-repeat: no-repeat;
+    background-position: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    -ms-background-size: cover;
+    /*min-height: 100px;*/
+}
+
+.head-wl {
+    height: 40px;
+    background-color: #052814;
+    text-align: center;
+    margin: 0 auto;
+    color: #fff;
+}
+
+.head-wl h1 a {
+    color: #fff;
+    font-size: 50px;
+}
+
+.search-w3ls {
+    margin-top: 7px;
+    float: right;
+    /*display:inline-block;*/
+    width: 25%;
+    color: #FFF;
+}
+
+.search-w3ls a {
+    color: #FFF;
+}
+
+.search-w3ls a:hover {
+    color: #FFF;
+}
+
+.search-w3ls img {
+    width: auto;
+}
+
+.search-w3ls button.btn.btn-default {
+    width: 40px;
+    height: 40px;
+    background: #ffffff;
+    outline: none;
+    color: #000;
+    border: none;
+    border-radius: 0;
+    font-size: 17px;
+}
+
+
+/* header end */
+
 .navbar-brand {
     display: flex;
     align-items: center;
+    margin-right: 0px;
 }
 
 .tm-site-icon {
@@ -65,6 +127,8 @@ a:focus {
     padding-left: 20px;
     padding-right: 20px;
     margin-top: 0px;
+    min-height: 110px;
+    background-color: #bed0c0;
 }
 
 .tm-logout-icon {
@@ -76,7 +140,7 @@ a:focus {
 }
 
 .tm-mt-big {
-    margin-top: 70px;
+    margin-top: 10px;
 }
 
 .tm-mt-small {
@@ -84,13 +148,13 @@ a:focus {
 }
 
 .tm-block {
-    padding: 50px 45px;
+    padding: 15px 10px;
 }
 
 .tm-block-title {
     font-size: 1.4rem;
     color: #333;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .navbar-light .navbar-nav .nav-link {
@@ -107,7 +171,7 @@ a:focus {
 .navbar-light .navbar-nav .nav-link.show,
 .navbar-light .navbar-nav .show>.nav-link,
 .navbar-light .navbar-nav a:hover {
-    background-color: #e6e6e6;
+    color: #fff;
 }
 
 .nav-item {
@@ -251,6 +315,10 @@ label {
 
 .tm-btn-right {
     text-align: right;
+}
+
+.tm-btn-center {
+    text-align: center;
 }
 
 .table td,
@@ -581,6 +649,23 @@ footer {
 
 /*上傳 END*/
 
+
+/*說明文字背景 START*/
+
+.content-bg {
+    background: rgb(255, 255, 255);
+    padding: 30px;
+    box-shadow: rgba(42, 46, 49, 0.27) 3px 3px 3px 3px;
+    margin: 15px auto;
+}
+
+.content-bg h4 {
+    color: #4c514c;
+}
+
+
+/*說明文字背景 END*/
+
 @media (min-width: 992px) {
     .navbar-expand-lg .navbar-nav .nav-link {
         padding: 15px 20px;
@@ -619,7 +704,7 @@ footer {
     .tm-col-small {
         width: 49.65%;
     }
-    .navbar-collapse {
+    /*.navbar-collapse {
         background: white;
         padding: 15px;
         box-shadow: rgba(108, 117, 125, 0.27) 0px 1px 1px 0px;
@@ -635,7 +720,7 @@ footer {
     }
     .nav-item {
         margin-right: 0;
-    }
+    }*/
 }
 
 @media (max-width: 991px) {
@@ -646,7 +731,7 @@ footer {
         height: auto;
     }
     .tm-block {
-        padding: 30px;
+        padding: 10px;
     }
     .tm-table-actions-row {
         display: block;
@@ -657,6 +742,15 @@ footer {
     }
     .tm-edit-product-row {
         flex-direction: column-reverse;
+    }
+    .search-w3ls {
+        width: 40%;
+    }
+}
+
+@media (max-width: 768px) {
+    .search-w3ls {
+        /*width: 40%;*/
     }
 }
 
@@ -674,6 +768,9 @@ footer {
     .page-item {
         margin-top: 10px;
     }
+    .search-w3ls {
+        width: 45%;
+    }
 }
 
 @media (max-width: 574px) {
@@ -689,8 +786,8 @@ footer {
         height: auto;
     }
     body {
-        padding-left: 15px;
-        padding-right: 15px;
+        /*padding-left: 15px;
+        padding-right: 15px;*/
     }
     .tm-site-title {
         font-size: 1.4rem;
@@ -699,16 +796,22 @@ footer {
     .tm-site-icon {
         font-size: 2em;
     }
+    .search-w3ls {
+        width: 50%;
+    }
 }
 
 @media (max-width: 480px) {
     .tm-mt-big {
-        margin-top: 45px;
+        margin-top: 20px;
+    }
+    .search-w3ls {
+        width: 75%;
     }
 }
 
 @media (max-width: 424px) {
     .navbar-collapse {
-        top: 107px;
+        /*top: 107px;*/
     }
 }

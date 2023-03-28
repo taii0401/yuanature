@@ -14,7 +14,6 @@ class CreateWebFileDataTable extends Migration
     public function up()
     {
         Schema::create('web_file_data', function (Blueprint $table) {
-            $table->comment('上傳檔案與其他資料表關聯');
             $table->id();
             $table->integer('data_id')->comment('資料id');
             $table->string('data_type',100)->nullable()->comment('資料類型');

@@ -3,7 +3,7 @@
         <nav class="navbar navbar-expand-xl navbar-light bg-light">
             <a class="navbar-brand" href="/">
                 <i class="fas fa-3x fa-tachometer-alt tm-site-icon"></i>
-                <h1 class="tm-site-title mb-0">UN SHOP後台管理</h1>
+                <h1 class="tm-site-title mb-0">原生學後台管理</h1>
             </a>
             <button class="navbar-toggler ml-auto mr-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">

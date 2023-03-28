@@ -14,7 +14,6 @@ class CreateWebFileTable extends Migration
     public function up()
     {
         Schema::create('web_file', function (Blueprint $table) {
-            $table->comment('上傳檔案資料');
             $table->id();
             $table->string('name')->nullable()->comment('名稱');
             $table->string('file_name')->unique()->comment('檔案名稱');

@@ -11,20 +11,22 @@
     <title>原生學 Pure Nature @yield('title')</title>
     <!-- font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600">
-    <link rel="stylesheet" href="{{ mix('css/font-awesome.css') }}">
+    <link rel="stylesheet" href="{{ mix('css/fontawesome.min.css') }}">
     <!-- bootstrap -->
-    <link rel="stylesheet" href="{{ mix('css/bootstrap.css') }}">
+    <link rel="stylesheet" href="{{ mix('css/bootstrap.min.css') }}">
     <!-- 模版 -->
-    <link rel="stylesheet" href="{{ mix('css/style.css') }}">
+    <link rel="stylesheet" href="{{ mix('css/tooplate.css') }}">
     <!-- 日期 -->
     <link rel="stylesheet" href="{{ mix('css/bootstrap-datepicker.css') }}">
     @yield('css')
 </head>
 
 <body>
-    @include('layouts.front_header')
-    @yield('content')
-    @include('layouts.footer')
+    <div class="container">
+        @include('layouts.front_header')
+        @yield('content')
+        @include('layouts.footer')
+    </div>
 </body>
 <script src="{{ mix('js/jquery-3.6.0.min.js') }}"></script>
 <script src="{{ mix('js/popper.min.js') }}"></script>
