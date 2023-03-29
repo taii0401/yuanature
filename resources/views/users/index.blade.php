@@ -7,8 +7,7 @@
             <div class="bg-white tm-block">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <i class="fas fa-3x fa-tachometer-alt tm-site-icon text-center"></i>
-                        <h2 class="tm-block-title mt-3">登入</h2>
+                        <h2 class="tm-block-title mt-3">{{ @$assign_data["title_txt"] }}</h2>
                     </div>
                 </div>
                 <div class="row mt-2">

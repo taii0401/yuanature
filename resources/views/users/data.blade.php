@@ -36,17 +36,17 @@
                                     <input type="text" id="name" name="name" class="form-control" value="{{ @$name }}">
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                    <label>手機號碼</label>
+                                    <input type="text" id="phone" name="phone" class="form-control" value="{{ @$phone }}">                  
+                                </div>
+                                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                     <label>生日</label>
                                     <div class="input-group date" id="input_datetimepicker" data-target-input="nearest">
                                         <input type="text" id="birthday" name="birthday" class="form-control datetimepicker" data-target="#input_datetimepicker"  value="{{ @$birthday }}" />
                                         <div class="input-group-append" data-target="#input_datetimepicker" data-toggle="datetimepicker">
-                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                            <div class="input-group-text"><i class="fa fa-calendar" aria-hidden="true"></i></div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                    <label>手機號碼</label>
-                                    <input type="text" id="phone" name="phone" class="form-control" value="{{ @$phone }}">                  
                                 </div>
                             </div>
                             <div class="row">

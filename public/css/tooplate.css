@@ -31,6 +31,7 @@ body {
     background-color: #fff;
     padding-left: 0px;
     padding-right: 0px;
+    color: #666;
 }
 
 a {
@@ -40,6 +41,16 @@ a {
 a:hover,
 a:focus {
     text-decoration: none;
+}
+
+p {
+    margin: 0 0 15px 0;
+    padding: 0;
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
 }
 
 
@@ -665,6 +676,22 @@ footer {
 
 
 /*說明文字背景 END*/
+
+
+/*常見問題 START*/
+
+.qa {}
+
+.qa-q {
+    color: #3e3f3f;
+}
+
+.qa-a {
+    color: #9f1321;
+}
+
+
+/*常見問題 END*/
 
 @media (min-width: 992px) {
     .navbar-expand-lg .navbar-nav .nav-link {

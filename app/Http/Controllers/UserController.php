@@ -62,7 +62,7 @@ class UserController extends Controller
         $data["disabled"] = "";
         
         if($action_type == "add") { //新增使用者
-            $data["title_txt"] = "申請帳號";
+            $data["title_txt"] = "註冊帳號";
             $data["edit_none"] = $data["edit_pass_none"] = $data["edit_data_none"] = $data["disabled"] = "";
             //性別-預設男
             $data["checked_sex_1"] = "checked";
