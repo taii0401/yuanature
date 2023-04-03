@@ -1,0 +1,334 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Validator,DB;
+use Illuminate\Http\Request;
+//字串-UUID
+use Illuminate\Support\Str;
+//例外處理
+use Illuminate\Database\QueryException;
+//雜湊-密碼
+use Illuminate\Support\Facades\Hash;
+//上傳檔案
+use Illuminate\Support\Facades\Storage;
+//使用者權限
+use App\Libraries\UserAuth;
+//Model
+use App\Models\User;
+use App\Models\WebUser;
+use App\Models\WebFile;
+use App\Models\WebFileData;
+
+class AjaxController extends Controller
+{
+    private function resetResult() 
+    {
+        $this->error = true;
+        $this->message = "請確認資料！";
+    }
+
+    private function returnResult()
+    {
+        $return_data = array(
+            "error" => $this->error,
+            "message" => $this->message
+        );
+        return $return_data;
+    }
+
+    //檔案-上傳檔案
+    public function upload_file(Request $request)
+    {
+        $this->resetResult();
+        
+        $name = $file_id = "";
+        //判斷是否登入
+        if(UserAuth::isLoggedIn()) {
+            $user_uuid = session("userUuid");
+            $user_id = 0;
+            if($user_uuid != "") {
+                //使用者資料
+                $web_user = WebUser::where(["uuid" => $user_uuid])->first()->toArray();
+                $user_id = isset($web_user["user_id"])?$web_user["user_id"]:0;
+            }
+
+            //檔案名稱
+            $name = $request->file("file")->getClientOriginalName();
+            //檔案大小
+            $size = $request->file("file")->getSize();
+            //檔案型態
+            $str = explode(".",$name);
+            $types = isset($str[1])?$str[1]:"";
+            //新檔案名稱
+            $file_name = substr(Str::uuid()->toString(),0,8)."_".date("YmdHis").".".$types;
+
+            //檔案存放路徑
+            $diskName = "public";
+            //將檔案存在./storage/public/files/$user_id/，並將檔名改為$file_name
+            $path = $request->file("file")->storeAs(
+                "files/".$user_id,
+                $file_name,
+                $diskName
+            );
+            //print_r($path);
+
+            try {
+                //新增檔案
+                $data = array();
+                $data["name"] = $name;
+                $data["file_name"] = $file_name;
+                $data["path"] = $diskName."/".$path;
+                $data["size"] = $size;
+                $data["types"] = $types;
+                $file_data = WebFile::create($data);
+                $file_id = (int)$file_data->id;
+
+                if($file_id > 0) { //新增成功
+                    $this->error = false;
+                } else {
+                    //刪除檔案存放路徑
+                    $file_path = "public/files/".$user_id."/".$file_name;
+                    if(Storage::exists($file_path)) {
+                        Storage::delete($file_path);
+                    }
+                    $this->message = "新增檔案錯誤！";
+                }
+            } catch(QueryException $e) {
+                $this->message = "新增檔案錯誤！";
+            }
+        } else {
+            $this->message = "沒有權限上傳檔案！";
+        }
+
+        $return_data = $this->returnResult();
+        $return_data["file_name"] = $name;
+        $return_data["file_id"] = $file_id;
+        //print_r($return_data);
+        return response()->json($return_data);
+    }
+    
+    //檔案-刪除檔案
+    public function upload_file_delete(Request $request,$file_ids=array())
+    {
+        $this->resetResult();
+
+        if(empty($file_ids)) {
+            $file_ids = $request->has("file_id")?array($request->input("file_id")):array();
+        }
+        
+        //刪除檔案
+        $delete = WebFile::deleteFile($file_ids);
+        if($delete) {
+            $this->error = false;
+        } else {
+            $this->message = "刪除檔案錯誤！";
+        }
+
+        return response()->json($this->returnResult());
+    }
+
+    //會員資料-檢查帳號是否存在
+    public function user_exist(Request $request)
+    {        
+        $this->resetResult();
+
+        $input = $request->all();
+        //去除空白
+        foreach($input as $key => $val) {
+            if(in_array($key,["account"])) {
+                $input[$key] = trim($val);
+            }
+        }
+
+        //檢查欄位、檢查訊息
+        $validator_data = $validator_message = [];
+        $validator_data["account"] = "required"; //帳號(電子郵件)
+
+        $validator_message["account.required"] = "請輸入帳號(電子郵件)！";
+        
+        $validator = Validator::make($input,$validator_data,$validator_message);
+
+        if($validator->fails()) {
+            foreach($validator->errors()->all() as $message) {
+                $this->message = $message;
+            }
+        }
+
+        $account = $input["account"]??"";
+        $count = User::where(["email" => $account])->count();
+        if($count == 0) {
+            $this->error = false;
+            $this->message = "帳號可新增！";
+        } else {
+            $this->message = "帳號已存在！";
+        }
+        
+        return response()->json($this->returnResult());
+    }
+
+    //會員資料-忘記密碼
+    public function user_forget(Request $request)
+    {
+        $this->resetResult();
+
+        if($request->has("username") && trim($request->username) != "") {
+            try {
+                $username = trim($request->username);
+                $user = User::where(["email" => $username])->first()->toArray();
+                if(!empty($user)) {
+                    //隨機產生亂碼
+                    $ran_str = $this->getRandom(6);
+                    //更新密碼
+                    $data = array();
+                    $data["password"] = Hash::make($ran_str);
+                    User::where(["email" => $username])->update($data);
+
+                    $this->error = false;
+                    $this->message = "密碼：".$ran_str."  請重新登入後，至修改密碼更新！";
+                }
+            } catch(QueryException $e) {
+                $this->message = "請確認帳號！";
+            }
+        } else {
+            $this->message = "請輸入帳號！";
+        }
+
+        return response()->json($this->returnResult());
+    }
+
+    //會員資料-新增、編輯、刪除
+    public function user_data(Request $request)
+    {
+        $this->resetResult();
+
+        $input = $request->all();
+        //去除空白
+        foreach($input as $key => $val) {
+            if(in_array($key,["account","password"])) {
+                $input[$key] = trim($val);
+            }
+        }
+
+        //表單動作類型(新增、編輯、刪除)
+        $action_type = $input["action_type"]??"add";
+
+        //檢查欄位、檢查訊息
+        $validator_data = $validator_message = [];
+        if($action_type == "add") { //新增會員
+            $validator_data["account"] = "required|email"; //帳號(電子郵件)
+            $validator_message["account.required"] = "請輸入帳號(電子郵件)！";
+            $validator_message["account.email"] = "帳號需為電子郵件格式！";
+        }
+        if(in_array($action_type,["add","edit","edit_password"])) {
+            $validator_data["password"] = "required"; //密碼
+            $validator_data["confirm_password"] = "required"; //確認密碼
+            $validator_message["password.required"] = "請輸入密碼！";
+            $validator_message["confirm_password.required"] = "請輸入確認密碼！";
+        }        
+        
+        $validator = Validator::make($input,$validator_data,$validator_message);
+
+        if($validator->fails()) {
+            foreach($validator->errors()->all() as $message) {
+                $this->message = $message;
+            }
+        }
+
+        DB::beginTransaction();
+
+        if($action_type == "add") { //新增使用者
+            //新增使用者
+            $user_id = UserAuth::createUser($input["account"],$input["password"]);
+            //print_r($user_id);exit;
+
+            //新增使用者資料
+            if($user_id > 0) {
+                //新增會員
+                $data = [];
+                $data["uuid"] = Str::uuid()->toString();
+                $data["user_id"] = $user_id;
+                $data["name"] = $input["name"]??"";
+                $data["sex"] = $input["sex"]??0;
+                $data["birthday"] = $input["birthday"]??"1911-01-01";
+                $data["phone"] = $input["phone"]??"";
+                $data["address"] = $input["address"]??"";
+                $user_data = WebUser::create($data);
+                //print_r($user_data->id);exit;
+
+                if((int)$user_data->id > 0) { //新增成功
+                    $this->error = false;
+                    //event(new Registered($user));
+                } else {
+                    //刪除使用者
+                    User::destroy($user_id);
+                    $this->message = "新增錯誤！";
+                }
+            } else {
+                $this->message = "新增帳號密碼錯誤！";
+            }
+        } else {
+            /*$uuid = $request->has("uuid")?$request->input("uuid"):"";
+            //取得使用者資料
+            $web_user = WebUser::where(["uuid" => $uuid])->first()->toArray();
+            $user_id = isset($web_user["user_id"])?$web_user["user_id"]:0;
+
+            if($uuid != "") {
+                if($action_type == "edit") { //編輯使用者
+                    try {
+                        $data = array();
+                        $data["short_link"] = $request->has("short_link")?trim($request->input("short_link")):"";
+                        $data["name"] = $request->has("name")?$request->input("name"):"";
+                        $data["sex"] = $request->has("sex")?$request->input("sex"):"";
+                        $data["birthday"] = $request->has("birthday")?$request->input("birthday"):"";
+                        $data["phone"] = $request->has("phone")?$request->input("phone"):"";
+                        $data["address"] = $request->has("address")?$request->input("address"):"";
+                        $data["modify_time"] = $now;
+                        WebUser::where(["uuid" => $uuid])->update($data);
+                        $this->error = false;
+                    } catch(QueryException $e) {
+                        $this->message = "更新錯誤！";
+                    }
+                } else if($action_type == "edit_password") { //編輯使用者密碼
+                    //取得登入者
+                    $user = User::where(["id" => $user_id])->first();
+                    //檢查密碼是否符合
+                    if(!empty($user) && $request->has("password") && $request->has("confirm_password")) {
+                        if(trim($request->input("password")) == $user->password) {
+                            $this->message = "密碼尚未修改！";
+                        } else {
+                            try {
+                                if(trim($request->input("password")) == trim($request->input("confirm_password"))) {
+                                    $data = array();
+                                    $data["password"] = Hash::make(trim($request->input("password")));
+                                    User::where(["id" => $user_id])->update($data);
+                                    $this->error = false;
+                                } else {
+                                    $this->message = "密碼與確認密碼不符合！";
+                                }
+                            } catch(QueryException $e) {
+                                $this->message = "更新密碼錯誤！";
+                            }
+                        }
+                    }
+                } else if($action_type == "delete") { //刪除使用者
+                    try {
+                        $data = array();
+                        $data["is_delete"] = 1;
+                        WebUser::where(["uuid" => $uuid])->update($data);
+                        User::destroy($user_id);
+                        $this->error = false;
+                    } catch(QueryException $e) {
+                        $this->message = "刪除錯誤！";
+                    }
+                }
+            }*/
+        }
+
+        if(!$this->error) {
+            DB::commit();
+        }
+
+        return response()->json($this->returnResult());
+    }
+}

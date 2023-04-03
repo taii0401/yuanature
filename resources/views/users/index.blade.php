@@ -1,4 +1,4 @@
-@extends('layouts.front_base')
+@extends('layouts.frontBase')
 @section('title') {{ @$assign_data["title_txt"] }} @endsection
 @section('content')
 <div class="content">
@@ -17,24 +17,25 @@
                         @endforeach
                     @endif
                     <div class="col-12">
+                        <div class="input-group mt-3 text-center">
+                            <div class="col-6">
+                                <button type="button" class="btn d-inline-block mx-auto text-center" style="border:0px;background-color:transparent;padding:0px;" onclick="changeForm('/users/forget')">
+                                    <img src="../../img/icons/fb_login.gif" width="135px" height="50px">
+                                </button>
+                            </div>
+                            <div class="col-6">
+                                <button type="button" class="btn d-inline-block mx-auto text-center" style="border:0px;background-color:transparent;padding:0px;" onclick="changeForm('/users/forget')">
+                                    <img src="../../img/icons/line_login.gif" width="135px" height="50px">
+                                </button>
+                            </div>
+                        </div>
+                        <hr>
+
                         <form id="form_data" method="post" class="tm-login-form" action="">
                             @csrf
-                            <div class="input-group mt-3" style="text-align:center;">
-                                <div class="col-6">
-                                    <button type="button" class="btn d-inline-block mx-auto" style="border:0px;background-color:transparent;padding:0px;text-align:center" onclick="changeForm('/users/forget')">
-                                        <img src="../../img/icons/fb_login.gif" width="120px" height="50px">
-                                    </button>
-                                </div>
-                                <div class="col-6">
-                                    <button type="button" class="btn d-inline-block mx-auto" style="border:0px;background-color:transparent;padding:0px;text-align:center" onclick="changeForm('/users/forget')">
-                                        <img src="../../img/icons/line_login.gif" width="120px" height="50px">
-                                    </button>
-                                </div>
-                            </div>
-                            <hr>
                             <div class="input-group">
                                 <label class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-form-label">帳號</label>
-                                <input type="email" id="username" name="username" class="col-xl-7 col-lg-7 col-md-7 col-sm-12 form-control require" placeholder="電子郵件">
+                                <input type="email" id="email" name="email" class="col-xl-7 col-lg-7 col-md-7 col-sm-12 form-control require" placeholder="電子郵件">
                             </div>
                             <div class="input-group mt-3">
                                 <label class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-form-label">密碼</label>
@@ -60,65 +61,3 @@
     </div>
 </div>
 @endsection
-
-
-<?php /*
-
-<div class="container"> 
-    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3"></div>
-    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 contact-two-grids">
-        <div class="contact-left-grid">
-            <table class="table-form" style="width: 100%;">
-                <tr>
-                    <td colspan="2">
-                        <h3 class="title clr">{{ @$assign_data["title_txt"] }}</h3>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="center">
-                        <button type="button" class="btn d-inline-block mx-auto" style="border:0px;background-color:transparent;padding:0px;text-align:center" onclick="changeForm('/users/forget')">
-                            <img src="../../img/icons/fb_login.gif" width="80px" height="50px">
-                        </button>
-                    </td>
-                    <td align="center">
-                        <button type="button" class="btn d-inline-block mx-auto" style="border:0px;background-color:transparent;padding:0px;text-align:center" onclick="changeForm('/users/forget')">
-                            <img src="../../img/icons/line_login.gif" width="80px" height="50px">
-                        </button>
-                    </td>
-                </tr>
-            </table>
-            <hr>
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-                <form id="form_data" method="post" class="tm-login-form" action="">
-                    @csrf
-                    <table class="table-form" style="width: 100%;">
-                        <tr>
-                            <td width="20%">
-                                <label for="username" class="col-form-label">帳號</label>
-                            </td>
-                            <td>
-                                <input type="email" id="username" name="username" class="form-control require" placeholder="電子郵件">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="password" class="col-form-label">密碼</label>
-                            </td>
-                            <td>
-                                <input type="password" id="password" name="password" class="form-control require">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2" align="center">
-                                <button type="submit" class="btn btn-primary d-inline-block mx-auto">登入</button>
-                                <button type="button" class="btn btn-danger d-inline-block mx-auto" onclick="changeForm('/users/forget')">忘記密碼</button>
-                                <button type="button" class="btn btn-primary d-inline-block mx-auto" onclick="changeForm('/users/create')">註冊</button>
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-@endsection*/?>

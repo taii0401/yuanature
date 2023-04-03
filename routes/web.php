@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AjaxController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,34 +20,41 @@ use App\Http\Controllers\UserController;
 Route::controller(FrontController::class)->group(function() { 
     //商品頁(廣志足白浴露)
     Route::get("/","product");
-    Route::get("/product","product");
+    Route::get("product","product");
     //關於我們
-    Route::get("/about","about");
+    Route::get("about","about");
     //購物指南
-    Route::get("/cart_info","cartInfo");
+    Route::get("cart_info","cartInfo");
     //常見問題
-    Route::get("/question","question");
+    Route::get("question","question");
 });
 
-//登入、登出、忘記密碼、註冊
+//共用
+Route::group([
+    "prefix" => "common"
+], function($router) {    
+    Route::controller(Controller::class)->group(function() { 
+        
+    });
+});
+
+//會員
 Route::group([
     "prefix" => "users"
 ], function($router) {    
     Route::controller(UserController::class)->group(function() { 
-        //登入畫面
+        //登入(畫面)
         Route::get("/","index");
         //登入
-        Route::post("/login","login");
+        Route::post("login","login");
         //登出
-        Route::get("/logout","logout");
-        //忘記密碼
-        Route::get("/forget","forget");
-        //新增使用者
-        Route::get("/create","create");
-        //編輯使用者
-        Route::get("/edit","edit");
-        //編輯使用者密碼
-        Route::get("/edit_password","edit_password"); 
+        Route::get("logout","logout");
+        //忘記密碼(畫面)
+        Route::get("forget","forget");
+        //新增會員(畫面)
+        Route::get("create","create");
+        //編輯會員(畫面)
+        Route::get("edit","edit");
     });
 });
 
@@ -70,11 +78,12 @@ Route::group([
 $ajaxs = array();
 $ajaxs[] = "upload_file"; //檔案-上傳檔案
 $ajaxs[] = "upload_file_delete"; //檔案-刪除檔案實際路徑
-$ajaxs[] = "user_exist"; //使用者資料-檢查帳號是否存在
-$ajaxs[] = "user_forget"; //使用者資料-忘記密碼
-$ajaxs[] = "user_data"; //使用者資料-新增、編輯、刪除
+$ajaxs[] = "user_exist"; //會員資料-檢查帳號是否存在
+$ajaxs[] = "user_forget"; //會員資料-忘記密碼
+$ajaxs[] = "user_data"; //會員資料-新增、編輯、刪除
+$ajaxs[] = "product_data"; //商品資料-新增、編輯、刪除
 $ajaxs[] = "cart_data"; //購物車-新增、編輯、刪除
 $ajaxs[] = "order_data"; //訂單-新增、編輯、刪除
 foreach($ajaxs as $ajax) {
-    Route::post('/ajax/'.$ajax, [AjaxController::class, $ajax]);
+    Route::post('/ajax/'.$ajax, [AjaxController::class, $ajax]); 
 }

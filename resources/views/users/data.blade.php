@@ -1,4 +1,4 @@
-@extends('layouts.front_base')
+@extends('layouts.frontBase')
 @section('title') {{ @$title_txt }} @endsection
 @section('content')
 <div class="content">
@@ -6,10 +6,25 @@
         <div class="col-xl-10 col-lg-10 col-md-12 col-sm-12 mx-auto tm-login">
             <div class="bg-white tm-block">
                 <div class="row">
-                    <div class="col-12">
-                        <h2 class="tm-block-title">{{ @$title_txt }}</h2>
+                    <div class="col-12 text-center">
+                        <h2 class="tm-block-title mt-3">{{ @$title_txt }}</h2>
                     </div>
                 </div>
+                <div class="col-12">
+                    <div class="input-group mt-3 text-center">
+                        <div class="col-6">
+                            <button type="button" class="btn d-inline-block mx-auto text-center" style="border:0px;background-color:transparent;padding:0px;" onclick="changeForm('/users/forget')">
+                                <img src="../../img/icons/fb_register.gif" width="135px" height="50px">
+                            </button>
+                        </div>
+                        <div class="col-6">
+                            <button type="button" class="btn d-inline-block mx-auto text-center" style="border:0px;background-color:transparent;padding:0px;" onclick="changeForm('/users/forget')">
+                                <img src="../../img/icons/line_register.gif" width="135px" height="50px">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <hr>
                 <div class="row">
                     <div id="msg_error" class="col-12 alert alert-danger" role="alert" style="display:none;"></div>
                     <div id="msg_success" class="col-12 alert alert-success" role="alert" style="display:none;"></div>
@@ -21,7 +36,7 @@
                             <div class="row">
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                     <label>登入帳號(電子郵件)</label>
-                                    <input type="email" id="username" name="username" class="form-control require" value="{{ @$username }}" {{ $disabled }}>
+                                    <input type="email" id="account" name="account" class="form-control require" value="{{ @$account }}" {{ $disabled }}>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                     <label>登入密碼</label>

@@ -5,6 +5,13 @@
 
     RewriteEngine On
 
+    #<IfModule mod_headers.c>
+        #Header always set Access-Control-Allow-Origin "*"
+    #</Ifmodule>
+
+    #RewriteCond %{THE_REQUEST}/webHostingTest [NC]
+    #RewriteRule ^ - [R=404,L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

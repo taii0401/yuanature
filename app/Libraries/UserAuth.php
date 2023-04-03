@@ -25,11 +25,11 @@ class UserAuth {
     }
 
     //新增使用者
-    public static function createUser($post_username,$post_password) {
+    public static function createUser($post_account,$post_password) {
         try {
             $data = array();
-            $data["name"] = $post_username;
-            $data["email"] = $post_username;
+            $data["name"] = $post_account;
+            $data["email"] = $post_account;
             $data["password"] = Hash::make($post_password);
             $user = User::create($data);
             $user_id = (int)$user->id;
@@ -56,10 +56,10 @@ class UserAuth {
     }
 
     //登入
-    public static function logIn($post_username,$post_password,$is_hash=true) {
+    public static function logIn($post_account,$post_password,$is_hash=true) {
         $isSuccess = false;
         //取得登入者
-        $user = User::where(["email" => $post_username])->first();
+        $user = User::where(["email" => $post_account])->first();
         //檢查密碼是否符合
         if(!empty($user)) {
             $is_match = false;
