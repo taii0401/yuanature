@@ -24,7 +24,6 @@ class CreateWebUserTable extends Migration
             $table->string('address')->nullable()->comment('地址');
             $table->integer('file_id')->default(0)->comment('檔案ID');
             $table->tinyInteger('is_verified')->default(0)->comment('是否驗證 0 否、1 是');
-            $table->integer('created_id')->nullable()->comment('建立者id');
             $table->integer('updated_id')->nullable()->comment('修改者id');
             $table->integer('deleted_id')->nullable()->comment('刪除者id');
             $table->timestamps();

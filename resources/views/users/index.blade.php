@@ -1,5 +1,5 @@
 @extends('layouts.frontBase')
-@section('title') {{ @$assign_data["title_txt"] }} @endsection
+@section('title') {{ @$title_txt }} @endsection
 @section('content')
 <div class="content">
     <div class="row tm-mt-big">
@@ -7,7 +7,7 @@
             <div class="bg-white tm-block">
                 <div class="row">
                     <div class="col-12 text-center">
-                        <h2 class="tm-block-title mt-3">{{ @$assign_data["title_txt"] }}</h2>
+                        <h2 class="tm-block-title mt-3">{{ @$title_txt }}</h2>
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -31,7 +31,7 @@
                         </div>
                         <hr>
 
-                        <form id="form_data" method="post" class="tm-login-form" action="">
+                        <form id="form_data" method="post" class="tm-login-form" action="{{ route('users.login') }}">
                             @csrf
                             <div class="input-group">
                                 <label class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-form-label">帳號</label>
@@ -41,7 +41,7 @@
                                 <label class="col-xl-2 col-lg-2 col-md-2 col-sm-12 col-form-label">密碼</label>
                                 <input type="password" id="password" name="password" class="col-xl-7 col-lg-7 col-md-7 col-sm-12  form-control require">
                                 <label class="col-xl-3 col-lg-3 col-md-3 col-sm-12 col-form-label" style="font-size:x-small;">
-                                    <a href="/users/forget">
+                                    <a href="#" onclick="changeForm('/users/forget')">
                                         忘記密碼？
                                     </a>
                                 </label>

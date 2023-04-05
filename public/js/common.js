@@ -380,7 +380,7 @@ function userSubmit(action_type) {
 	}
 	if(action_type == 'add') { //新增
         //檢查登入帳號(電子郵件)
-        if(checkFormat('email',$('#account').val(),128,true) == false) {
+        if(checkFormat('email',$('#account').val(),0,true) == false) {
             return false;
         }
         //檢查登入帳號(電子郵件)是否存在
@@ -388,11 +388,11 @@ function userSubmit(action_type) {
             return false;
         }
         //檢查密碼
-        if(checkFormat('en_number',$('#password').val(),0,true) == false) {
+        if(checkFormat('en_number',$('#password').val(),30,true) == false) {
             return false;
         }
         //檢查確認密碼
-        if(checkFormat('confirm_password',$('#confirm_password').val(),0,true) == false) {
+        if(checkFormat('confirm_password',$('#confirm_password').val(),30,true) == false) {
             return false;
         }
 	}
@@ -429,7 +429,7 @@ function userSubmit(action_type) {
             if(response.error == false) {
                 if(action_type == 'add') { //新增
                     alert("申請成功！");
-                    changeForm('/users');
+                    changeForm('/users/verify/add/'+response.message);
                 } else if(action_type == 'edit') { //編輯-使用者資料
                     alert("修改成功！");
                     changeForm('/users/edit');

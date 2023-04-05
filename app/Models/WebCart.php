@@ -10,7 +10,6 @@ class WebCart extends Model
     use HasFactory;
 
     protected $table = 'web_cart'; //指定資料表名稱
-    public $timestamps = false; 
     protected $primaryKey = 'id'; //主鍵，Model會另外自動加入id
     protected $fillable = [
         'user_id','product_id','amount','create_time','modify_time',

@@ -1,4 +1,4 @@
-@extends('layouts.front_base')
+@extends('layouts.frontBase')
 @section('title') {{ @$assign_data["title_txt"] }} @endsection
 @section('content')
 <div class="services" id="services">

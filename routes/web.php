@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AjaxController;
@@ -46,7 +47,7 @@ Route::group([
         //登入(畫面)
         Route::get("/","index");
         //登入
-        Route::post("login","login");
+        Route::post("login","login")->name("users.login");
         //登出
         Route::get("logout","logout");
         //忘記密碼(畫面)
@@ -55,6 +56,10 @@ Route::group([
         Route::get("create","create");
         //編輯會員(畫面)
         Route::get("edit","edit");
+        //驗證會員
+        Route::get("verify/{type}/{user_uuid}","verify");
+        //重發驗證信
+        Route::get("resend/{user_uuid}","resend");
     });
 });
 

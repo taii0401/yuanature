@@ -37,7 +37,7 @@ class Controller extends BaseController
     }
 
     /**
-     * 取得資料(unshop_code、unshop_file)
+     * 取得資料(web_code、web_file)
      * @param  type：型態-code、file
      * @param  cond：搜尋條件
      * @param  return_col：回傳資料的欄位
@@ -78,7 +78,7 @@ class Controller extends BaseController
     }
 
     /**
-     * 取得代碼資料名稱(unshop_code)
+     * 取得代碼資料名稱(web_code)
      * @param  type：型態
      * @return array
      */

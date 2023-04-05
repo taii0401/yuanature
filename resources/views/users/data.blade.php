@@ -40,7 +40,7 @@
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                     <label>登入密碼</label>
-                                    <input type="password" id="password" name="password" class="form-control require" value="{{ @$password }}" placeholder="不得超過30個英文字或數字">                  
+                                    <input type="password" id="password" name="password" class="form-control require" value="{{ @$password }}" placeholder="輸入6~30個英文字或數字">                  
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                     <label>確認密碼</label>

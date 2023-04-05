@@ -8,13 +8,15 @@ use App\Models\User;
 use App\Models\WebUser;
 
 
-class UserAuth {
+class UserAuth 
+{
     //首頁
     public const HOME = "/"; 
     private static $userdata = null;
 
-    //取得使用者資料
-    public static function userdata() {
+    //取得會員資料
+    public static function userdata() 
+    {
         if(empty(self::$userdata) && session()->exists("userUuid")) {
             $web_user = WebUser::where(["uuid" => session("userUuid")])->first();
             if(isset($web_user->uuid) && $web_user->uuid != "") {
@@ -24,8 +26,9 @@ class UserAuth {
         return self::$userdata;
     }
 
-    //新增使用者
-    public static function createUser($post_account,$post_password) {
+    //新增會員
+    public static function createUser($post_account,$post_password) 
+    {
         try {
             $data = array();
             $data["name"] = $post_account;
@@ -40,13 +43,38 @@ class UserAuth {
         return $user_id;
     }
 
+    //驗證會員
+    public static function verifyUser($user_id) 
+    {
+        $isSuccess = false;
+        try {
+            $now = date("Y-m-d H:i:s");
+            //十分鐘內必須驗證
+            $datetime = date("Y-m-d H:i:s",strtotime("$now -10 minute"));
+
+            $db = new User();
+            $data = $db->where("id",$user_id)->where("updated_at",">=",$datetime)->first();
+            if(!empty($data)) {
+                $data->email_verified_at = date("Y-m-d H:i:s");
+                $data->save();
+                $isSuccess = true;
+            }
+        } catch(QueryException $e) {
+            
+        }
+        
+        return $isSuccess;
+    }
+
     //判斷是否登入
-    public static function isLoggedIn() {
+    public static function isLoggedIn() 
+    {
         return !empty(self::userdata());
     }
 
     //自動登入
-    public static function userLogIn($user_id=0) {
+    public static function userLogIn($user_id=0) 
+    {
         if($user_id > 0) {
             $user = User::where(["id" => $user_id])->first();
             $user_email = $user->email;
@@ -56,7 +84,8 @@ class UserAuth {
     }
 
     //登入
-    public static function logIn($post_account,$post_password,$is_hash=true) {
+    public static function logIn($post_account,$post_password,$is_hash=true) 
+    {
         $isSuccess = false;
         //取得登入者
         $user = User::where(["email" => $post_account])->first();
@@ -86,7 +115,8 @@ class UserAuth {
     }
 
     //登出
-    public static function logOut() {
+    public static function logOut() 
+    {
        //刪除session
        session()->forget("userUuid");
        self::$userdata = null;

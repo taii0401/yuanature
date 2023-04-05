@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Validator,DB;
+use Validator,DB,Mail;
 use Illuminate\Http\Request;
 //字串-UUID
 use Illuminate\Support\Str;
@@ -25,7 +25,7 @@ class AjaxController extends Controller
     private function resetResult() 
     {
         $this->error = true;
-        $this->message = "請確認資料！";
+        $this->message = "";
     }
 
     private function returnResult()
@@ -205,7 +205,7 @@ class AjaxController extends Controller
         $input = $request->all();
         //去除空白
         foreach($input as $key => $val) {
-            if(in_array($key,["account","password"])) {
+            if(in_array($key,["account","password","confirm_password"])) {
                 $input[$key] = trim($val);
             }
         }
@@ -221,10 +221,16 @@ class AjaxController extends Controller
             $validator_message["account.email"] = "帳號需為電子郵件格式！";
         }
         if(in_array($action_type,["add","edit","edit_password"])) {
-            $validator_data["password"] = "required"; //密碼
+            $validator_data["password"] = "required|min:6|max:30"; //密碼
             $validator_data["confirm_password"] = "required"; //確認密碼
             $validator_message["password.required"] = "請輸入密碼！";
+            $validator_message["password.min"] = "請確認密碼長度限制！";
+            $validator_message["password.max"] = "請確認密碼長度限制！";
             $validator_message["confirm_password.required"] = "請輸入確認密碼！";
+
+            if($input["password"] != $input["confirm_password"]) {
+                $this->message = "請確認密碼是否輸入一樣！";
+            }
         }        
         
         $validator = Validator::make($input,$validator_data,$validator_message);
@@ -233,6 +239,10 @@ class AjaxController extends Controller
             foreach($validator->errors()->all() as $message) {
                 $this->message = $message;
             }
+        }
+
+        if($this->message != "") {
+            return response()->json($this->returnResult());
         }
 
         DB::beginTransaction();
@@ -244,9 +254,10 @@ class AjaxController extends Controller
 
             //新增使用者資料
             if($user_id > 0) {
+                $input["uuid"] = Str::uuid()->toString();
                 //新增會員
                 $data = [];
-                $data["uuid"] = Str::uuid()->toString();
+                $data["uuid"] = $input["uuid"];
                 $data["user_id"] = $user_id;
                 $data["name"] = $input["name"]??"";
                 $data["sex"] = $input["sex"]??0;
@@ -258,7 +269,21 @@ class AjaxController extends Controller
 
                 if((int)$user_data->id > 0) { //新增成功
                     $this->error = false;
-                    //event(new Registered($user));
+                    //寄送驗證信
+                    $mail_data = [
+                        "name" => $input["name"],
+                        "uuid" => $input["uuid"]
+                    ];
+                    Mail::send("emails.userRegister",$mail_data,
+                    function($mail) use ($input) {
+                        //收件人
+                        $mail->to($input["account"]);
+                        //寄件人
+                        $mail->from(env("MAIL_FROM_ADDRESS")); 
+                        //郵件主旨
+                        $mail->subject("恭喜註冊 原生學 Pure Nature 成功!");
+                    });
+                    $this->message = $input["uuid"];  
                 } else {
                     //刪除使用者
                     User::destroy($user_id);

@@ -4,16 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 //上傳檔案
 use Illuminate\Support\Facades\Storage;
 
 class WebFile extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $table = 'web_file'; //指定資料表名稱
-    public $timestamps = false; 
     protected $primaryKey = 'id'; //主鍵，Model會另外自動加入id
     protected $fillable = [
         'name','file_name','path','size','types',
