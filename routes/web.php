@@ -56,6 +56,8 @@ Route::group([
         Route::get("create","create");
         //編輯會員(畫面)
         Route::get("edit","edit");
+        //編輯會員密碼(畫面)
+        Route::get("edit_password","edit_password");
         //驗證會員
         Route::get("verify/{type}/{user_uuid}","verify");
         //重發驗證信

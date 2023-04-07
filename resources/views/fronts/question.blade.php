@@ -42,7 +42,7 @@
             <div class="qa">
                 <p class="mb-4">
                     <span class="qa-q">Q：忘記密碼怎麼辦？</span><br/>
-                    <span class="qa-a">A：請至會員登入處點選「忘記密碼」進行驗證及重新設定，如果擔心會經常忘記，也可以使用FACEBOOK或GOOGLE帳戶登入綁定。</span>
+                    <span class="qa-a">A：請至會員登入處點選「忘記密碼」進行驗證及重新設定，如果擔心會經常忘記，也可以使用FACEBOOK或LINE帳戶登入綁定。</span>
                 </p>
             </div>
             <div class="qa">

@@ -172,26 +172,50 @@ class AjaxController extends Controller
     {
         $this->resetResult();
 
-        if($request->has("username") && trim($request->username) != "") {
-            try {
-                $username = trim($request->username);
-                $user = User::where(["email" => $username])->first()->toArray();
-                if(!empty($user)) {
-                    //隨機產生亂碼
-                    $ran_str = $this->getRandom(6);
-                    //更新密碼
-                    $data = array();
-                    $data["password"] = Hash::make($ran_str);
-                    User::where(["email" => $username])->update($data);
-
-                    $this->error = false;
-                    $this->message = "密碼：".$ran_str."  請重新登入後，至修改密碼更新！";
-                }
-            } catch(QueryException $e) {
-                $this->message = "請確認帳號！";
+        $input = $request->all();
+        
+        //去除空白
+        foreach($input as $key => $val) {
+            if(in_array($key,["account"])) {
+                $input[$key] = trim($val);
             }
-        } else {
-            $this->message = "請輸入帳號！";
+        }
+
+        //檢查欄位、檢查訊息
+        $validator_data = $validator_message = [];
+        $validator_data["account"] = "required"; //帳號(電子郵件)
+
+        $validator_message["account.required"] = "請輸入帳號(電子郵件)！";
+        
+        $validator = Validator::make($input,$validator_data,$validator_message);
+
+        if($validator->fails()) {
+            foreach($validator->errors()->all() as $message) {
+                $this->message = $message;
+            }
+        }
+        try {
+            $user = User::where(["email" => $input["account"]])->first()->toArray();
+            if(!empty($user)) {
+                $email = $input["account"];
+                //隨機產生亂碼
+                $ran_str = $this->getRandom(6);
+                //更新密碼
+                $data = array();
+                $data["password"] = Hash::make($ran_str);
+                User::where(["email" => $email])->update($data);
+
+                //寄送驗證信
+                $mail_data = [
+                    "email" => $email,
+                    "ran_str" => $ran_str
+                ];
+                $this->sendMail("user_forget",$mail_data);
+                $this->error = false;
+                $this->message = "請至信箱收取新密碼重新登入後，再至修改密碼更新！";
+            }
+        } catch(QueryException $e) {
+            $this->message = "請確認帳號！";
         }
 
         return response()->json($this->returnResult());
@@ -220,7 +244,7 @@ class AjaxController extends Controller
             $validator_message["account.required"] = "請輸入帳號(電子郵件)！";
             $validator_message["account.email"] = "帳號需為電子郵件格式！";
         }
-        if(in_array($action_type,["add","edit","edit_password"])) {
+        if(in_array($action_type,["add","edit_password"])) {
             $validator_data["password"] = "required|min:6|max:30"; //密碼
             $validator_data["confirm_password"] = "required"; //確認密碼
             $validator_message["password.required"] = "請輸入密碼！";
@@ -247,12 +271,12 @@ class AjaxController extends Controller
 
         DB::beginTransaction();
 
-        if($action_type == "add") { //新增使用者
-            //新增使用者
+        if($action_type == "add") { //新增
+            //新增會員
             $user_id = UserAuth::createUser($input["account"],$input["password"]);
             //print_r($user_id);exit;
 
-            //新增使用者資料
+            //新增會員資料
             if($user_id > 0) {
                 $input["uuid"] = Str::uuid()->toString();
                 //新增會員
@@ -261,7 +285,7 @@ class AjaxController extends Controller
                 $data["user_id"] = $user_id;
                 $data["name"] = $input["name"]??"";
                 $data["sex"] = $input["sex"]??0;
-                $data["birthday"] = $input["birthday"]??"1911-01-01";
+                $data["birthday"] = $input["birthday"]??"1999-01-01";
                 $data["phone"] = $input["phone"]??"";
                 $data["address"] = $input["address"]??"";
                 $user_data = WebUser::create($data);
@@ -271,18 +295,11 @@ class AjaxController extends Controller
                     $this->error = false;
                     //寄送驗證信
                     $mail_data = [
+                        "email" => $input["account"],
                         "name" => $input["name"],
                         "uuid" => $input["uuid"]
                     ];
-                    Mail::send("emails.userRegister",$mail_data,
-                    function($mail) use ($input) {
-                        //收件人
-                        $mail->to($input["account"]);
-                        //寄件人
-                        $mail->from(env("MAIL_FROM_ADDRESS")); 
-                        //郵件主旨
-                        $mail->subject("恭喜註冊 原生學 Pure Nature 成功!");
-                    });
+                    $this->sendMail("user_register",$mail_data);
                     $this->message = $input["uuid"];  
                 } else {
                     //刪除使用者
@@ -293,61 +310,41 @@ class AjaxController extends Controller
                 $this->message = "新增帳號密碼錯誤！";
             }
         } else {
-            /*$uuid = $request->has("uuid")?$request->input("uuid"):"";
-            //取得使用者資料
+            $uuid = $input["uuid"]??"";
+            //取得會員資料
             $web_user = WebUser::where(["uuid" => $uuid])->first()->toArray();
             $user_id = isset($web_user["user_id"])?$web_user["user_id"]:0;
 
             if($uuid != "") {
-                if($action_type == "edit") { //編輯使用者
+                if($action_type == "edit") { //編輯會員
                     try {
                         $data = array();
-                        $data["short_link"] = $request->has("short_link")?trim($request->input("short_link")):"";
-                        $data["name"] = $request->has("name")?$request->input("name"):"";
-                        $data["sex"] = $request->has("sex")?$request->input("sex"):"";
-                        $data["birthday"] = $request->has("birthday")?$request->input("birthday"):"";
-                        $data["phone"] = $request->has("phone")?$request->input("phone"):"";
-                        $data["address"] = $request->has("address")?$request->input("address"):"";
-                        $data["modify_time"] = $now;
+                        $data["name"] = $input["name"]??"";
+                        $data["sex"] = $input["sex"]??0;
+                        $data["birthday"] = $input["birthday"]??"1911-01-01";
+                        $data["phone"] = $input["phone"]??"";
+                        $data["address"] = $input["address"]??"";
                         WebUser::where(["uuid" => $uuid])->update($data);
                         $this->error = false;
                     } catch(QueryException $e) {
                         $this->message = "更新錯誤！";
                     }
-                } else if($action_type == "edit_password") { //編輯使用者密碼
+                } else if($action_type == "edit_password") { //編輯會員密碼
                     //取得登入者
-                    $user = User::where(["id" => $user_id])->first();
+                    $user = User::where(["id" => $user_id,"email" => $input["account"]])->first();
                     //檢查密碼是否符合
-                    if(!empty($user) && $request->has("password") && $request->has("confirm_password")) {
-                        if(trim($request->input("password")) == $user->password) {
-                            $this->message = "密碼尚未修改！";
-                        } else {
-                            try {
-                                if(trim($request->input("password")) == trim($request->input("confirm_password"))) {
-                                    $data = array();
-                                    $data["password"] = Hash::make(trim($request->input("password")));
-                                    User::where(["id" => $user_id])->update($data);
-                                    $this->error = false;
-                                } else {
-                                    $this->message = "密碼與確認密碼不符合！";
-                                }
-                            } catch(QueryException $e) {
-                                $this->message = "更新密碼錯誤！";
-                            }
+                    if(!empty($user)) {
+                        try {
+                            $data = array();
+                            $data["password"] = Hash::make($input["password"]);
+                            $user->update($data);
+                            $this->error = false;
+                        } catch(QueryException $e) {
+                            $this->message = "更新密碼錯誤！";
                         }
                     }
-                } else if($action_type == "delete") { //刪除使用者
-                    try {
-                        $data = array();
-                        $data["is_delete"] = 1;
-                        WebUser::where(["uuid" => $uuid])->update($data);
-                        User::destroy($user_id);
-                        $this->error = false;
-                    } catch(QueryException $e) {
-                        $this->message = "刪除錯誤！";
-                    }
                 }
-            }*/
+            }
         }
 
         if(!$this->error) {

@@ -18,7 +18,7 @@ class UserAuth
     public static function userdata() 
     {
         if(empty(self::$userdata) && session()->exists("userUuid")) {
-            $web_user = WebUser::where(["uuid" => session("userUuid")])->first();
+            $web_user = WebUser::where(["uuid" => session("userUuid"),"is_verified" => 1])->first();
             if(isset($web_user->uuid) && $web_user->uuid != "") {
                 self::$userdata = $web_user;
             }
@@ -76,7 +76,7 @@ class UserAuth
     public static function userLogIn($user_id=0) 
     {
         if($user_id > 0) {
-            $user = User::where(["id" => $user_id])->first();
+            $user = User::where(["id" => $user_id])->whereNotNull("email_verified_at")->first();
             $user_email = $user->email;
             $user_pass = $user->password;
             UserAuth::logIn($user_email,$user_pass,false);
@@ -88,7 +88,7 @@ class UserAuth
     {
         $isSuccess = false;
         //取得登入者
-        $user = User::where(["email" => $post_account])->first();
+        $user = User::where(["email" => $post_account])->whereNotNull("email_verified_at")->first();
         //檢查密碼是否符合
         if(!empty($user)) {
             $is_match = false;
@@ -101,7 +101,7 @@ class UserAuth
             }
 
             if($is_match) {
-                $web_user = WebUser::where(["user_id" => $user->id])->first();
+                $web_user = WebUser::where(["user_id" => $user->id,"is_verified" => 1])->first();
                 //設定session
                 if(isset($web_user->uuid) && $web_user->uuid != "") {
                     $isSuccess = true;

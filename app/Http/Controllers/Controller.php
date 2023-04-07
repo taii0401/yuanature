@@ -7,6 +7,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
+use Mail;
 //字串-隨機產生亂碼
 use Illuminate\Support\Str;
 //例外處理
@@ -207,5 +208,65 @@ class Controller extends BaseController
         }
 
         return $data;
+    }
+
+    /**
+     * 寄送信件
+     * @param  type：選項類別
+     * @param  code_type：從code資料表而來-代碼類別
+     * @param  is_all：代碼類別選項是否加上全部
+     * @return array
+     */
+    public function sendMail($type="",$data=[])
+    {
+        //信件主旨
+        $subject = "原生學 Pure Nature ";
+        //信件樣板
+        $email_tpl = "";
+        //收件人
+        $email = $data["email"]??"";
+        //傳送內容
+        $mail_data = [];
+
+        switch($type) {
+            case "user_register": //會員註冊
+            case "user_resend": //會員重寄驗證信
+                $name = $data["name"]??"";
+                $uuid = $data["uuid"]??"";
+                $email_tpl = "emails.user";
+                $btn_txt = "驗證";
+                $btn_url = "https://www.yuanature.tw/users/verify/email/$uuid";
+
+                if($type == "user_register") {
+                    $subject .= "恭喜註冊成功!";
+                    $text = "恭喜 $name 註冊成功，請在十分鐘內點選驗證後登入。";
+                } else if($type == "user_resend") {
+                    $subject .= "重寄驗證信!";
+                    $text = "請在十分鐘內點選驗證後登入。";
+                }                
+                break;
+            case "user_forget": //會員忘記密碼
+                $subject .= " 新密碼!";
+                $email_tpl = "emails.user";
+                $btn_txt = "登入";
+                $btn_url = "https://www.yuanature.tw/users";
+                $text = "您的新密碼為：".$data["ran_str"];
+                break;
+        }
+        $mail_data["text"] = $text;
+        $mail_data["btn_txt"] = $btn_txt;
+        $mail_data["btn_url"] = $btn_url;
+
+        if($email != "") {
+            Mail::send($email_tpl,$mail_data,
+            function($mail) use ($email,$subject) {
+                //收件人
+                $mail->to($email);
+                //寄件人
+                $mail->from(env("MAIL_FROM_ADDRESS")); 
+                //郵信件主旨
+                $mail->subject($subject);
+            });
+        }
     }
 }

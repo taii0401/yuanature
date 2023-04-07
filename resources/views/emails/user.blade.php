@@ -40,7 +40,7 @@
                             <tr>
                                 <td align="center" >
                                     <h1 style="color:#333333;font-size:18px;font-weight:bold;font-family:'PingFang TC','微軟正黑體','Microsoft JhengHei','Helvetica Neue',Helvetica,Arial,sans-serif;padding:0;margin:0;line-height:1.4">
-                                        恭喜 {{ $name }} 註冊成功，請在十分鐘內點選"驗證"後登入。
+                                        {{ $text }}
                                     </h1>
                                 </td>
                             </tr>
@@ -64,7 +64,7 @@
                                         <td align="center" bgcolor="#005da0" style="color:#ffffff;padding-top:7px;padding-bottom:7px;padding-left:60px;padding-right:60px">
                                             <![endif]--><!--[if !mso]><!---->
                                         <td align="center" bgcolor="#005da0" style="border-radius:4px">
-                                            <!-- <![endif]--><a class="dnd-button" href="https://www.yuanature.tw/users/verify/email/{{ $uuid }}" target="_blank" style="color:#ffffff;border-radius:4px;display:inline-block;text-decoration:none;font-size:16px;font-weight:bold;letter-spacing:1px;padding-top:7px;padding-bottom:7px;padding-left:60px;padding-right:60px"><span class="a__text" style="color:#ffffff;text-decoration:none;font-family:'PingFang TC','微軟正黑體','Microsoft JhengHei','Helvetica Neue',Helvetica,Arial,sans-serif">驗證</span></a>
+                                            <!-- <![endif]--><a class="dnd-button" href="{{ $btn_url }}" target="_blank" style="color:#ffffff;border-radius:4px;display:inline-block;text-decoration:none;font-size:16px;font-weight:bold;letter-spacing:1px;padding-top:7px;padding-bottom:7px;padding-left:60px;padding-right:60px"><span class="a__text" style="color:#ffffff;text-decoration:none;font-family:'PingFang TC','微軟正黑體','Microsoft JhengHei','Helvetica Neue',Helvetica,Arial,sans-serif">{{ $btn_txt }}</span></a>
                                         </td>
                                         </tr>
                                     </tbody>

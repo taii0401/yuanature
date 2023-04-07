@@ -1,11 +1,21 @@
 <div class="header-outs">
     <div class="head-wl">
         <div class="search-w3ls">
+        @if(UserAuth::isLoggedIn())
+            <a href="/users/edit">
+                <img src="{{ asset('img/icons/member.png') }}" height="20px">&nbsp;&nbsp;{{ UserAuth::userdata()->name }}
+            </a>
+            <a href="/users/logout">
+                / 登出
+            </a>
+        @else
             <a href="/users/">
-                <img src="../../img/icons/member.png" height="20px">&nbsp;&nbsp;登入 / 註冊
-            </a>&nbsp;&nbsp;
+                <img src="{{ asset('img/icons/member.png') }}" height="20px">&nbsp;&nbsp;登入 / 註冊
+            </a>
+        @endif
+            &nbsp;&nbsp;
             <a href="/users/cart">
-                <img src="../../img/icons/cart.png" height="20px">&nbsp;&nbsp;購物車
+                <img src="{{ asset('img/icons/cart.png') }}" height="20px">&nbsp;&nbsp;購物車
             </a>
         </div>
         <div class="clearfix"> </div>
@@ -22,7 +32,7 @@
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="/">
-                            <img src="../../img/icons/logo.jpg" height="80px">
+                            <img src="{{ asset('img/icons/logo.jpg') }}" height="80px">
                         </a>
                     </li>
                     <li class="nav-item" style="margin-top:15px">

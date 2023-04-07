@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Mail;
+use Validator,DB,Mail;
 use Illuminate\Http\Request;
 //使用者權限
 use App\Libraries\UserAuth;
@@ -28,21 +28,32 @@ class UserController extends Controller
     //登入
     public function login(Request $request)
     {
-        $message = $post_account = $post_password = "";
-        $post_account = $request->input("account");
-        $post_password = $request->input("password");
-
-        if($post_account == "" || $post_password == "") {
-            $message = "請輸入帳號密碼！";
-        } else {
-            $login = UserAuth::logIn($post_account,$post_password);
-            if(!$login) {
-                $message = "帳號密碼錯誤！";
+        $input = $request->all();
+        //去除空白
+        foreach($input as $key => $val) {
+            if(in_array($key,["account","password"])) {
+                $input[$key] = trim($val);
             }
         }
 
-        if($message != "") { //錯誤訊息
-            return back()->withErrors($message);
+        //檢查欄位、檢查訊息
+        $validator_data = $validator_message = [];
+        $validator_data["account"] = "required"; //帳號
+        $validator_data["password"] = "required"; //密碼
+        $validator_message["account.required"] = "請輸入帳號！";
+        $validator_message["password.required"] = "請輸入密碼！";
+
+        $validator = Validator::make($input,$validator_data,$validator_message);
+
+        if($validator->fails()) {
+            foreach($validator->errors()->all() as $message) {
+                return back()->withErrors($message);
+            }
+        }
+
+        $login = UserAuth::logIn($input["account"],$input["password"]);
+        if(!$login) {
+            return back()->withErrors("帳號密碼錯誤或尚未驗證！");
         } else { 
             //編輯會員
             return redirect("users/edit");
@@ -52,7 +63,7 @@ class UserController extends Controller
     //登出
     public function logout()
     {
-        //UserAuth::logOut();
+        UserAuth::logOut();
         return redirect("users");
     }
 
@@ -83,7 +94,8 @@ class UserController extends Controller
     //忘記密碼(畫面)
     public function forget()
     {
-        return view("users.forget");
+        $data["title_txt"] = "忘記密碼";
+        return view("users.forget",$data);
     }
 
     //修改密碼(畫面)
@@ -103,27 +115,41 @@ class UserController extends Controller
     {
         $data = array();
         $data["action_type"] = $action_type;
-        //鎖定欄位-登入帳號
-        $data["disabled"] = "";
+        $data["require"] = "require";
+        $data["disabled"] = "disabled";
+        $data["edit_none"] = $data["edit_data_none"] = $data["edit_pass_none"] = "none";
         
         if($action_type == "add") { //新增會員
             $data["title_txt"] = "註冊帳號";
+            $data["disabled"] = "";
+            $data["edit_none"] = $data["edit_data_none"] = $data["edit_pass_none"] = "";
         } else if($action_type == "edit" || $action_type == "edit_password") { //編輯會員、修改密碼
+            $data["require"] = $data["add_none"] = "";
             if($action_type == "edit") {
                 $data["title_txt"] = "修改會員資料";
                 $data["edit_data_none"] = "";
+                $data["require"] = "";
             } else {
                 $data["title_txt"] = "修改密碼";
-                $data["edit_pass_none"] = $data["btn_none"] = "";
+                $data["edit_pass_none"] = "";
             }
             
             if($user_uuid != "") {
                 //會員資料
-                $user = User::where(["uuid" => $user_uuid])->first()->toArray();
-                if(!empty($user)) {
-                    foreach($user as $key => $val) {
+                $web_user = WebUser::where(["uuid" => $user_uuid])->first()->toArray();
+                if(!empty($web_user)) {
+                    foreach($web_user as $key => $val) {
                         $data[$key] = $val;
                     }
+                }
+                //帳號密碼
+                if(isset($data["user_id"])) {
+                    $user = User::where(["id" => $data["user_id"]])->first();
+                    //密碼
+                    $data["password"] = $user->password;
+                    //帳號
+                    $user_data = $user->toArray();
+                    $data["account"] = isset($user_data["email"])?$user_data["email"]:"";
                 }
             }
         }
@@ -160,8 +186,9 @@ class UserController extends Controller
                     $user_id = $web_user->user_id;
                     if($user_id > 0) {
                         //驗證會員
-                        if(UserAuth::verifyUser($user_id)) {
-                            $web_user->is_verified = 1;
+                        if(UserAuth::verifyUser($user_id)) { //驗證成功
+                            $web_user->is_verified = 1; //有驗證
+                            $web_user->update_id = $user_id;
                             $web_user->save();
                             $isSuccess = true;
                         }
@@ -197,27 +224,24 @@ class UserController extends Controller
             if(!empty($web_user)) {
                 $user_id = $web_user->user_id;
                 if($user_id > 0) {
-                    $web_user->	is_verified = 0;
+                    $web_user->is_verified = 0; //沒有驗證
+                    $web_user->update_id = $user_id;
                     $web_user->save();
 
-                    $mail_data = [
-                        "name" => $web_user->name,
-                        "uuid" => $user_uuid
-                    ];
+                    //清除驗證時間
                     $user = User::where(["id" => $user_id])->first();
                     $email = $user->email;
                     $user->email_verified_at = NULL;
+                    $user->updated_at = date("Y-m-d H:i:s");
                     $user->save();
-                    
-                    Mail::send("emails.userRegister",$mail_data,
-                    function($mail) use ($email) {
-                        //收件人
-                        $mail->to($email);
-                        //寄件人
-                        $mail->from(env("MAIL_FROM_ADDRESS")); 
-                        //郵件主旨
-                        $mail->subject("恭喜註冊 原生學 Pure Nature 成功!");
-                    });
+
+                    //寄送驗證信
+                    $mail_data = [
+                        "email" => $email,
+                        "name" => $web_user->name,
+                        "uuid" => $user_uuid
+                    ];
+                    $this->sendMail("user_resend",$mail_data);
                 }
             }
         }

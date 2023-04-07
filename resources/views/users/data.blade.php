@@ -3,23 +3,26 @@
 @section('content')
 <div class="content">
     <div class="row tm-mt-big">
-        <div class="col-xl-10 col-lg-10 col-md-12 col-sm-12 mx-auto tm-login">
+        @if($action_type != "add")
+            @include('layouts.frontUser')
+        @endif
+        <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12 mx-auto tm-login">
             <div class="bg-white tm-block">
                 <div class="row">
                     <div class="col-12 text-center">
                         <h2 class="tm-block-title mt-3">{{ @$title_txt }}</h2>
                     </div>
                 </div>
-                <div class="col-12">
+                <div class="col-12" style="display:{{ $edit_none}};">
                     <div class="input-group mt-3 text-center">
                         <div class="col-6">
                             <button type="button" class="btn d-inline-block mx-auto text-center" style="border:0px;background-color:transparent;padding:0px;" onclick="changeForm('/users/forget')">
-                                <img src="../../img/icons/fb_register.gif" width="135px" height="50px">
+                                <img src="{{asset('img/icons/fb_register.gif')}}" width="135px" height="50px">
                             </button>
                         </div>
                         <div class="col-6">
                             <button type="button" class="btn d-inline-block mx-auto text-center" style="border:0px;background-color:transparent;padding:0px;" onclick="changeForm('/users/forget')">
-                                <img src="../../img/icons/line_register.gif" width="135px" height="50px">
+                                <img src="{{asset('img/icons/line_register.gif')}}" width="135px" height="50px">
                             </button>
                         </div>
                     </div>
@@ -33,19 +36,21 @@
                             @csrf
                             <input type="hidden" id="action_type" name="action_type" value="{{ @$action_type }}">
                             <input type="hidden" id="uuid" name="uuid" value="{{ @$uuid }}">
-                            <div class="row">
+                            <div class="row" style="display:{{ $edit_pass_none}};">
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                    <label>登入帳號(電子郵件)</label>
+                                    <label><span class="star">* </span>登入帳號(電子郵件)</label>
                                     <input type="email" id="account" name="account" class="form-control require" value="{{ @$account }}" {{ $disabled }}>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                    <label>登入密碼</label>
-                                    <input type="password" id="password" name="password" class="form-control require" value="{{ @$password }}" placeholder="輸入6~30個英文字或數字">                  
+                                    <label><span class="star">* </span>登入密碼</label>
+                                    <input type="password" id="password" name="password" class="form-control {{ $require }}" value="" placeholder="輸入6~30個英文字或數字">                  
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                    <label>確認密碼</label>
-                                    <input type="password" id="confirm_password" name="confirm_password" class="form-control require" value="{{ @$password }}" placeholder="請輸入相同的登入密碼">
+                                    <label><span class="star">* </span>確認密碼</label>
+                                    <input type="password" id="confirm_password" name="confirm_password" class="form-control {{ $require }}" value="" placeholder="請輸入相同的登入密碼">
                                 </div>
+                            </div>
+                            <div class="row" style="display:{{ $edit_data_none}};">
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                     <label>姓名</label>
                                     <input type="text" id="name" name="name" class="form-control" value="{{ @$name }}">
@@ -65,9 +70,9 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-12 tm-btn-right">
+                                <div class="col-12 tm-btn-center">
                                     <button type="button" class="btn btn-primary" onclick="userSubmit('{{ @$action_type }}');">送出</button>
-                                    <button type="button" class="btn btn-danger" onclick="changeForm('/users')">取消</button>
+                                    <button type="button" class="btn btn-danger" onclick="changeForm('/users/edit')">取消</button>
                                 </div>
                             </div>
                         </form>
