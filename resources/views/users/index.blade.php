@@ -20,12 +20,12 @@
                         <div class="input-group mt-3 text-center">
                             <div class="col-6">
                                 <button type="button" class="btn d-inline-block mx-auto text-center" style="border:0px;background-color:transparent;padding:0px;" onclick="changeForm('/users/forget')">
-                                    <img src="{{asset('img/icons/fb_login.gif')}}" width="135px" height="50px">
+                                    <img src="{{ asset('img/icons/fb_login.gif') }}" width="135px" height="50px">
                                 </button>
                             </div>
                             <div class="col-6">
                                 <button type="button" class="btn d-inline-block mx-auto text-center" style="border:0px;background-color:transparent;padding:0px;" onclick="changeForm('/users/forget')">
-                                    <img src="{{asset('img/icons/line_login.gif')}}" width="135px" height="50px">
+                                    <img src="{{ asset('img/icons/line_login.gif') }}" width="135px" height="50px">
                                 </button>
                             </div>
                         </div>

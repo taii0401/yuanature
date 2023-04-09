@@ -14,10 +14,10 @@
             <div class="col-xl-2 col-lg-3 col-md-3 col-sm-12">
                 <p>&nbsp;</p>
                 <p>
-                    <a href="#">
+                    <a href="https://www.facebook.com/yuanature.tw" target="_blank">
                         <img src="{{ asset('img/icons/fb_grey.png') }}" height="30px">
                     </a>
-                    <a href="#">
+                    <a href="https://www.instagram.com/yuanature" target="_blank">
                         <img src="{{ asset('img/icons/ig_grey.png') }}" height="30px">
                     </a>
                 </p>

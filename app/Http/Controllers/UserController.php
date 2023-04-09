@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Validator,DB,Mail;
 use Illuminate\Http\Request;
+use App\Services\LineService;
 //使用者權限
 use App\Libraries\UserAuth;
 
@@ -19,6 +20,12 @@ class UserController extends Controller
         //echo "<pre>";print_r(session()->all());echo "</pre>";
         if(session("user") === NULL) { 
             $data["title_txt"] = "會員登入";
+
+            //取得LINE登入連結
+            $lineService = new LineService();
+            $url = $lineService->getLoginBaseUrl($this->getRandom(6));
+            $data["line_url"] = $url;
+            
             return view("users.index",$data);
         } else { //已登入
             return redirect("/");
@@ -76,6 +83,12 @@ class UserController extends Controller
             return redirect("users/edit");
         }
         $data = $this->get_data("add");
+
+        //取得LINE登入連結
+        $lineService = new LineService();
+        $url = $lineService->getLoginBaseUrl($this->getRandom(6));
+        $data["line_url"] = $url;
+
         return view("users.data",$data);
     }
 

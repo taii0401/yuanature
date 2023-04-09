@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AjaxController;
+use App\Http\Controllers\ThirdController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,8 +20,9 @@ use App\Http\Controllers\AjaxController;
 
 //首頁、關於我們、商品頁(廣志足白浴露)、購物指南、常見問題
 Route::controller(FrontController::class)->group(function() { 
+    //首頁
+    Route::get("/","index");
     //商品頁(廣志足白浴露)
-    Route::get("/","product");
     Route::get("product","product");
     //關於我們
     Route::get("about","about");
@@ -28,6 +30,10 @@ Route::controller(FrontController::class)->group(function() {
     Route::get("cart_info","cartInfo");
     //常見問題
     Route::get("question","question");
+    //隱私權政策
+    Route::get("privacy","privacy");
+    //服務條款
+    Route::get("terms","terms");
 });
 
 //共用
@@ -64,6 +70,22 @@ Route::group([
         Route::get("resend/{user_uuid}","resend");
     });
 });
+
+//第三方註冊、登入
+Route::group([
+    "prefix" => "users/third"
+], function($router) {    
+    Route::controller(ThirdController::class)->group(function() { 
+        //Facebook登入
+        Route::get("fb_login","fbLogin");
+        //Facebook登入重新導向授權資料處理
+        Route::get("fb_login_callback","fbLoginCallback");
+        //Line登入重新導向授權資料處理
+        Route::get("line_login_callback","lineLoginCallback");
+    });
+});
+
+
 
 //會員資料、購物車、訂單
 /*Route::group([
