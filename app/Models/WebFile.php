@@ -13,11 +13,9 @@ class WebFile extends Model
 {
     use HasFactory,SoftDeletes;
 
-    protected $table = 'web_file'; //指定資料表名稱
-    protected $primaryKey = 'id'; //主鍵，Model會另外自動加入id
-    protected $fillable = [
-        'name','file_name','path','size','types',
-    ];
+    protected $table = "web_file"; //指定資料表名稱
+    protected $primaryKey = "id"; //主鍵，Model會另外自動加入id
+    protected $guarded = [];
 
     /**
      * 刪除檔案及實際路徑

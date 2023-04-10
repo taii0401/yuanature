@@ -10,12 +10,11 @@ class WebUser extends Model
 {
     use HasFactory,SoftDeletes;
 
-    protected $table = 'web_user'; //指定資料表名稱
-    protected $primaryKey = 'id'; //主鍵，Model會另外自動加入id
-    protected $fillable = ['uuid','user_id','name','sex','birthday','phone','address','file_id','is_verified'];
+    protected $table = "web_user"; //指定資料表名稱
+    protected $guarded = [];
     protected $casts = [
-        'created_at' => 'datetime:Y-m-d H:i:s',
-        'updated_at' => 'datetime:Y-m-d H:i:s',
-        'deleted_at' => 'datetime:Y-m-d H:i:s'
+        "created_at" => "datetime:Y-m-d H:i:s",
+        "updated_at" => "datetime:Y-m-d H:i:s",
+        "deleted_at" => "datetime:Y-m-d H:i:s"
     ];
 }
