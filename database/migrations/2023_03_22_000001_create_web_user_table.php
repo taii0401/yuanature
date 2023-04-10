@@ -18,6 +18,7 @@ class CreateWebUserTable extends Migration
             $table->string('uuid',50)->comment('uuid');
             $table->integer('user_id')->comment('users.id');
             $table->string('name',30)->nullable()->comment('姓名');
+            $table->string('email')->nullable()->comment('信箱');
             $table->tinyInteger('sex')->nullable()->comment('性別：1 男、2 女');
             $table->date('birthday')->nullable()->comment('生日');
             $table->string('phone',10)->nullable()->comment('手機');
