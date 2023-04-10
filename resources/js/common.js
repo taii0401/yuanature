@@ -410,6 +410,13 @@ function userSubmit(action_type) {
         }
     }
 
+    if (action_type == 'delete') { //刪除
+        var yes = confirm("你確定要刪除嗎？");
+        if (!yes) {
+            return false;
+        }
+    }
+
     $('.form-control').attr('disabled', false);
 
     $.ajax({
@@ -434,6 +441,9 @@ function userSubmit(action_type) {
                     changeForm('/users/edit');
                 } else if (action_type == 'edit_password') { //編輯-密碼
                     alert("修改成功，請重新登入！");
+                    changeForm('/users/logout');
+                } else if (action_type == 'delete') { //刪除
+                    alert("刪除成功！");
                     changeForm('/users/logout');
                 }
             } else if (response.error == true) {
