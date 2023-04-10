@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 //使用者權限
 use App\Libraries\UserAuth;
+//Contriller
+use App\Http\Controllers\UserController;
 //Model
 use App\Models\User;
 use App\Models\WebUser;
@@ -269,73 +271,71 @@ class AjaxController extends Controller
             return response()->json($this->returnResult());
         }
 
-        DB::beginTransaction();
+        if($action_type == "add" || $action_type == "edit") {
+            $input["email"] = $input["account"];
+
+            $add_data = [];
+            $add_data["name"] = $input["name"]??NULL;
+            $add_data["email"] = $input["email"]??NULL;
+            $add_data["sex"] = $input["sex"]??0;
+            $add_data["birthday"] = $input["birthday"]??"1999-01-01";
+            $add_data["phone"] = $input["phone"]??NULL;
+            $add_data["address"] = $input["address"]??NULL;
+        }
 
         if($action_type == "add") { //新增
             //新增會員
-            $user_id = UserAuth::createUser($input["account"],$input["password"]);
+            if($input["name"] == "") {
+                $input["name"] = $input["account"];
+            }
+            $user_id = UserAuth::createUser($input);
             //print_r($user_id);exit;
 
             //新增會員資料
             if($user_id > 0) {
-                $input["uuid"] = Str::uuid()->toString();
-                //新增會員
-                $data = [];
-                $data["uuid"] = $input["uuid"];
-                $data["user_id"] = $user_id;
-                $data["name"] = $input["name"]??"";
-                $data["sex"] = $input["sex"]??0;
-                $data["birthday"] = $input["birthday"]??"1999-01-01";
-                $data["phone"] = $input["phone"]??"";
-                $data["address"] = $input["address"]??"";
-                $user_data = WebUser::create($data);
-                //print_r($user_data->id);exit;
-
-                if((int)$user_data->id > 0) { //新增成功
+                $uuid = Str::uuid()->toString();
+                $add_data["uuid"] = $uuid;
+                $add_data["user_id"] = $user_id;
+                $user_data = WebUser::create($add_data);
+                if((int)$user_data->id > 0) {//新增成功
                     $this->error = false;
                     //寄送驗證信
                     $mail_data = [
-                        "email" => $input["account"],
+                        "email" => $input["email"],
                         "name" => $input["name"],
-                        "uuid" => $input["uuid"]
+                        "uuid" => $uuid
                     ];
                     $this->sendMail("user_register",$mail_data);
-                    $this->message = $input["uuid"];  
+                    $this->message = $uuid;  
                 } else {
-                    //刪除使用者
+                    //刪除會員
                     User::destroy($user_id);
-                    $this->message = "新增錯誤！";
+                    $this->message = "新增會員錯誤！";
                 }
             } else {
-                $this->message = "新增帳號密碼錯誤！";
+                $this->message = "新增會員錯誤！";
             }
         } else {
             $uuid = $input["uuid"]??"";
-            //取得會員資料
-            $web_user = WebUser::where(["uuid" => $uuid])->first()->toArray();
-            $user_id = isset($web_user["user_id"])?$web_user["user_id"]:0;
 
             if($uuid != "") {
                 if($action_type == "edit") { //編輯會員
                     try {
-                        $data = array();
-                        $data["name"] = $input["name"]??"";
-                        $data["sex"] = $input["sex"]??0;
-                        $data["birthday"] = $input["birthday"]??"1911-01-01";
-                        $data["phone"] = $input["phone"]??"";
-                        $data["address"] = $input["address"]??"";
-                        WebUser::where(["uuid" => $uuid])->update($data);
+                        WebUser::where(["uuid" => $uuid])->update($add_data);
                         $this->error = false;
                     } catch(QueryException $e) {
                         $this->message = "更新錯誤！";
                     }
                 } else if($action_type == "edit_password") { //編輯會員密碼
+                    //取得會員資料
+                    $web_user = WebUser::where(["uuid" => $uuid])->first()->toArray();
+                    $user_id = isset($web_user["user_id"])?$web_user["user_id"]:0;
                     //取得登入者
                     $user = User::where(["id" => $user_id,"email" => $input["account"]])->first();
-                    //檢查密碼是否符合
+                    //更新密碼
                     if(!empty($user)) {
                         try {
-                            $data = array();
+                            $data = [];
                             $data["password"] = Hash::make($input["password"]);
                             $user->update($data);
                             $this->error = false;
@@ -343,12 +343,16 @@ class AjaxController extends Controller
                             $this->message = "更新密碼錯誤！";
                         }
                     }
+                } else if($action_type == "delete") { //刪除使用者
+                    try {
+                        WebUser::where(["uuid" => $uuid])->delete();
+                        //User::destroy($user_id);
+                        $this->error = false;
+                    } catch(QueryException $e) {
+                        $this->message = "刪除錯誤！";
+                    }
                 }
             }
-        }
-
-        if(!$this->error) {
-            DB::commit();
         }
 
         return response()->json($this->returnResult());

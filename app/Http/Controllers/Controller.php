@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\WebCode;
 use App\Models\WebFile;
 use App\Models\WebFileData;
-use App\Models\WebCart;
+use App\Models\WebUser;
 
 class Controller extends BaseController
 {

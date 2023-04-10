@@ -1,9 +1,15 @@
 <?php
 
 namespace App\Libraries;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\QueryException;
 
+use DB;
+//字串-隨機產生亂碼
+use Illuminate\Support\Str;
+//例外處理
+use Illuminate\Database\QueryException;
+//雜湊-密碼
+use Illuminate\Support\Facades\Hash;
+//Model
 use App\Models\User;
 use App\Models\WebUser;
 
@@ -18,7 +24,18 @@ class UserAuth
     public static function userdata() 
     {
         if(empty(self::$userdata) && session()->exists("userUuid")) {
-            $web_user = WebUser::where(["uuid" => session("userUuid"),"is_verified" => 1])->first();
+            $web_user = WebUser::where(["uuid" => session("userUuid"),"is_verified" => 1,"deleted_at" => NULL])->first();
+            //判斷會員是以哪種帳號登入
+            $user_data = User::where(["id" => $web_user->id])->first()->toArray();
+            if($user_data["email_verified_at"] != "") {
+                $login_type = "email";
+            } else if($user_data["facebook_id"] != "") {
+                $login_type = "facebook";
+            } else if($user_data["line_id"] != "") {
+                $login_type = "line";
+            }
+            $web_user->login_type = $login_type;
+
             if(isset($web_user->uuid) && $web_user->uuid != "") {
                 self::$userdata = $web_user;
             }
@@ -27,18 +44,25 @@ class UserAuth
     }
 
     //新增會員
-    public static function createUser($post_account,$post_password) 
+    public static function createUser($post_data=[]) 
     {
-        try {
+        $user_id = 0;
+
+        DB::beginTransaction();
+
+        //新增會員
+        if(!empty($post_data)) {
             $data = array();
-            $data["name"] = $post_account;
-            $data["email"] = $post_account;
-            $data["password"] = Hash::make($post_password);
+            $data["name"] = $post_data["name"]??NULL;
+            $data["email"] = $post_data["email"]??NULL;
+            $data["password"] = isset($post_data["password"])?Hash::make($post_data["password"]):NULL;
+            $data["facebook_id"] = $post_data["facebook_id"]??NULL;
+            $data["line_id"] = $post_data["line_id"]??NULL;
             $user = User::create($data);
             $user_id = (int)$user->id;
-        } catch(QueryException $e) {
-            $user_id = 0;
         }
+
+        DB::commit();
         
         return $user_id;
     }
@@ -76,28 +100,52 @@ class UserAuth
     public static function userLogIn($user_id=0) 
     {
         if($user_id > 0) {
-            $user = User::where(["id" => $user_id])->whereNotNull("email_verified_at")->first();
-            $user_email = $user->email;
-            $user_pass = $user->password;
-            UserAuth::logIn($user_email,$user_pass,false);
+            $user_data = User::where(["id" => $user_id])->where(function($query) {
+                $query->whereNotNull("email_verified_at")
+                        ->orWhereNotNull("facebook_id")
+                        ->orWhereNotNull("line_id");
+            })->first()->toArray();
+
+            if($user_data["email_verified_at"] != "") {
+                $login_type = "email";
+            } else if($user_data["facebook_id"] != "") {
+                $login_type = "facebook";
+            } else if($user_data["line_id"] != "") {
+                $login_type = "line";
+            }
+
+            UserAuth::logIn($user_data,$login_type);
         }
     }
 
     //登入
-    public static function logIn($post_account,$post_password,$is_hash=true) 
+    public static function logIn($post_data,$login_type="email",$is_hash=false) 
     {
         $isSuccess = false;
         //取得登入者
-        $user = User::where(["email" => $post_account])->whereNotNull("email_verified_at")->first();
+        $db = new User();
+        if($login_type == "email") {
+            $db = $db->where("email",$post_data["email"])->whereNotNull("email_verified_at");
+        } else if($login_type == "facebook") {
+            $db = $db->where("facebook_id",$post_data["facebook_id"]);
+        } else if($login_type == "line") {
+            $db = $db->where("line_id",$post_data["line_id"]);
+        }
+        $user = $db->first();
+
         //檢查密碼是否符合
         if(!empty($user)) {
-            $is_match = false;
-            if($is_hash) {
-                $is_match = Hash::check($post_password,$user->password);
-            } else {
-                if($post_password == $user->password) {
-                    $is_match = true;
+            if($login_type == "email") {
+                $is_match = false;
+                if($is_hash) {
+                    $is_match = Hash::check($post_data["password"],$user->password);
+                } else {
+                    if($post_data["password"] == $user->password) {
+                        $is_match = true;
+                    }
                 }
+            } else {
+                $is_match = true;
             }
 
             if($is_match) {

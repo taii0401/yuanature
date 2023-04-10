@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Validator,DB,Mail;
 use Illuminate\Http\Request;
 use App\Services\LineService;
+
+//字串-UUID
+use Illuminate\Support\Str;
 //使用者權限
 use App\Libraries\UserAuth;
 
@@ -58,7 +61,8 @@ class UserController extends Controller
             }
         }
 
-        $login = UserAuth::logIn($input["account"],$input["password"]);
+        $input["email"] = $input["account"];
+        $login = UserAuth::logIn($input,"email",true);
         if(!$login) {
             return back()->withErrors("帳號密碼錯誤或尚未驗證！");
         } else { 
@@ -201,7 +205,7 @@ class UserController extends Controller
                         //驗證會員
                         if(UserAuth::verifyUser($user_id)) { //驗證成功
                             $web_user->is_verified = 1; //有驗證
-                            $web_user->update_id = $user_id;
+                            $web_user->updated_id = $user_id;
                             $web_user->save();
                             $isSuccess = true;
                         }

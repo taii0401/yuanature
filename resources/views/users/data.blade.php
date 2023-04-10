@@ -21,7 +21,7 @@
                             </button>
                         </div>
                         <div class="col-6">
-                            <button type="button" class="btn d-inline-block mx-auto text-center" style="border:0px;background-color:transparent;padding:0px;" onclick="changeForm('{{ $line_url }}')">
+                            <button type="button" class="btn d-inline-block mx-auto text-center" style="border:0px;background-color:transparent;padding:0px;" onclick="changeForm('{{ @$line_url }}')">
                                 <img src="{{ asset('img/icons/line_register.gif') }}" width="135px" height="50px">
                             </button>
                         </div>
@@ -69,7 +69,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mt-b">
                                 <div class="col-12 tm-btn-center">
                                     <button type="button" class="btn btn-primary" onclick="userSubmit('{{ @$action_type }}');">送出</button>
                                     <button type="button" class="btn btn-danger" onclick="changeForm('/users/edit')">取消</button>

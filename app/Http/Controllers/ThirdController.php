@@ -2,10 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Exception,Socialite;
+use DB,Exception,Socialite;
 use Illuminate\Http\Request;
+//字串-UUID
+use Illuminate\Support\Str;
+//LOG
 use Illuminate\Support\Facades\Log;
+//LINE
 use App\Services\LineService;
+//使用者權限
+use App\Libraries\UserAuth;
+//Model
+use App\Models\User;
+use App\Models\WebUser;
 
 class ThirdController extends Controller
 {
@@ -13,20 +22,71 @@ class ThirdController extends Controller
     public function lineLoginCallback(Request $request)
     {
         try {
-            $lineService = new LineService();
             $error = $request->input("error",false);
             if($error) {
                 throw new Exception($request->all());
             }
             $code = $request->input("code","");
+            //處理LINE回傳資料
+            $lineService = new LineService();
             $response = $lineService->getLineToken($code);
             $user_profile = $lineService->getUserProfile($response["access_token"]);
+            //dd($user_profile);
             //echo "<pre>"; print_r($user_profile); echo "</pre>";
 
-            $line_id = $user_profile["userId"]??"";
-            $line_name = $user_profile["displayName"]??"";
-
+            //LINE回傳資料
+            $input = [];
+            $input["line_id"] = $user_profile["userId"]??"";
+            $input["name"] = $user_profile["displayName"]??"";
             
+            $isSuccess = false;
+            //檢查是否已註冊
+            $user = User::where("line_id",$input["line_id"])->first();
+            if(empty($user)) {
+                //預設會員姓名
+                $name = "line_".$input["line_id"];
+                if($input["name"] == "") {
+                    $input["name"] = $name;
+                }
+                //新增會員
+                $input["email"] = $name."@mail.com";
+                $user_id = UserAuth::createUser($input);
+
+                //新增會員資料
+                if($user_id > 0) {
+                    $uuid = Str::uuid()->toString();
+                    $add_data = [];
+                    $add_data["uuid"] = $uuid;
+                    $add_data["user_id"] = $user_id;
+                    $add_data["name"] = $input["name"];
+                    $add_data["birthday"] = "1999-01-01";
+                    $add_data["is_verified"] = 1;
+                    $user_data = WebUser::create($add_data);
+                    //dd($user_data->id);
+                    if((int)$user_data->id > 0) {
+                        $isSuccess = true;
+                    } else {
+                        //刪除使用者
+                        User::destroy($user_id);
+                    }
+                }
+            } else {
+                $isSuccess = true;
+                $input["user_id"] = $user->id;
+            }
+
+            //自動登入
+            $login = false;
+            if($isSuccess) {
+                $login = UserAuth::logIn($input,"line");
+            }
+            
+            if(!$login) {
+                return back()->withErrors("LINE登入錯誤！");
+            } else { 
+                //編輯會員
+                return redirect("users/edit");
+            }
         } catch (Exception $ex) {
             Log::error($ex);
         }
