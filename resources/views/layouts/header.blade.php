@@ -12,28 +12,16 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mx-auto">
-                    @if(UserAuth::isLoggedIn())
-                        <li class="nav-item">
-                            <a class="nav-link" href="/products">商品管理</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/fronts/my_page/{{ UserAuth::userdata()->short_link }}">我的頁面</a>
-                        </li>
-                    @endif
+                    <li class="nav-item">
+                        <a class="nav-link" href="/products">商品管理</a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        @if(UserAuth::isLoggedIn())
-                            <a class="nav-link d-flex" href="/users/logout">
-                                <i class="far fa-user mr-2 tm-logout-icon"></i>
-                                <span>{{ UserAuth::userdata()->name }}  登出</span>
-                            </a>
-                        @else
-                            <a class="nav-link d-flex" href="/users">
-                                <i class="far fa-user mr-2 tm-logout-icon"></i>
-                                <span>登入</span>
-                            </a>
-                        @endif
+                        <a class="nav-link d-flex" href="/users">
+                            <i class="far fa-user mr-2 tm-logout-icon"></i>
+                            <span>登入</span>
+                        </a>
                     </li>
                 </ul>
             </div>

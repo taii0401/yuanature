@@ -1,11 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\ThirdController;
+
+//後台
+use App\Http\Controllers\BackEnd\AuthController as BackEndAuthController;
+use App\Http\Controllers\BackEnd\AdminController as BackEndAdminController;
+use App\Http\Controllers\BackEnd\UserController as BackEndUserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,22 +90,41 @@ Route::group([
 });
 
 
-
-//會員資料、購物車、訂單
-/*Route::group([
-    "middleware" => ["auth.users"],
-    "prefix" => "users"
-], function($router) {
+//後台管理
+//登入、登出
+Route::group([
     
+], function($router) {
+    Route::controller(BackEndAuthController::class)->group(function() { 
+        //登入畫面
+        Route::get("admin/","index");
+        //登入
+        Route::post("admin/login","login")->name("admin.login");
+        //登出
+        Route::get("admin/logout","logout");
+    });
 });
 
-//後台管理
+//管理員管理、會員管理、訂單管理
 Route::group([
-    "middleware" => ["auth.admin"],
+    //"middleware" => ["auth.admin"],
     "prefix" => "admin"
 ], function($router) {
-    
-});*/
+    //管理員
+    Route::controller(BackEndAdminController::class)->group(function() {
+        //列表
+        Route::get("list","list");
+    });
+
+    //會員管理
+    Route::controller(BackEndUserController::class)->group(function() {
+        //列表
+        Route::get("user/","index");
+    });
+});
+
+
+
 
 //AJAX
 $ajaxs = array();
@@ -114,5 +137,5 @@ $ajaxs[] = "product_data"; //商品資料-新增、編輯、刪除
 $ajaxs[] = "cart_data"; //購物車-新增、編輯、刪除
 $ajaxs[] = "order_data"; //訂單-新增、編輯、刪除
 foreach($ajaxs as $ajax) {
-    Route::post('/ajax/'.$ajax, [AjaxController::class, $ajax]); 
+    Route::post("/ajax/".$ajax,[AjaxController::class,$ajax]); 
 }

@@ -236,6 +236,8 @@ return [
 
         //登入
         'UserAuth' => App\Libraries\UserAuth::class,
+        //管理者登入
+        'AdminAuth' => App\Libraries\AdminAuth::class,
         //Facebook登入
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
     ],
