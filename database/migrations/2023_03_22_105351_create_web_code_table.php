@@ -15,7 +15,7 @@ class CreateWebCodeTable extends Migration
     {
         Schema::create('web_code', function (Blueprint $table) {
             $table->id();
-            $table->string('types',100)->nullable()->comment('代碼類型');
+            $table->string('type',100)->nullable()->comment('代碼類型');
             $table->string('code',30)->nullable()->comment('代碼');
             $table->string('name',100)->nullable()->comment('代碼名稱');
             $table->string('cname',100)->nullable()->comment('代碼中文名稱');
