@@ -38,39 +38,6 @@ class Controller extends BaseController
         echo "<pre>";print_r($data,$ret);echo "</pre>";
     }
 
-    //轉換動作名稱
-    public function getActionName($action_type)
-    {
-        $name = "";
-        switch($action_type) {
-            case "create":
-                $name = "新增";
-            break;
-            case "edit":
-                $name = "編輯";
-            break;
-            case "delete":
-                $name = "刪除";
-            break;
-            case "import":
-                $name = "匯入";
-            break;
-            case "export":
-                $name = "匯出";
-            break;
-            case "search":
-                $name = "查詢";
-            break;
-            case "other":
-                $name = "其他";
-            break;
-            default:
-            break;
-        }
-
-        return $name;
-    }
-
     //操作紀錄
     public function createLogRecord($type,$action='',$title='',$record='',$isServer=false) 
     {
@@ -92,61 +59,6 @@ class Controller extends BaseController
         } else {
             Log::Info("新增操作紀錄錯誤：動作 - ".$action."、標題 - ".$title."、紀錄 - ".$record);
         }
-    }
-
-    /**
-     * 取得資料(web_code、web_file)
-     * @param  type：型態-code、file
-     * @param  cond：搜尋條件
-     * @param  return_col：回傳資料的欄位
-     * @return array
-     */
-    public function getData($type="",$cond=array(),$return_col="")
-    {
-        $data = $get_datas = array();
-
-        if($type == "code") { //代碼
-            $get_datas = WebCode::where($cond)->get()->toArray();
-        } else if($type == "file") { //檔案
-            $get_datas = WebFile::where($cond)->get()->toArray();
-        }
-
-        if(!empty($get_datas)) {
-            foreach($get_datas as $get_data) {
-                if($type == "code") { //代碼
-                    //code
-                    $id = isset($get_data["code"])?$get_data["code"]:"";
-                } else {
-                    //ID
-                    $id = isset($get_data["id"])?$get_data["id"]:"";
-                }
-                
-                
-                if($id != "") {
-                    if($return_col != "") {
-                        $data[$id] = isset($get_data[$return_col])?$get_data[$return_col]:"";
-                    } else {
-                        $data[$id] = $get_data;
-                    }
-                }
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * 取得代碼資料名稱(web_code)
-     * @param  type：型態
-     * @return array
-     */
-    public function getCodeNames($type="")
-    {
-        $cond = array();
-        $cond["types"] = $type;
-        $data = $this->getData("code",$cond,"cname");
-
-        return $data;
     }
 
     /**
@@ -211,68 +123,9 @@ class Controller extends BaseController
     }
 
     /**
-     * 選項項目
-     * @param  type：選項類別
-     * @param  code_type：從code資料表而來-代碼類別
-     * @param  is_all：代碼類別選項是否加上全部
-     * @return array
-     */
-    public function getOptions($type="",$code_type="",$is_all=false)
-    {
-        $data = array();
-        switch($type) {
-            case "code": //代碼
-                $conds = array();
-                $conds["types"] = $code_type;
-                $conds["is_display"] = 1;
-                $conds["is_delete"] = 0;
-                $code_datas = $this->getData("code",$conds,"cname");
-
-                if($is_all) {
-                    $data[""] = "全部";
-                }
-
-                if(!empty($code_datas)) {
-                    foreach($code_datas as $key => $val) {
-                        $data[$key] = $val;
-                    }
-                }
-                break;
-            case "product_is_display": //是否顯示
-                $data[""] = "全部";
-                $data[1] = "是";
-                $data[0] = "否";
-                break;
-            case "product_orderby": //商品排序
-                $data["asc_serial"] = "編號 小 ~ 大";
-                $data["desc_serial"] = "編號 大 ~ 小";
-                $data["asc_sales"] = "售價 小 ~ 大";
-                $data["desc_sales"] = "售價 大 ~ 小";
-                break;
-            case "order_status": //訂單狀態
-                $data[""] = "全部";
-                $data[0] = "處理中";
-                $data[1] = "已付款";
-                $data[2] = "已寄送";
-                $data[3] = "已取消";
-                break;
-            case "order_orderby": //訂單排序
-                $data["asc_serial"] = "編號 小 ~ 大";
-                $data["desc_serial"] = "編號 大 ~ 小";
-                $data["asc_create_time"] = "日期 小 ~ 大";
-                $data["desc_create_time"] = "日期 大 ~ 小";
-                break;
-        }
-
-        return $data;
-    }
-
-    /**
      * 寄送信件
-     * @param  type：選項類別
-     * @param  code_type：從code資料表而來-代碼類別
-     * @param  is_all：代碼類別選項是否加上全部
-     * @return array
+     * @param  type：寄送類別
+     * @param  data：信件資料
      */
     public function sendMail($type="",$data=[])
     {
