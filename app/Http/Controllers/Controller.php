@@ -7,7 +7,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
-use Mail;
+use Mail,Log;
 //字串-隨機產生亂碼
 use Illuminate\Support\Str;
 //例外處理
@@ -21,6 +21,7 @@ use App\Models\WebCode;
 use App\Models\WebFile;
 use App\Models\WebFileData;
 use App\Models\WebUser;
+use App\Models\LogRecord;
 
 class Controller extends BaseController
 {
@@ -35,6 +36,62 @@ class Controller extends BaseController
     public function pr($data,$ret=false)
     {
         echo "<pre>";print_r($data,$ret);echo "</pre>";
+    }
+
+    //轉換動作名稱
+    public function getActionName($action_type)
+    {
+        $name = "";
+        switch($action_type) {
+            case "create":
+                $name = "新增";
+            break;
+            case "edit":
+                $name = "編輯";
+            break;
+            case "delete":
+                $name = "刪除";
+            break;
+            case "import":
+                $name = "匯入";
+            break;
+            case "export":
+                $name = "匯出";
+            break;
+            case "search":
+                $name = "查詢";
+            break;
+            case "other":
+                $name = "其他";
+            break;
+            default:
+            break;
+        }
+
+        return $name;
+    }
+
+    //操作紀錄
+    public function createLogRecord($type,$action='',$title='',$record='',$isServer=false) 
+    {
+        if($isServer) {
+            $admin_id = 99999;
+        } else {
+            $admin_data = session("admin");
+            $admin_id = $admin_data["id"]??0;
+        }
+
+        if($admin_id > 0 && $action > 0 && $title != '' && $record != '') {
+            $logRecordModel = new LogRecord();
+            $logRecordModel->type = $type;
+            $logRecordModel->operator_id = $admin_id;
+            $logRecordModel->action = $action;
+            $logRecordModel->title = $title;
+            $logRecordModel->record = $record;
+            $logRecordModel->save();
+        } else {
+            Log::Info("新增操作紀錄錯誤：動作 - ".$action."、標題 - ".$title."、紀錄 - ".$record);
+        }
     }
 
     /**
