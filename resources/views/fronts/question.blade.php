@@ -1,5 +1,5 @@
 @extends('layouts.frontBase')
-@section('title') {{ @$assign_data["title_txt"] }} @endsection
+@section('title') {{ @$title_txt }} @endsection
 @section('content')
 <div class="content">
     <div class="row tm-mt-big">

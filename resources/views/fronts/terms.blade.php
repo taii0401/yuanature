@@ -1,5 +1,5 @@
 @extends('layouts.frontBase')
-@section('title') {{ @$assign_data["title_txt"] }} @endsection
+@section('title') {{ @$title_txt }} @endsection
 @section('content')
 <div class="content" style="margin-top:0;background-image:url({{ asset('img/about_bg.jpg') }});background-size: auto;">
     <div class="row">
