@@ -69,6 +69,12 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row" style="display:{{ $add_none}};">
+                                <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                    <label>通知信箱</label>
+                                    <input type="text" id="email" name="email" class="form-control" value="{{ @$email }}">
+                                </div>
+                            </div>
                             <div class="row mt-b">
                                 <div class="col-12 tm-btn-center">
                                     <button type="button" class="btn btn-primary" onclick="userSubmit('{{ @$action_type }}');">送出</button>

@@ -271,9 +271,10 @@ class AjaxController extends Controller
             return response()->json($this->returnResult());
         }
 
-        if($action_type == "add" || $action_type == "edit") {
+        if($action_type == "add") {
             $input["email"] = $input["account"];
-
+        }
+        if($action_type == "add" || $action_type == "edit") {
             $add_data = [];
             $add_data["name"] = $input["name"]??NULL;
             $add_data["email"] = $input["email"]??NULL;
