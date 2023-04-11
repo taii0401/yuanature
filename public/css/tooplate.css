@@ -222,8 +222,8 @@ p {
 
 .tm-content-row {
     justify-content: space-between;
-    margin-left: -20px;
-    margin-right: -20px;
+    /*margin-left: -20px;
+    margin-right: -20px;*/
     /* To offset col padding */
 }
 
@@ -361,7 +361,7 @@ label {
 
 .table td,
 .table th {
-    padding: 20px 24px;
+    padding: 5px 10px;
     vertical-align: middle;
 }
 

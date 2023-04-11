@@ -19,7 +19,7 @@
     @yield('css')
 </head>
 
-<body class="bg02">
+<body>
     <div class="container">
         <div class="header-outs">
             <div class="head-wl">
