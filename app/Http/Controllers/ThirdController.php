@@ -60,6 +60,7 @@ class ThirdController extends Controller
                     $add_data["user_id"] = $user_id;
                     $add_data["name"] = $input["name"];
                     $add_data["birthday"] = "1999-01-01";
+                    $add_data["register_type"] = 3;
                     $add_data["is_verified"] = 1;
                     $user_data = WebUser::create($add_data);
                     //dd($user_data->id);

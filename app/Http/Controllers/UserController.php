@@ -31,7 +31,7 @@ class UserController extends Controller
             
             return view("users.index",$data);
         } else { //已登入
-            return redirect("/");
+            return redirect("/users/edit");
         }
     }
 

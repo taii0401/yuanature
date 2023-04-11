@@ -23,19 +23,8 @@ class UserAuth
     //取得會員資料
     public static function userdata() 
     {
-        if(empty(self::$userdata) && session()->exists("userUuid")) {
-            $web_user = WebUser::where(["uuid" => session("userUuid"),"is_verified" => 1,"deleted_at" => NULL])->first();
-            //判斷會員是以哪種帳號登入
-            $user_data = User::where(["id" => $web_user->id])->first()->toArray();
-            if($user_data["email_verified_at"] != "") {
-                $login_type = "email";
-            } else if($user_data["facebook_id"] != "") {
-                $login_type = "facebook";
-            } else if($user_data["line_id"] != "") {
-                $login_type = "line";
-            }
-            $web_user->login_type = $login_type;
-
+        if(empty(self::$userdata) && session()->exists("user")) {
+            $web_user = WebUser::where(["uuid" => session("user"),"is_verified" => 1,"deleted_at" => NULL])->first();
             if(isset($web_user->uuid) && $web_user->uuid != "") {
                 self::$userdata = $web_user;
             }
@@ -154,7 +143,7 @@ class UserAuth
                 if(isset($web_user->uuid) && $web_user->uuid != "") {
                     $isSuccess = true;
                     self::$userdata = $web_user;
-                    session(["userUuid" => $web_user->uuid]);
+                    session(["user" => $web_user->uuid]);
                 }
             }
         }
@@ -166,7 +155,7 @@ class UserAuth
     public static function logOut() 
     {
        //刪除session
-       session()->forget("userUuid");
+       session()->forget("user");
        self::$userdata = null;
     }
 }

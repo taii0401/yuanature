@@ -282,6 +282,7 @@ class AjaxController extends Controller
             $add_data["birthday"] = $input["birthday"]??"1999-01-01";
             $add_data["phone"] = $input["phone"]??NULL;
             $add_data["address"] = $input["address"]??NULL;
+            $add_data["register_type"] = 1;
         }
 
         if($action_type == "add") { //新增
