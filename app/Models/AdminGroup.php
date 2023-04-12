@@ -15,4 +15,19 @@ class AdminGroup extends Model
         "created_at" => "datetime:Y-m-d H:i:s",
         "updated_at" => "datetime:Y-m-d H:i:s"
     ];
+
+    /**
+     * 取得名稱
+     * @param  id
+     * @return string
+     */
+    public static function getName($id)
+    {
+        $name = "";
+        $data = self::where(["id" => $id])->first("name");
+        if(isset($data) && $data->exists("name")) {
+            $name = $data->name;
+        }
+        return $name;
+    }
 }
