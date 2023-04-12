@@ -75,7 +75,7 @@
                                     <input type="text" id="email" name="email" class="form-control" value="{{ @$email }}">
                                 </div>
                             </div>
-                            <div class="row mt-b">
+                            <div class="row mt-3">
                                 <div class="col-12 tm-btn-center">
                                     <button type="button" class="btn btn-primary" onclick="userSubmit('{{ @$action_type }}');">送出</button>
                                     <button type="button" class="btn btn-danger" onclick="changeForm('/users/edit')">取消</button>
