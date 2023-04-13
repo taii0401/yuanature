@@ -14,8 +14,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 //使用者權限
 use App\Libraries\UserAuth;
-//Contriller
-use App\Http\Controllers\UserController;
 //Model
 use App\Models\User;
 use App\Models\WebUser;
