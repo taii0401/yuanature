@@ -21,6 +21,9 @@ class CreateAdministratorTable extends Migration
             $table->string('name')->comment('名稱');
             $table->tinyInteger('status')->default(2)->comment('狀態1.啟用 2.未啟用');
             $table->integer('admin_group_id')->nullable()->comment('ref. admin_permissions_group.id');
+            $table->integer('created_id')->nullable()->comment('建立者id');
+            $table->integer('updated_id')->nullable()->comment('修改者id');
+            $table->integer('deleted_id')->nullable()->comment('刪除者id');
             $table->timestamps();
             $table->softDeletes();
         });
