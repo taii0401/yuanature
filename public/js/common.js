@@ -457,65 +457,6 @@ function userSubmit(action_type) {
     });
 }
 
-//送出-商品資料
-function productSubmit(action_type) {
-    $('#action_type').val(action_type);
-    //檢查必填
-    if (checkRequiredClass('require', true) == false) {
-        return false;
-    }
-    if (action_type == 'add') { //新增
-        CKEDITOR.instances['content'].updateElement();
-        CKEDITOR.instances['category'].updateElement();
-    } else if (action_type == 'edit') { //編輯
-        CKEDITOR.instances['content'].updateElement();
-        CKEDITOR.instances['category'].updateElement();
-    } else if (action_type == 'delete' || action_type == 'delete_list') { //刪除、刪除-列表勾選多筆
-        var yes = confirm("你確定要刪除嗎？");
-        if (!yes) {
-            return false;
-        }
-    }
-
-    $('.form-control').attr('disabled', false);
-
-    $.ajax({
-        type: 'POST',
-        url: '/ajax/product_data',
-        dataType: 'json',
-        async: false,
-        data: $('#form_data').serialize(),
-        error: function(xhr) {
-            //console.log(xhr);
-            alert('傳送錯誤！');
-            return false;
-        },
-        success: function(response) {
-            //console.log(response);
-            if (response.error == false) {
-                if (action_type == 'add') { //新增
-                    uuid = response.message;
-                    alert("新增成功！");
-                    changeForm('/products/edit?uuid=' + uuid);
-                } else if (action_type == 'edit') { //編輯
-                    uuid = $('#uuid').val();
-                    alert("編輯成功！");
-                    changeForm('/products/edit?uuid=' + uuid);
-                } else if (action_type == 'delete' || action_type == 'delete_list') { //刪除、刪除-列表勾選多筆
-                    alert("刪除成功！");
-                    changeForm('/products');
-                }
-            } else if (response.error == true) {
-                showMsg('msg_error', response.message, true);
-                return false;
-            } else {
-                alert('傳送錯誤！');
-                return false;
-            }
-        }
-    });
-}
-
 //購物車-新增、編輯、刪除
 function cartSubmit(action_type) {
     $('#action_type').val(action_type);
@@ -633,6 +574,61 @@ function orderSubmit(action_type) {
                 }
             } else if (response.error == true) {
                 showMsg('msg_error', response.message, false);
+                return false;
+            } else {
+                alert('傳送錯誤！');
+                return false;
+            }
+        }
+    });
+}
+
+
+/* =================================後台================================= */
+//送出-管理員資料
+function adminSubmit(action_type) {
+    $('#action_type').val(action_type);
+    //檢查必填
+    if (checkRequiredClass('require', true) == false) {
+        return false;
+    }
+    if (action_type == 'delete' || action_type == 'delete_list') { //刪除、刪除-列表勾選多筆
+        var yes = confirm("你確定要刪除嗎？");
+        if (!yes) {
+            return false;
+        }
+    }
+
+    $('.form-control').attr('disabled', false);
+
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/admin/admin_data',
+        dataType: 'json',
+        async: false,
+        data: $('#form_data').serialize(),
+        error: function(xhr) {
+            //console.log(xhr);
+            alert('傳送錯誤！');
+            return false;
+        },
+        success: function(response) {
+            //console.log(response);
+            if (response.error == false) {
+                if (action_type == 'add') { //新增
+                    uuid = response.message;
+                    alert("新增成功！");
+                    changeForm('/admin/list');
+                } else if (action_type == 'edit') { //編輯
+                    uuid = $('#uuid').val();
+                    alert("編輯成功！");
+                    changeForm('/admin/list');
+                } else if (action_type == 'delete' || action_type == 'delete_list') { //刪除、刪除-列表勾選多筆
+                    alert("刪除成功！");
+                    changeForm('/admin/list');
+                }
+            } else if (response.error == true) {
+                showMsg('msg_error', response.message, true);
                 return false;
             } else {
                 alert('傳送錯誤！');
