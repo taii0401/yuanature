@@ -123,6 +123,57 @@ class Controller extends BaseController
     }
 
     /**
+     * 處理搜尋條件
+     * @param  page_link：頁面連結
+     * @param  page：目前頁數
+     * @param  datas：需轉換分頁的資料
+     * @return array
+     */
+    public function getSearch($search_datas=[],$input_datas=[],$order_by="asc_id")
+    {
+        $search_get_url = "";
+        $assign_data = $conds = [];
+        //取得目前頁數及搜尋條件
+        foreach($search_datas as $search_data) {
+            if(isset($input_datas[$search_data])) {
+                ${$search_data} = $input_datas[$search_data]; //取得搜尋條件的值
+                $assign_data[$search_data] = ${$search_data}; //顯示資料
+                //搜尋條件
+                if(!in_array($search_data,["page","orderby"])) {
+                    $conds[$search_data] = ${$search_data};
+                }
+                //加入搜尋連結
+                if($search_data != "page") {
+                    if($search_get_url == "") {
+                        $search_get_url .= "?";
+                    } else {
+                        $search_get_url .= "&";
+                    }
+                    $search_get_url .= $search_data."=".${$search_data};
+                }
+            } else {
+                //預設目前頁數和排序
+                if($search_data == "page") {
+                    ${$search_data} = 1;
+                } else if($search_data == "orderby") {
+                    ${$search_data} = $order_by;
+                } else {
+                    ${$search_data} = "";
+                }
+
+                $assign_data[$search_data] = ${$search_data}; //顯示資料
+            }
+        }
+        $assign_data["search_get_url"] = $search_get_url;
+
+        $search_data = [];
+        $search_data["assign_data"] = $assign_data;
+        $search_data["conds"] = $conds;
+
+        return $search_data;
+    }
+
+    /**
      * 寄送信件
      * @param  type：寄送類別
      * @param  data：信件資料
