@@ -5,7 +5,54 @@ namespace App\Http\Controllers\BackEnd;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Models\Administrator;
+use App\Models\AdminGroup;
+
 class AdminController extends Controller
 {
-    
+    //管理員列表
+    public function list(Request $request) 
+    {
+        $input = $request->all();
+        $assign_data = $list_data = $page_data = $option_data = [];
+
+        //搜尋條件-狀態
+        $option_data["status"] = ["" => "全部","1" => "啟用","2" => "未啟用"];
+        //取得目前頁數及搜尋條件
+        $search_datas = ["page","orderby","keywords","status"];
+        $get_search_data = $this->getSearch($search_datas,$input);
+        //顯示資料
+        $assign_data = $get_search_data["assign_data"]??[];
+        $assign_data["search_get_url"] = $get_search_data["search_get_url"]??"";
+        //分頁
+        $page = $assign_data["page"]??1;
+        //標題
+        $assign_data["title_txt"] = "管理員列表";
+
+        //取得所有資料
+        $all_datas = Administrator::getAllDatas($get_search_data["conds"]);
+        //處理分頁資料
+        $page_data = $this->getPage("admin/list",$page,$all_datas);
+        $list_data = isset($page_data["list_data"])?$page_data["list_data"]:array();
+        //$this->pr($list_data);exit;
+
+        //轉換名稱
+        if(!empty($list_data)) {
+            foreach($list_data as $key => $val) {
+                $list_data[$key]["status_name"] = Administrator::class::$statusName[$val["status"]]??"";
+                $list_data[$key]["admin_group_name"] = $val["admin_group_id"]?AdminGroup::getName($val["admin_group_id"]):"";
+            }
+        }
+
+        //新增、編輯資料
+        $all_datas_group = AdminGroup::getAllDatas()->get()->toArray();
+        $datas["modal_data"]["admin_group"] = $this->getSelect($all_datas_group);
+
+        $datas["assign_data"] = $assign_data;
+        $datas["option_data"] = $option_data;
+        $datas["list_data"] = $list_data;
+        //dd($list_data);
+
+        return view("backend.adminList",["datas" => $datas,"page_data" => $page_data]);
+    }
 }
