@@ -310,10 +310,10 @@ class AjaxController extends Controller
                 } else {
                     //刪除會員
                     User::destroy($user_id);
-                    $this->message = "新增會員錯誤！";
+                    $this->message = "註冊會員錯誤！";
                 }
             } else {
-                $this->message = "新增會員錯誤！";
+                $this->message = "註冊會員錯誤！";
             }
         } else {
             $uuid = $input["uuid"]??"";
@@ -324,7 +324,7 @@ class AjaxController extends Controller
                         WebUser::where(["uuid" => $uuid])->update($add_data);
                         $this->error = false;
                     } catch(QueryException $e) {
-                        $this->message = "更新錯誤！";
+                        $this->message = "修改會員資料錯誤！";
                     }
                 } else if($action_type == "edit_password") { //編輯會員密碼
                     //取得會員資料
@@ -340,16 +340,16 @@ class AjaxController extends Controller
                             $user->update($data);
                             $this->error = false;
                         } catch(QueryException $e) {
-                            $this->message = "更新密碼錯誤！";
+                            $this->message = "修改會員密碼錯誤！";
                         }
                     }
-                } else if($action_type == "delete") { //刪除使用者
+                } else if($action_type == "delete") { //刪除會員
                     try {
                         WebUser::where(["uuid" => $uuid])->delete();
                         //User::destroy($user_id);
                         $this->error = false;
                     } catch(QueryException $e) {
-                        $this->message = "刪除錯誤！";
+                        $this->message = "刪除會員錯誤！";
                     }
                 }
             }
