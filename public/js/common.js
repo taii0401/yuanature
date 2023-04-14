@@ -586,8 +586,8 @@ function orderSubmit(action_type) {
 
 /* =================================後台================================= */
 //送出-管理員資料
-function adminSubmit(action_type) {
-    $('#action_type').val(action_type);
+function adminSubmit() {
+    var action_type = $('#action_type').val();
     //檢查必填
     if (checkRequiredClass('require', true) == false) {
         return false;

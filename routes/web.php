@@ -10,6 +10,7 @@ use App\Http\Controllers\ThirdController;
 use App\Http\Controllers\BackEnd\AuthController as BackEndAuthController;
 use App\Http\Controllers\BackEnd\AdminController as BackEndAdminController;
 use App\Http\Controllers\BackEnd\UserController as BackEndUserController;
+use App\Http\Controllers\BackEnd\AjaxController as BackEndAjaxController;;
 
 /*
 |--------------------------------------------------------------------------
@@ -127,15 +128,21 @@ Route::group([
 
 
 //AJAX
-$ajaxs = array();
+$ajaxs = [];
 $ajaxs[] = "upload_file"; //檔案-上傳檔案
 $ajaxs[] = "upload_file_delete"; //檔案-刪除檔案實際路徑
 $ajaxs[] = "user_exist"; //會員資料-檢查帳號是否存在
 $ajaxs[] = "user_forget"; //會員資料-忘記密碼
 $ajaxs[] = "user_data"; //會員資料-新增、編輯、刪除
-$ajaxs[] = "product_data"; //商品資料-新增、編輯、刪除
 $ajaxs[] = "cart_data"; //購物車-新增、編輯、刪除
 $ajaxs[] = "order_data"; //訂單-新增、編輯、刪除
 foreach($ajaxs as $ajax) {
     Route::post("/ajax/".$ajax,[AjaxController::class,$ajax]); 
+}
+
+//後台AJAX
+$ajaxs_admin = [];
+$ajaxs_admin[] = "admin_data"; //管理員資料-新增、編輯、刪除
+foreach($ajaxs_admin as $ajax_admin) {
+    Route::post("/ajax/admin/".$ajax_admin,[BackEndAjaxController::class,$ajax_admin]); 
 }
