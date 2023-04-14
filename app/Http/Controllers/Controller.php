@@ -174,6 +174,30 @@ class Controller extends BaseController
     }
 
     /**
+     * 處理選單資料
+     * @param  datas：資料
+     * @param  return_key：回傳的KEY值
+     * @param  return_value：回傳的值
+     * @return array
+     */
+    public function getSelect($datas=[],$return_key="id",$return_value="name")
+    {
+        $return_datas = [];
+        if(!empty($datas)) {
+            foreach($datas as $val) {
+                $id = $val[$return_key]??0;
+                $name = $val[$return_value]??"";
+
+                if($id > 0 && $name != "") {
+                    $return_datas[$id] = $name;
+                }
+            }
+        }
+
+        return $return_datas;
+    }
+
+    /**
      * 寄送信件
      * @param  type：寄送類別
      * @param  data：信件資料
