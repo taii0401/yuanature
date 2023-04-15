@@ -4,6 +4,8 @@ namespace App\Http\Controllers\BackEnd;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+//使用者權限
+use App\Libraries\AdminAuth;
 
 use App\Models\Administrator;
 use App\Models\AdminGroup;

@@ -1,12 +1,6 @@
 @extends('backend.base')
 @section('title') {{ @$datas["assign_data"]["title_txt"] }} @endsection
 @section('content')
-<form id="form_data" class="tm-signup-form" method="post">
-    @csrf
-    <input type="hidden" id="action_type" name="action_type" value="{{ @$assign_data["action_type"] }}">
-    <input type="hidden" id="user_id" name="user_id" value="{{ @$assign_data["user_id"] }}">
-    <input type="hidden" id="check_list" name="check_list" value="">
-</form>
 <div class="row tm-content-row tm-mt-big">
     <div class="col-xl-12 col-lg-12 tm-md-12 tm-sm-12 tm-col">
         <div class="bg-white tm-block h-100">
@@ -21,35 +15,22 @@
                 </div>
                 <div class="col-md-4">
                     <input type="hidden" id="status" name="status" class="form-control search_input_data" value="{{ @$datas["assign_data"]["status"] }}">
-                    <input type="hidden" id="orderby" name="orderby" class="form-control search_input_data" value="{{ @$datas["assign_data"]["orderby"] }}">
                     <div class="dropdown btn-group">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             是否啟用
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            @if(isset($datas["option"]["types"]))    
-                                @foreach($option_datas["types"] as $key => $val) 
-                                <a class="dropdown-item @if($assign_data["types"] == $key) active @endif" href="#" onclick="$('#types').val('{{ @$key }}');getSearchUrl('{{ @$assign_data["search_link"] }}');">{{ @$val }}</a>
-                                @endforeach
-                            @endif
-                        </div>
-                    </div>
-                    <div class="dropdown btn-group">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            排序
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            @if(isset($option_datas["orderby"]))
-                                @foreach($option_datas["orderby"] as $key => $val) 
-                                <a class="dropdown-item @if($assign_data["orderby"] == $key) active @endif" href="#" onclick="$('#orderby').val('{{ @$key }}');getSearchUrl('{{ @$assign_data["search_link"] }}');">{{ @$val }}</a>
+                            @if(isset($datas["option_data"]["status"]))    
+                                @foreach($datas["option_data"]["status"] as $key => $val) 
+                                <a class="dropdown-item @if($datas["assign_data"]["status"] == $key) active @endif" href="#" onclick="$('#status').val('{{ @$key }}');getSearchUrl('{{ @$datas["assign_data"]["search_link"] }}');">{{ @$val }}</a>
                                 @endforeach
                             @endif
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-12 text-right">
-                    <button type="button" class="btn btn-primary" onclick="changeForm('/products/create');">新增</button>
-                    <button type="button" class="btn btn-danger check_btn" style="display:none" onclick="productSubmit('delete_list');">刪除</button>
+                    <button type="button" class="btn btn-primary dataModalBtn" data-bs-toggle="modal" data-bs-target="#dataModal" data-id="add">新增</button>
+                    <button type="button" class="btn btn-danger check_btn" style="display:none" onclick="adminSubmit('delete');">刪除</button>
                 </div>
             </div>
             <div class="tm-table-mt tm-table-actions-row">
@@ -70,11 +51,11 @@
                                     <label for="check_all"></label>
                                 </div>
                             </th>
-                            <th scope="col" class="text-center" style="width:30%;">帳號</th>
-                            <th scope="col" class="text-center">名稱</th>
-                            <th scope="col" class="text-center" style="width:15%;">是否啟用</th>
-                            <th scope="col" class="text-center" style="width:15%;">群組</th>
-                            <th scope="col" class="text-center" style="width:20%;">動作</th>
+                            <th scope="col" style="width:30%;">帳號</th>
+                            <th scope="col">名稱</th>
+                            <th scope="col" style="width:15%;">是否啟用</th>
+                            <th scope="col" style="width:15%;">群組</th>
+                            <th scope="col" style="width:15%;"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -87,17 +68,18 @@
                                         <label for="checkbox_{{ @$data["uuid"] }}"></label>
                                     </div>
                                 </td>
-                                <td class="text-center">{{ @$data["account"] }}</td>
-                                <td class="text-center">{{ @$data["name"] }}</td>
-                                <td class="text-center">{{ @$data["status_name"] }}</td>
-                                <td class="text-center">{{ @$data["admin_group_name"] }}</td>
-                                <td class="text-center">
-                                    <div style="margin:0 auto;">
+                                <td>{{ @$data["account"] }}</td>
+                                <td>{{ @$data["name"] }}</td>
+                                <td>{{ @$data["status_name"] }}</td>
+                                <td>{{ @$data["admin_group_name"] }}</td>
+                                <td>
+                                    <div class="col-12">
                                         <div class="btn-action">
-                                            <i class="fas fa-edit tm-edit-icon" onclick="changeForm('/products/edit?uuid={{ @$data["uuid"] }}');"></i>
+                                            <i class="fas fa-edit tm-edit-icon dataModalBtn"data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["uuid"] }},{{ @$data["account"] }},{{ @$data["name"] }},{{ @$data["status"] }},{{ @$data["admin_group_id"] }}">
+                                            </i>
                                         </div>
                                         <div class="btn-action">
-                                            <i class="fas fa-trash-alt tm-trash-icon" onclick="$('#check_list').val('{{ @$data["uuid"] }}');productSubmit('delete_list');"></i>
+                                            <i class="fas fa-trash-alt tm-trash-icon" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('delete');"></i>
                                         </div>
                                     </div>
                                 </td>
@@ -118,4 +100,90 @@
         </div>
     </div>
 </div>
+
+<form id="form_data" class="tm-signup-form" method="post">
+    @csrf
+    <input type="text" id="input_modal_action_type" name="action_type" value="">
+    <input type="hidden" id="input_modal_uuid" name="uuid" value="">
+    <input type="text" id="check_list" name="check_list" value="">
+    <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="semi-bold"><span id="modal_title_name"></span>管理員</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">×</button>
+                </div>
+                <div class="modal-body">
+                    <div id="msg_error" class="col-12 alert alert-danger" role="alert" style="display:none;"></div>
+                    <div id="msg_success" class="col-12 alert alert-success" role="alert" style="display:none;"></div>
+                    <div class="col-12">
+                    <div class="row m-t-10">
+                        <div class="row">
+                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                                <label>帳號</label>
+                                <input type="text" id="input_modal_account" name="account" class="form-control require" value="" >
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                                <label class="col-12">是否啟用：</label>
+                                <label class="form-switch">
+                                    <input type="checkbox" id="input_modal_status" name="status" class="form-control" onclick="changeSwitch('input_modal_status');">
+                                    <i></i> <span id="input_switch_text_input_modal_status"></span>
+                                </label>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                                <label>密碼</label>
+                                <input type="password" id="input_modal_password" name="password" class="form-control " value="" placeholder="輸入6~30個英文字或數字">                  
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                                <label>確認密碼</label>
+                                <input type="password" id="input_modal_confirm_password" name="confirm_password" class="form-control " value="" placeholder="請輸入相同的登入密碼">
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                                <label>名稱</label>
+                                <input type="text" id="input_modal_name" name="name" class="form-control require" value="">
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                                <label class="col-form-label">群組</label>
+                                <select class="custom-select col-12" id="input_modal_admin_group_id" name="admin_group_id">
+                                    @if(isset($datas["modal_data"]["admin_group"]) && !empty($datas["modal_data"]["admin_group"]))
+                                        @foreach($datas["modal_data"]["admin_group"] as $key => $val)
+                                            <option value="{{ $key }}">{{ $val }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="adminSubmit();">送出</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">取消</button>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</form>
+@endsection
+
+@section('script')
+<script>
+    $(function () {
+        //是否啟用
+        changeSwitch('input_modal_status');
+    });
+
+    $('.dataModalBtn').click(function () {
+        var input_modal_keys = ['action_type','uuid','account','name','status','admin_group_id'];
+        var select_modal_keys = ['status'];
+        setModalInput($(this).data('id'),input_modal_keys,select_modal_keys);
+
+        var action_type = $('#input_modal_action_type').val();
+        if(action_type == 'add') {
+            $('#modal_title_name').text('新增');
+        } else if(action_type == 'edit') {
+            $('#modal_title_name').text('編輯');
+        }
+    });
+</script>
 @endsection
