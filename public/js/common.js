@@ -309,6 +309,27 @@ function showMsg(div_msg, message, isShowMsg) {
     }
 }
 
+//Modal-設定輸入值
+function setModalInput(modal_values,input_modal_keys,select_modal_keys) {
+    if(input_modal_keys.length > 0) {
+        for(var i = 0;i < input_modal_keys.length; i++) {
+            var input_modal_key = input_modal_keys[i];
+            var value = modal_values.split(',')[i];
+    
+            if(select_modal_keys.length > 0 && select_modal_keys.includes(input_modal_key)) { //switch
+                if(value == "1") {
+                    $('#input_modal_'+input_modal_key).prop('checked',true);
+                } else {
+                    $('#input_modal_'+input_modal_key).prop('checked',false);
+                }
+                changeSwitch('input_modal_status');
+            } else {
+                $('#input_modal_'+input_modal_key).val(value);
+            }
+        }
+    }
+}
+
 //檢查帳號是否存在
 function userExist(account) {
     //取得csrf_token
@@ -587,14 +608,16 @@ function orderSubmit(action_type) {
 /* =================================後台================================= */
 //送出-管理員資料
 function adminSubmit() {
-    var action_type = $('#action_type').val();
-    //檢查必填
-    if (checkRequiredClass('require', true) == false) {
-        return false;
-    }
-    if (action_type == 'delete' || action_type == 'delete_list') { //刪除、刪除-列表勾選多筆
+    var action_type = $('#input_modal_action_type').val();
+
+    if (action_type == 'delete') { //刪除
         var yes = confirm("你確定要刪除嗎？");
         if (!yes) {
+            return false;
+        }
+    } else {
+        //檢查必填
+        if (checkRequiredClass('require', true) == false) {
             return false;
         }
     }
@@ -616,17 +639,13 @@ function adminSubmit() {
             //console.log(response);
             if (response.error == false) {
                 if (action_type == 'add') { //新增
-                    uuid = response.message;
                     alert("新增成功！");
-                    changeForm('/admin/list');
                 } else if (action_type == 'edit') { //編輯
-                    uuid = $('#uuid').val();
                     alert("編輯成功！");
-                    changeForm('/admin/list');
-                } else if (action_type == 'delete' || action_type == 'delete_list') { //刪除、刪除-列表勾選多筆
+                } else if (action_type == 'delete') { //刪除
                     alert("刪除成功！");
-                    changeForm('/admin/list');
                 }
+                changeForm('/admin/list');
             } else if (response.error == true) {
                 showMsg('msg_error', response.message, true);
                 return false;
