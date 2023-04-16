@@ -36,7 +36,7 @@ function getSearchUrl(path, is_return = false) {
     $('.search_input_data').each(function() {
         input_id = this.id
         input_value = $(this).val();
-        if (input_id != "" && input_value != "") {
+        if (input_id != "") {
             if (i == 0) {
                 url += '?';
             } else {
@@ -606,8 +606,14 @@ function orderSubmit(action_type) {
 
 
 /* =================================後台================================= */
-//送出-管理員資料
-function adminSubmit() {
+//送出-管理員資料、會員資料
+function adminSubmit(type) {
+    if(type == 'admin') {
+        change_url = '/admin/list';
+    } else  if(type == 'user') {
+        change_url = '/admin/user/';
+    }
+
     var action_type = $('#input_modal_action_type').val();
 
     if (action_type == 'delete') { //刪除
@@ -626,7 +632,7 @@ function adminSubmit() {
 
     $.ajax({
         type: 'POST',
-        url: '/ajax/admin/admin_data',
+        url: '/ajax/admin/'+type+'_data',
         dataType: 'json',
         async: false,
         data: $('#form_data').serialize(),
@@ -645,7 +651,7 @@ function adminSubmit() {
                 } else if (action_type == 'delete') { //刪除
                     alert("刪除成功！");
                 }
-                changeForm('/admin/list');
+                changeForm(change_url);
             } else if (response.error == true) {
                 showMsg('msg_error', response.message, true);
                 return false;
