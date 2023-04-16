@@ -10,6 +10,14 @@ class WebUser extends Model
 {
     use HasFactory,SoftDeletes;
 
+    const IS_VERIFIED_YES = 1;
+    const IS_VERIFIED_NO = 0;
+
+    public static $isVerifiedName = [
+        self::IS_VERIFIED_YES => "是",
+        self::IS_VERIFIED_NO => "否",
+    ];
+
     protected $table = "web_user"; //指定資料表名稱
     protected $guarded = [];
     protected $casts = [
@@ -45,7 +53,7 @@ class WebUser extends Model
         $all_datas = $conds = $conds_in = $conds_like = [];
         
         //條件欄位
-		$cols = ["id","uuid","user_id","name","email","sex","phone","address","register_type"];
+		$cols = ["id","uuid","user_id","name","email","sex","phone","address","register_type","is_verified"];
 		foreach($cols as $col) {
 			if(isset($cond[$col])) {
                 if(in_array($col,["name","email","phone","address"])) {
@@ -74,6 +82,16 @@ class WebUser extends Model
             foreach($conds_like as $key => $val) {
                 $all_datas = $all_datas->where($key,"like","%".$val."%");
             }
+        }
+        //關鍵字
+        if(isset($cond["keywords"]) && $cond["keywords"] != "") {
+            $keywords = $cond["keywords"];
+            $conds_or = array("name","email","phone");
+            $all_datas = $all_datas->where(function ($query) use($conds_or,$keywords) {
+                foreach($conds_or as $value) {
+                    $query->orWhere($value,"like","%".$keywords."%");
+                }
+            });
         }
         //排序
         $all_datas = $all_datas->orderBy($orderby,$sort);
