@@ -8,6 +8,8 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
 use Mail,Log;
+//URL
+use Illuminate\Support\Facades\URL;
 //字串-隨機產生亂碼
 use Illuminate\Support\Str;
 //例外處理
@@ -86,16 +88,16 @@ class Controller extends BaseController
     
     /**
      * 分頁
-     * @param  page_link：頁面連結
      * @param  page：目前頁數
      * @param  datas：需轉換分頁的資料
+     * @param  search_get_url：搜尋條件
      * @return array
      */
-    public function getPage($page_link="",$page=1,$datas)
+    public function getPage($page=1,$datas,$search_get_url="")
     {
         $page_data = array();
         //頁面連結
-        $page_data["page_link"] = $page_link;
+        $page_data["page_link"] = str_replace(env("APP_URL"),"",URL::current());
     
         $paginator = $datas->paginate(env("GLOBAL_PAGE_NUM"));
         //資料總數
@@ -118,6 +120,11 @@ class Controller extends BaseController
         //目前頁面資料
         $list_datas = $paginator->toArray();
         $page_data["list_data"] = isset($list_datas["data"])?$list_datas["data"]:array();
+        //搜尋條件連結
+        $page_data["search_get_url"] = "";
+        if($search_get_url != "") {
+            $page_data["search_get_url"] = str_replace("?","&",$search_get_url);
+        }
     
         return $page_data;
     }
@@ -133,6 +140,7 @@ class Controller extends BaseController
     {
         $search_get_url = "";
         $assign_data = $conds = [];
+        
         //取得目前頁數及搜尋條件
         foreach($search_datas as $search_data) {
             if(isset($input_datas[$search_data])) {

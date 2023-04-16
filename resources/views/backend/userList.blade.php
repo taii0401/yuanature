@@ -7,30 +7,42 @@
             <div class="row">
                 <div class="form-group col-md-4 col-sm-12">
                     <div class="input-group">
-                        <input type="text" id="keywords" name="keywords" class="form-control search_input_data" placeholder="帳號、名稱" value="{{ @$datas["assign_data"]["keywords"] }}">
+                        <input type="text" id="keywords" name="keywords" class="form-control search_input_data" placeholder="姓名、EMAIL、手機" value="{{ @$datas["assign_data"]["keywords"] }}">
                         <span class="input-group-btn">
                             <button class="btn btn-secondary" onclick="getSearchUrl('{{ @$datas["assign_data"]["search_link"] }}');"><i class="fas fa-search"></i></button>
                         </span>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <input type="hidden" id="status" name="status" class="form-control search_input_data" value="{{ @$datas["assign_data"]["status"] }}">
+                    <input type="hidden" id="register_type" name="register_type" class="form-control search_input_data" value="{{ @$datas["assign_data"]["register_type"] }}">
+                    <input type="hidden" id="is_verified" name="is_verified" class="form-control search_input_data" value="{{ @$datas["assign_data"]["is_verified"] }}">
                     <div class="dropdown btn-group">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            是否啟用
+                            登入方式
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            @if(isset($datas["option_data"]["status"]))    
-                                @foreach($datas["option_data"]["status"] as $key => $val) 
-                                <a class="dropdown-item @if($datas["assign_data"]["status"] == $key) active @endif" href="#" onclick="$('#status').val('{{ @$key }}');getSearchUrl('{{ @$datas["assign_data"]["search_link"] }}');">{{ @$val }}</a>
+                            @if(isset($datas["option_data"]["register_type"]))    
+                                @foreach($datas["option_data"]["register_type"] as $key => $val) 
+                                <a class="dropdown-item @if($datas["assign_data"]["register_type"] == $key) active @endif" href="#" onclick="$('#register_type').val('{{ @$key }}');getSearchUrl('{{ @$datas["assign_data"]["search_link"] }}');">{{ @$val }}</a>
+                                @endforeach
+                            @endif
+                        </div>
+                    </div>
+                    <div class="dropdown btn-group">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            是否驗證
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            @if(isset($datas["option_data"]["is_verified"]))    
+                                @foreach($datas["option_data"]["is_verified"] as $key => $val) 
+                                <a class="dropdown-item @if($datas["assign_data"]["is_verified"] == $key) active @endif" href="#" onclick="$('#is_verified').val('{{ @$key }}');getSearchUrl('{{ @$datas["assign_data"]["search_link"] }}');">{{ @$val }}</a>
                                 @endforeach
                             @endif
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-12 text-right">
-                    <button type="button" class="btn btn-primary dataModalBtn" data-bs-toggle="modal" data-bs-target="#dataModal" data-id="add">新增</button>
-                    <button type="button" class="btn btn-danger check_btn" style="display:none" onclick="adminSubmit('admin');">刪除</button>
+                    <button type="button" class="btn btn-danger check_btn" style="display:none" onclick="adminSubmit('user');">刪除</button>
                 </div>
             </div>
             <div class="tm-table-mt tm-table-actions-row">
@@ -51,10 +63,11 @@
                                     <label for="check_all"></label>
                                 </div>
                             </th>
-                            <th scope="col" style="width:30%;">帳號</th>
-                            <th scope="col">名稱</th>
-                            <th scope="col" style="width:15%;">是否啟用</th>
-                            <th scope="col" style="width:15%;">群組</th>
+                            <th class="text-center" scope="col">姓名</th>
+                            <th class="text-center" scope="col" style="width:20%;">EMAIL</th>
+                            <th class="text-center" scope="col" style="width:10%;">手機</th>
+                            <th class="text-center" scope="col" style="width:10%;">登入方式</th>
+                            <th class="text-center" scope="col" style="width:10%;">是否驗證</th>
                             <th scope="col" style="width:15%;"></th>
                         </tr>
                     </thead>
@@ -68,18 +81,19 @@
                                         <label for="checkbox_{{ @$data["uuid"] }}"></label>
                                     </div>
                                 </td>
-                                <td>{{ @$data["account"] }}</td>
-                                <td>{{ @$data["name"] }}</td>
-                                <td>{{ @$data["status_name"] }}</td>
-                                <td>{{ @$data["admin_group_name"] }}</td>
+                                <td class="text-center">{{ @$data["name"] }}</td>
+                                <td class="text-center">{{ @$data["email"] }}</td>
+                                <td class="text-center">{{ @$data["phone"] }}</td>
+                                <td class="text-center">{{ @$data["register_type_name"] }}</td>
+                                <td class="text-center">{{ @$data["is_verified_name"] }}</td>
                                 <td>
                                     <div class="col-12">
                                         <div class="btn-action">
-                                            <i class="fas fa-edit tm-edit-icon dataModalBtn"data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["uuid"] }},{{ @$data["account"] }},{{ @$data["name"] }},{{ @$data["status"] }},{{ @$data["admin_group_id"] }}">
+                                            <i class="fas fa-edit tm-edit-icon dataModalBtn"data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["uuid"] }},{{ @$data["name"] }},{{ @$data["phone"] }},{{ @$data["is_verified"] }}">
                                             </i>
                                         </div>
                                         <div class="btn-action">
-                                            <i class="fas fa-trash-alt tm-trash-icon" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('admin');"></i>
+                                            <i class="fas fa-trash-alt tm-trash-icon" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');userSubmit('delete');"></i>
                                         </div>
                                     </div>
                                 </td>
@@ -110,7 +124,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="semi-bold"><span id="modal_title_name"></span>管理員</h5>
+                    <h5 class="semi-bold"><span id="modal_title_name"></span>會員</h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">×</button>
                 </div>
                 <div class="modal-body">
@@ -131,11 +145,11 @@
                                 </label>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label>密碼<span class="password_text" style="color:red;font-size:x-small"></span></label>
+                                <label>密碼</label>
                                 <input type="password" id="input_modal_password" name="password" class="form-control " value="" placeholder="輸入6~30個英文字或數字">                  
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label>確認密碼<span class="password_text" style="color:red;font-size:x-small"></span></label>
+                                <label>確認密碼</label>
                                 <input type="password" id="input_modal_confirm_password" name="confirm_password" class="form-control " value="" placeholder="請輸入相同的登入密碼">
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
@@ -156,7 +170,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="adminSubmit('admin');">送出</button>
+                    <button type="button" class="btn btn-primary" onclick="adminSubmit('user');">送出</button>
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">取消</button>
                 </div>
             </div>
@@ -181,10 +195,8 @@
         var action_type = $('#input_modal_action_type').val();
         if(action_type == 'add') {
             $('#modal_title_name').text('新增');
-            $('.password_text').text('');
         } else if(action_type == 'edit') {
             $('#modal_title_name').text('編輯');
-            $('.password_text').text('(若不修改則不需要輸入)');
         }
     });
 </script>

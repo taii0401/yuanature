@@ -4,6 +4,7 @@ namespace App\Http\Controllers\BackEnd;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
 //使用者權限
 use App\Libraries\AdminAuth;
 
@@ -19,13 +20,12 @@ class AdminController extends Controller
         $assign_data = $list_data = $page_data = $option_data = [];
 
         //搜尋條件-狀態
-        $option_data["status"] = ["" => "全部","1" => "啟用","2" => "未啟用"];
+        $option_data["status"] = ["" => "全部",Administrator::STATUS_SUCCESS => Administrator::class::$statusName[Administrator::STATUS_SUCCESS],Administrator::STATUS_FAIL => Administrator::class::$statusName[Administrator::STATUS_FAIL]];
         //取得目前頁數及搜尋條件
         $search_datas = ["page","orderby","keywords","status"];
         $get_search_data = $this->getSearch($search_datas,$input);
         //顯示資料
         $assign_data = $get_search_data["assign_data"]??[];
-        $assign_data["search_get_url"] = $get_search_data["search_get_url"]??"";
         //分頁
         $page = $assign_data["page"]??1;
         //標題
@@ -34,7 +34,8 @@ class AdminController extends Controller
         //取得所有資料
         $all_datas = Administrator::getAllDatas($get_search_data["conds"]);
         //處理分頁資料
-        $page_data = $this->getPage("admin/list",$page,$all_datas);
+        $page_data = $this->getPage($page,$all_datas,$assign_data["search_get_url"]);
+        $page_data["search_get_url"] = $assign_data["search_get_url"];
         $list_data = isset($page_data["list_data"])?$page_data["list_data"]:array();
         //$this->pr($list_data);exit;
 

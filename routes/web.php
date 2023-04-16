@@ -120,7 +120,7 @@ Route::group([
     //會員管理
     Route::controller(BackEndUserController::class)->group(function() {
         //列表
-        Route::get("user/","index");
+        Route::get("user/","list");
     });
 });
 

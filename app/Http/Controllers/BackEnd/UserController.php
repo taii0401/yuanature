@@ -4,14 +4,55 @@ namespace App\Http\Controllers\BackEnd;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+//URL
+use Illuminate\Support\Facades\URL;
+//使用者權限
+use App\Libraries\AdminAuth;
+
+use App\Models\User;
+use App\Models\WebUser;
+use App\Models\WebCode;
 
 class UserController extends Controller
 {
-    //首頁
-    public function index(Request $request)
+    //會員列表
+    public function list(Request $request) 
     {
-        $data["title_txt"] = "會員管理";
-        dd("ccc");
-        return view("fronts.index",$data);
+        $input = $request->all();
+        $assign_data = $list_data = $page_data = $option_data = [];
+
+        //搜尋條件-登入方式、是否驗證、排序
+        $option_data["register_type"] = WebCode::getCodeOptions("user_register");
+        $option_data["is_verified"] = ["" => "全部",WebUser::IS_VERIFIED_YES => WebUser::class::$isVerifiedName[WebUser::IS_VERIFIED_YES],WebUser::IS_VERIFIED_NO => WebUser::class::$isVerifiedName[WebUser::IS_VERIFIED_NO]];
+        //取得目前頁數及搜尋條件
+        $search_datas = ["page","orderby","keywords","register_type","is_verified"];
+        $get_search_data = $this->getSearch($search_datas,$input);
+        //顯示資料
+        $assign_data = $get_search_data["assign_data"]??[];
+        //分頁
+        $page = $assign_data["page"]??1;
+        //標題
+        $assign_data["title_txt"] = "會員列表";
+
+        //取得所有資料
+        $all_datas = WebUser::getAllDatas($get_search_data["conds"]);
+        //處理分頁資料
+        $page_data = $this->getPage($page,$all_datas,$assign_data["search_get_url"]);
+        $list_data = isset($page_data["list_data"])?$page_data["list_data"]:array();
+        //$this->pr($list_data);exit;
+
+        //轉換名稱
+        if(!empty($list_data)) {
+            foreach($list_data as $key => $val) {
+                $list_data[$key]["register_type_name"] = $val["register_type"]?WebCode::getName($val["register_type"]):"";
+                $list_data[$key]["is_verified_name"] = WebUser::class::$isVerifiedName[$val["is_verified"]]??"";
+            }
+        }
+        
+        $datas["assign_data"] = $assign_data;
+        $datas["option_data"] = $option_data;
+        $datas["list_data"] = $list_data;
+
+        return view("backend.userList",["datas" => $datas,"page_data" => $page_data]);
     }
 }

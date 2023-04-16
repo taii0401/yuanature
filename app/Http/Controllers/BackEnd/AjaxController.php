@@ -52,7 +52,6 @@ class AjaxController extends Controller
 
         //表單動作類型(新增、編輯、刪除)
         $action_type = $input["action_type"]??"add";
-
         //檢查欄位、檢查訊息
         $validator_data = $validator_message = [];
         if($action_type == "add") { //新增管理員
@@ -83,11 +82,11 @@ class AjaxController extends Controller
         if($this->message != "") {
             return response()->json($this->returnResult());
         }
-
+        
         $add_data = [];
         if($action_type == "add" || $action_type == "edit") {
             $add_data["name"] = $input["name"]??NULL;
-            $add_data["status"] = $input["status"]??2;
+            $add_data["status"] = isset($input["status"]) && $input["status"] == "on"?1:2;
             $add_data["admin_group_id"] = $input["admin_group_id"]??0;
         }
 
