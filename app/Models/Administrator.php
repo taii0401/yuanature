@@ -46,7 +46,7 @@ class Administrator extends Model
      * @param  cond：搜尋條件
      * @param  orderby：排序欄位
      * @param  sort：排序-遞增、遞減
-     * @return data
+     * @return array
      */
     public static function getAllDatas($cond=[],$orderby="id",$sort="asc")
     {

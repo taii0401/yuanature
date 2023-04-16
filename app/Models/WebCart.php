@@ -16,7 +16,7 @@ class WebCart extends Model
     /**
      * 取得購物車資料
      * @param  cond：搜尋條件
-     * @return data
+     * @return array
      */
     public static function getCart($cond=array())
     {
