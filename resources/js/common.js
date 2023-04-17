@@ -217,9 +217,9 @@ function checkFileCount() {
 function changeSwitch(id) {
     var check_switch = $('#' + id).prop('checked');
     if (check_switch) {
-        $('#input_switch_text_' + id).html('開啟');
+        $('#input_switch_text_' + id).html('是');
     } else {
-        $('#input_switch_text_' + id).html('關閉');
+        $('#input_switch_text_' + id).html('否');
     }
 }
 
@@ -310,21 +310,21 @@ function showMsg(div_msg, message, isShowMsg) {
 }
 
 //Modal-設定輸入值
-function setModalInput(modal_values,input_modal_keys,select_modal_keys) {
-    if(input_modal_keys.length > 0) {
-        for(var i = 0;i < input_modal_keys.length; i++) {
+function setModalInput(modal_values, input_modal_keys, select_modal_keys) {
+    if (input_modal_keys.length > 0) {
+        for (var i = 0; i < input_modal_keys.length; i++) {
             var input_modal_key = input_modal_keys[i];
             var value = modal_values.split(',')[i];
-    
-            if(select_modal_keys.length > 0 && select_modal_keys.includes(input_modal_key)) { //switch
-                if(value == "1") {
-                    $('#input_modal_'+input_modal_key).prop('checked',true);
+
+            if (select_modal_keys.length > 0 && select_modal_keys.includes(input_modal_key)) { //switch、select
+                if (value == "1") {
+                    $('#input_modal_' + input_modal_key).prop('checked', true);
                 } else {
-                    $('#input_modal_'+input_modal_key).prop('checked',false);
+                    $('#input_modal_' + input_modal_key).prop('checked', false);
                 }
-                changeSwitch('input_modal_status');
+                changeSwitch('input_modal_' + input_modal_key);
             } else {
-                $('#input_modal_'+input_modal_key).val(value);
+                $('#input_modal_' + input_modal_key).val(value);
             }
         }
     }
@@ -608,9 +608,9 @@ function orderSubmit(action_type) {
 /* =================================後台================================= */
 //送出-管理員資料、會員資料
 function adminSubmit(type) {
-    if(type == 'admin') {
+    if (type == 'admin') {
         change_url = '/admin/list';
-    } else  if(type == 'user') {
+    } else if (type == 'user') {
         change_url = '/admin/user/';
     }
 
@@ -632,7 +632,7 @@ function adminSubmit(type) {
 
     $.ajax({
         type: 'POST',
-        url: '/ajax/admin/'+type+'_data',
+        url: '/ajax/admin/' + type + '_data',
         dataType: 'json',
         async: false,
         data: $('#form_data').serialize(),
