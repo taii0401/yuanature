@@ -274,11 +274,11 @@ class AjaxController extends Controller
         }
         if($action_type == "add" || $action_type == "edit") {
             $add_data = [];
-            $add_data["name"] = $input["name"]??NULL;
-            $add_data["email"] = $input["email"]??NULL;
+            $add_data["name"] = trim($input["name"])??NULL;
+            $add_data["email"] = trim($input["email"])??NULL;
             $add_data["sex"] = $input["sex"]??0;
             $add_data["birthday"] = $input["birthday"]??"1999-01-01";
-            $add_data["phone"] = $input["phone"]??NULL;
+            $add_data["phone"] = trim($input["phone"])??NULL;
             $add_data["address"] = $input["address"]??NULL;
             $add_data["register_type"] = 1;
         }
