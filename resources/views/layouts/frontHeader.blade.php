@@ -23,7 +23,7 @@
 </div>
 <div class="row" style="background-color: #bed0c0;">
     <div class="col-12">
-        <nav class="navbar navbar-expand-md navbar-light" style="margin-top:0px;">
+        <nav class="navbar navbar-expand-sm navbar-light" style="margin-top:0px;">
             <button class="navbar-toggler ml-auto mr-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -35,16 +35,16 @@
                             <img src="{{ asset('img/icons/logo.jpg') }}" height="80px">
                         </a>
                     </li>
-                    <li class="nav-item" style="margin-top:15px">
+                    <li class="nav-item" style="margin-top:22px">
                         <a class="nav-link" href="/about">關於我們</a>
                     </li>
-                    <li class="nav-item" style="margin-top:15px">
+                    <li class="nav-item" style="margin-top:22px">
                         <a class="nav-link" href="/product">廣志足白浴露</a>
                     </li>
-                    <li class="nav-item" style="margin-top:15px">
+                    <li class="nav-item" style="margin-top:22px">
                         <a class="nav-link" href="/cart_info">購物指南</a>
                     </li>
-                    <li class="nav-item" style="margin-top:15px">
+                    <li class="nav-item" style="margin-top:22px">
                         <a class="nav-link" href="/question">常見問題</a>
                     </li>
                 </ul>

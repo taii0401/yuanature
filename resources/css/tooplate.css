@@ -154,7 +154,7 @@ p {
 .tm-site-title {
     display: inline-block;
     text-transform: uppercase;
-    font-size: 1.6rem;
+    font-size: large;
     margin-left: 1rem;
     color: #656565;
     letter-spacing: 1px;
@@ -913,7 +913,6 @@ footer {
         padding-right: 15px;*/
     }
     .tm-site-title {
-        font-size: 1.2rem;
         margin-left: 7px;
     }
     .tm-site-icon {
