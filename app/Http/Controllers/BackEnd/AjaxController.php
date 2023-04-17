@@ -42,6 +42,11 @@ class AjaxController extends Controller
 
         $admin_id = AdminAuth::admindata()->id;
 
+        if(AdminAuth::admindata()->admin_group_id != 1) {
+            $this->message = "您沒有權限操作！";
+            return response()->json($this->returnResult());
+        }
+
         $input = $request->all();
         //去除空白
         foreach($input as $key => $val) {

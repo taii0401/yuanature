@@ -54,9 +54,11 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent" style="background-color: #bed0c0;">
                         <ul class="navbar-nav mx-auto">
                         @if(AdminAuth::isLoggedIn())
-                            <li class="nav-item" style="margin-top:15px">
-                                <a class="nav-link" href="/admin/list">管理員管理</a>
-                            </li>
+                            @if(AdminAuth::admindata()->admin_group_id == 1)
+                                <li class="nav-item" style="margin-top:15px">
+                                    <a class="nav-link" href="/admin/list">管理員管理</a>
+                                </li>
+                            @endif
                             <li class="nav-item" style="margin-top:15px">
                                 <a class="nav-link" href="/admin/user">會員管理</a>
                             </li>
