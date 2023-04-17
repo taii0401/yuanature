@@ -13,35 +13,29 @@
                         </span>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6 col-sm-12">
                     <input type="hidden" id="register_type" name="register_type" class="form-control search_input_data" value="{{ @$datas["assign_data"]["register_type"] }}">
                     <input type="hidden" id="is_verified" name="is_verified" class="form-control search_input_data" value="{{ @$datas["assign_data"]["is_verified"] }}">
-                    <div class="dropdown btn-group">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            登入方式
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            @if(isset($datas["option_data"]["register_type"]))    
-                                @foreach($datas["option_data"]["register_type"] as $key => $val) 
-                                <a class="dropdown-item @if($datas["assign_data"]["register_type"] == $key) active @endif" href="#" onclick="$('#register_type').val('{{ @$key }}');getSearchUrl('{{ @$datas["assign_data"]["search_link"] }}');">{{ @$val }}</a>
-                                @endforeach
-                            @endif
-                        </div>
-                    </div>
-                    <div class="dropdown btn-group">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            是否驗證
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            @if(isset($datas["option_data"]["is_verified"]))    
-                                @foreach($datas["option_data"]["is_verified"] as $key => $val) 
-                                <a class="dropdown-item @if($datas["assign_data"]["is_verified"] == $key) active @endif" href="#" onclick="$('#is_verified').val('{{ @$key }}');getSearchUrl('{{ @$datas["assign_data"]["search_link"] }}');">{{ @$val }}</a>
-                                @endforeach
-                            @endif
-                        </div>
-                    </div>
+                    <input type="hidden" id="orderby" name="orderby" class="form-control search_input_data" value="{{ @$assign_data["orderby"] }}">
+
+                    @if(isset($datas["option_data"]) && !empty($datas["option_data"]))
+                        @foreach($datas["option_data"] as $option_key => $option_val)
+                            <div class="dropdown btn-group">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ @$option_val["name"]}}
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    @if(!empty($option_val["data"]))    
+                                        @foreach($option_val["data"] as $key => $val) 
+                                        <a class="dropdown-item @if($datas["assign_data"][$option_key] == $key) active @endif" href="#" onclick="$('#{{ @$option_key }}').val('{{ @$key }}');getSearchUrl('{{ @$datas["assign_data"]["search_link"] }}');">{{ @$val }}</a>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
-                <div class="col-md-4 col-sm-12 text-right">
+                <div class="col-md-2 col-sm-12 text-right">
                     <button type="button" class="btn btn-danger check_btn" style="display:none" onclick="adminSubmit('user');">刪除</button>
                 </div>
             </div>
@@ -68,6 +62,7 @@
                             <th class="text-center" scope="col" style="width:10%;">手機</th>
                             <th class="text-center" scope="col" style="width:10%;">登入方式</th>
                             <th class="text-center" scope="col" style="width:10%;">是否驗證</th>
+                            <th class="text-center" scope="col" style="width:10%;">建立時間</th>
                             <th scope="col" style="width:15%;"></th>
                         </tr>
                     </thead>
@@ -86,10 +81,11 @@
                                 <td class="text-center">{{ @$data["phone"] }}</td>
                                 <td class="text-center">{{ @$data["register_type_name"] }}</td>
                                 <td class="text-center">{{ @$data["is_verified_name"] }}</td>
+                                <td class="text-center">{{ @$data["created_at"] }}</td>
                                 <td>
                                     <div class="col-12">
                                         <div class="btn-action">
-                                            <i class="fas fa-edit tm-edit-icon dataModalBtn"data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["uuid"] }},{{ @$data["name"] }},{{ @$data["phone"] }},{{ @$data["is_verified"] }}">
+                                            <i class="fas fa-edit tm-edit-icon dataModalBtn"data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["uuid"] }},{{ @$data["name"] }},{{ @$data["email"] }},{{ @$data["phone"] }},{{ @$data["is_verified"] }}">
                                             </i>
                                         </div>
                                         <div class="btn-action">
@@ -134,37 +130,23 @@
                     <div class="row m-t-10">
                         <div class="row">
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label>帳號</label>
-                                <input type="text" id="input_modal_account" name="account" class="form-control require" value="" >
+                                <label>姓名</label>
+                                <input type="text" id="input_modal_name" name="name" class="form-control require" value="" >
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label class="col-12">是否啟用：</label>
+                                <label>EMAIL</label>
+                                <input type="text" id="input_modal_email" name="email" class="form-control " value="">                  
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                                <label>手機</label>
+                                <input type="text" id="input_modal_phone" name="phone" class="form-control " value="">
+                            </div>
+                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                                <label class="col-12">是否驗證</label>
                                 <label class="form-switch">
-                                    <input type="checkbox" id="input_modal_status" name="status" class="form-control" onclick="changeSwitch('input_modal_status');">
-                                    <i></i> <span id="input_switch_text_input_modal_status"></span>
+                                    <input type="checkbox" id="input_modal_is_verified" name="is_verified" class="form-control" onclick="changeSwitch('input_modal_is_verified');">
+                                    <i></i> <span id="input_switch_text_input_modal_is_verified"></span>
                                 </label>
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label>密碼</label>
-                                <input type="password" id="input_modal_password" name="password" class="form-control " value="" placeholder="輸入6~30個英文字或數字">                  
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label>確認密碼</label>
-                                <input type="password" id="input_modal_confirm_password" name="confirm_password" class="form-control " value="" placeholder="請輸入相同的登入密碼">
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label>名稱</label>
-                                <input type="text" id="input_modal_name" name="name" class="form-control require" value="">
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label class="col-form-label">群組</label>
-                                <select class="custom-select col-12" id="input_modal_admin_group_id" name="admin_group_id">
-                                    @if(isset($datas["modal_data"]["admin_group"]) && !empty($datas["modal_data"]["admin_group"]))
-                                        @foreach($datas["modal_data"]["admin_group"] as $key => $val)
-                                            <option value="{{ $key }}">{{ $val }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
                             </div>
                         </div>
                     </div>
@@ -183,13 +165,13 @@
 @section('script')
 <script>
     $(function () {
-        //是否啟用
-        changeSwitch('input_modal_status');
+        //是否驗證
+        changeSwitch('input_modal_is_verified');
     });
 
     $('.dataModalBtn').click(function () {
-        var input_modal_keys = ['action_type','uuid','account','name','status','admin_group_id'];
-        var select_modal_keys = ['status'];
+        var input_modal_keys = ['action_type','uuid','name','email','phone','is_verified'];
+        var select_modal_keys = ['is_verified'];
         setModalInput($(this).data('id'),input_modal_keys,select_modal_keys);
 
         var action_type = $('#input_modal_action_type').val();

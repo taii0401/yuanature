@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Storage;
 use App\Libraries\AdminAuth;
 //Model
 use App\Models\Administrator;
+use App\Models\WebUser;
+use App\Models\User;
 
 class AjaxController extends Controller
 {
@@ -132,6 +134,95 @@ class AjaxController extends Controller
                 $check_list = $input["check_list"]??[];
                 $uuids = explode(",",$check_list);
                 $data = Administrator::whereIn("uuid",$uuids);
+                $data->update(["deleted_id" => $admin_id]);
+                $data->delete();
+                $this->error = false;
+            } catch(QueryException $e) {
+                $this->message = "刪除錯誤！";
+            }
+        }
+
+        DB::commit();
+
+        return response()->json($this->returnResult());
+    }
+
+    //會員資料-編輯、刪除
+    public function user_data(Request $request)
+    {
+        $this->resetResult();
+
+        $admin_id = AdminAuth::admindata()->id;
+
+        $input = $request->all();
+        //去除空白
+        foreach($input as $key => $val) {
+            if(in_array($key,["name","email","phone"])) {
+                $input[$key] = trim($val);
+            }
+        }
+
+        //表單動作類型(編輯、刪除)
+        $action_type = $input["action_type"]??"edit";
+        //檢查欄位、檢查訊息
+        $validator_data = $validator_message = [];
+        if($action_type == "edit") { 
+            $validator_data["name"] = "required"; //姓名
+            $validator_message["name.required"] = "請輸入姓名！";
+        } 
+        
+        $validator = Validator::make($input,$validator_data,$validator_message);
+
+        if($validator->fails()) {
+            foreach($validator->errors()->all() as $message) {
+                $this->message = $message;
+            }
+        }
+       
+        if($this->message != "") {
+            return response()->json($this->returnResult());
+        }
+        
+        $add_data = [];
+        if($action_type == "edit") {
+            $add_data["name"] = $input["name"];
+            $add_data["email"] = $input["email"]??NULL;
+            $add_data["phone"] = $input["phone"]??NULL;
+            $add_data["is_verified"] = isset($input["is_verified"]) && $input["is_verified"] == "on"?1:0;
+        }
+
+        DB::beginTransaction();
+
+        if($action_type == "edit") { //編輯
+            $uuid = $input["uuid"]??"";
+
+            if($uuid != "") {
+                try {
+                    $add_data["updated_id"] = $admin_id;
+                    WebUser::where(["uuid" => $uuid])->update($add_data);
+
+                    //若點選驗證，則直接更新users.email_verified_at
+                    if(isset($add_data["is_verified"]) && $add_data["is_verified"] == 1) {
+                        $user_id = WebUser::where(["uuid" => $uuid])->first()->user_id;
+                        $user = User::where(["id" => $user_id,"email_verified_at" => NULL])->first();
+                        if(!empty($user)) {
+                            $user->email_verified_at = date("Y-m-d H:i:s");
+                            $user->save();
+                        }
+                    }
+
+                    $this->error = false;
+                } catch(QueryException $e) {
+                    $this->message = "更新錯誤！";
+                }
+            } else {
+                $this->message = "更新錯誤！";
+            }
+        } else if($action_type == "delete") { //刪除
+            try {
+                $check_list = $input["check_list"]??[];
+                $uuids = explode(",",$check_list);
+                $data = WebUser::whereIn("uuid",$uuids);
                 $data->update(["deleted_id" => $admin_id]);
                 $data->delete();
                 $this->error = false;
