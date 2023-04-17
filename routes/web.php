@@ -108,7 +108,7 @@ Route::group([
 
 //管理員管理、會員管理、訂單管理
 Route::group([
-    //"middleware" => ["auth.admin"],
+    "middleware" => ["auth.admin"],
     "prefix" => "admin"
 ], function($router) {
     //管理員
@@ -144,5 +144,5 @@ foreach($ajaxs as $ajax) {
 $ajaxs_admin = [];
 $ajaxs_admin[] = "admin_data"; //管理員資料-新增、編輯、刪除
 foreach($ajaxs_admin as $ajax_admin) {
-    Route::post("/ajax/admin/".$ajax_admin,[BackEndAjaxController::class,$ajax_admin]); 
+    Route::post("/ajax/admin/".$ajax_admin,[BackEndAjaxController::class,$ajax_admin])->middleware("auth.admin"); 
 }
