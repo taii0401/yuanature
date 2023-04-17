@@ -19,8 +19,8 @@ class AdminController extends Controller
         $input = $request->all();
         $assign_data = $list_data = $page_data = $option_data = [];
 
-        //搜尋條件-狀態
-        $option_data["status"] = ["" => "全部",Administrator::STATUS_SUCCESS => Administrator::class::$statusName[Administrator::STATUS_SUCCESS],Administrator::STATUS_FAIL => Administrator::class::$statusName[Administrator::STATUS_FAIL]];
+        //選單搜尋條件-狀態
+        $option_data["status"] = ["name" => "是否啟用","data" => ["" => "全部",Administrator::STATUS_SUCCESS => Administrator::class::$statusName[Administrator::STATUS_SUCCESS],Administrator::STATUS_FAIL => Administrator::class::$statusName[Administrator::STATUS_FAIL]]];
         //取得目前頁數及搜尋條件
         $search_datas = ["page","orderby","keywords","status"];
         $get_search_data = $this->getSearch($search_datas,$input);

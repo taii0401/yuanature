@@ -15,18 +15,23 @@
                 </div>
                 <div class="col-md-4">
                     <input type="hidden" id="status" name="status" class="form-control search_input_data" value="{{ @$datas["assign_data"]["status"] }}">
-                    <div class="dropdown btn-group">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            是否啟用
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            @if(isset($datas["option_data"]["status"]))    
-                                @foreach($datas["option_data"]["status"] as $key => $val) 
-                                <a class="dropdown-item @if($datas["assign_data"]["status"] == $key) active @endif" href="#" onclick="$('#status').val('{{ @$key }}');getSearchUrl('{{ @$datas["assign_data"]["search_link"] }}');">{{ @$val }}</a>
-                                @endforeach
-                            @endif
-                        </div>
-                    </div>
+                    
+                    @if(isset($datas["option_data"]) && !empty($datas["option_data"]))
+                        @foreach($datas["option_data"] as $option_key => $option_val)
+                            <div class="dropdown btn-group">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ @$option_val["name"]}}
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    @if(!empty($option_val["data"]))    
+                                        @foreach($option_val["data"] as $key => $val) 
+                                        <a class="dropdown-item @if($datas["assign_data"][$option_key] == $key) active @endif" href="#" onclick="$('#{{ @$option_key }}').val('{{ @$key }}');getSearchUrl('{{ @$datas["assign_data"]["search_link"] }}');">{{ @$val }}</a>
+                                        @endforeach
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
                 <div class="col-md-4 col-sm-12 text-right">
                     <button type="button" class="btn btn-primary dataModalBtn" data-bs-toggle="modal" data-bs-target="#dataModal" data-id="add">新增</button>
@@ -124,7 +129,7 @@
                                 <input type="text" id="input_modal_account" name="account" class="form-control require" value="" >
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label class="col-12">是否啟用：</label>
+                                <label class="col-12">是否啟用</label>
                                 <label class="form-switch">
                                     <input type="checkbox" id="input_modal_status" name="status" class="form-control" onclick="changeSwitch('input_modal_status');">
                                     <i></i> <span id="input_switch_text_input_modal_status"></span>
