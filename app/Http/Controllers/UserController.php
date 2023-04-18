@@ -66,8 +66,7 @@ class UserController extends Controller
         if(!$login) {
             return back()->withErrors("帳號密碼錯誤或尚未驗證！");
         } else { 
-            //編輯會員
-            return redirect("users/edit");
+            return redirect(config("yuanature.login_url"));
         }
     }
 
@@ -75,7 +74,7 @@ class UserController extends Controller
     public function logout()
     {
         UserAuth::logOut();
-        return redirect("users");
+        return redirect(config("yuanature.logout_url"));
     }
 
     //新增會員(畫面)

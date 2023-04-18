@@ -85,8 +85,7 @@ class ThirdController extends Controller
             if(!$login) {
                 return back()->withErrors("LINE登入錯誤！");
             } else { 
-                //編輯會員
-                return redirect("users/edit");
+                return redirect(config("yuanature.login_url"));
             }
         } catch (Exception $ex) {
             Log::error($ex);
@@ -178,8 +177,7 @@ class ThirdController extends Controller
             if(!$login) {
                 return back()->withErrors("FACEBOOK登入錯誤！");
             } else { 
-                //編輯會員
-                return redirect("users/edit");
+                return redirect(config("yuanature.login_url"));
             }
         } catch (Exception $ex) {
             Log::error($ex);

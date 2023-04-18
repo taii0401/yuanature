@@ -3,7 +3,7 @@
         <div class="search-w3ls">
         @if(UserAuth::isLoggedIn())
             <a href="/users/edit">
-                <img src="{{ asset('img/icons/member.png') }}" height="20px">&nbsp;&nbsp;{{ UserAuth::userdata()->name }}
+                <img src="{{ asset('img/icons/member.png') }}" height="20px">&nbsp;&nbsp;會員中心
             </a>
             <a href="/users/logout">
                 / 登出
