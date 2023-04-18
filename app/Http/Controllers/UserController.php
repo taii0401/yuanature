@@ -104,7 +104,7 @@ class UserController extends Controller
             //新增會員
             return redirect("users/create");
         }
-        $data = $this->get_data("edit",session("userUuid"));
+        $data = $this->get_data("edit",session("user"));
         return view("users.data",$data);
     }
 
@@ -123,7 +123,7 @@ class UserController extends Controller
             //新增會員
             return redirect("users");
         }
-        $data = $this->get_data("edit_password",session("userUuid"));
+        $data = $this->get_data("edit_password",session("user"));
         return view("users.data",$data);
     }
 
@@ -158,6 +158,7 @@ class UserController extends Controller
                         $data[$key] = $val;
                     }
                 }
+
                 //帳號密碼
                 if(isset($data["user_id"])) {
                     $user = User::where(["id" => $data["user_id"]])->first();

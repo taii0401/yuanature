@@ -45,7 +45,7 @@ class AjaxController extends Controller
         $name = $file_id = "";
         //判斷是否登入
         if(UserAuth::isLoggedIn()) {
-            $user_uuid = session("userUuid");
+            $user_uuid = session("user");
             $user_id = 0;
             if($user_uuid != "") {
                 //使用者資料
