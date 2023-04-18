@@ -45,7 +45,11 @@
                 <nav class="navbar navbar-expand-sm navbar-light" style="margin-top:0px;">
                     <a class="navbar-brand" href="/">
                         <img src="{{ asset('img/icons/logo.jpg') }}" height="80px">
-                        <h6 class="tm-site-title mb-0">後台-{{ @$datas["assign_data"]["title_txt"] }}</h6>
+                        <h6 class="tm-site-title mb-0">後台
+                            @if(@$datas["assign_data"] != "")
+                                {{ @$datas["assign_data"]["title_txt"] }}
+                            @endif
+                        </h6>
                     </a>    
                     <button class="navbar-toggler ml-auto mr-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
