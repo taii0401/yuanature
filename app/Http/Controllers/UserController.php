@@ -131,21 +131,22 @@ class UserController extends Controller
     {
         $data = array();
         $data["action_type"] = $action_type;
-        $data["require"] = $data["disabled"] = "";
+        $data["require"] = $data["pass_require"] = $data["disabled"] = "";
         $data["add_none"] = $data["edit_none"] = $data["edit_data_none"] = $data["edit_pass_none"] = "none";
         
         if($action_type == "add") { //新增會員
             $data["title_txt"] = "註冊帳號";
-            $data["require"] = "require";
+            $data["require"] = $data["pass_require"] = "require";
             $data["edit_none"] = $data["edit_data_none"] = $data["edit_pass_none"] = "";
         } else if($action_type == "edit" || $action_type == "edit_password") { //編輯會員、修改密碼
             $data["disabled"] = "disabled";
             if($action_type == "edit") {
                 $data["title_txt"] = "修改會員資料";
+                $data["require"] = "require";
                 $data["add_none"] = $data["edit_data_none"] = "";
             } else {
                 $data["title_txt"] = "修改密碼";
-                $data["require"] = "require";
+                $data["pass_require"] = "require";
                 $data["edit_pass_none"] = "";
             }
             

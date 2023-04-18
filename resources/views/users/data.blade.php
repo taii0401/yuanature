@@ -39,25 +39,25 @@
                             <div class="row" style="display:{{ $edit_pass_none}};">
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                     <label><span class="star">* </span>登入帳號(電子郵件)</label>
-                                    <input type="email" id="account" name="account" class="form-control require" value="{{ @$account }}" {{ $disabled }}>
+                                    <input type="email" id="account" name="account" class="form-control {{ $pass_require }}" value="{{ @$account }}" {{ $disabled }}>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                     <label><span class="star">* </span>登入密碼</label>
-                                    <input type="password" id="password" name="password" class="form-control {{ $require }}" value="" placeholder="輸入6~30個英文字或數字">                  
+                                    <input type="password" id="password" name="password" class="form-control {{ $pass_require }}" value="" placeholder="輸入6~30個英文字或數字">                  
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                     <label><span class="star">* </span>確認密碼</label>
-                                    <input type="password" id="confirm_password" name="confirm_password" class="form-control {{ $require }}" value="" placeholder="請輸入相同的登入密碼">
+                                    <input type="password" id="confirm_password" name="confirm_password" class="form-control {{ $pass_require }}" value="" placeholder="請輸入相同的登入密碼">
                                 </div>
                             </div>
                             <div class="row" style="display:{{ $edit_data_none}};">
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                    <label>姓名</label>
-                                    <input type="text" id="name" name="name" class="form-control" value="{{ @$name }}">
+                                    <label><span class="star">* </span>姓名</label>
+                                    <input type="text" id="name" name="name" class="form-control {{ $require }}" value="{{ @$name }}">
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                    <label>手機號碼</label>
-                                    <input type="text" id="phone" name="phone" class="form-control" value="{{ @$phone }}">                  
+                                    <label><span class="star">* </span>手機號碼</label>
+                                    <input type="text" id="phone" name="phone" class="form-control {{ $require }}" value="{{ @$phone }}">                  
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                     <label>生日</label>
@@ -71,8 +71,8 @@
                             </div>
                             <div class="row" style="display:{{ $add_none}};">
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                    <label>通知信箱</label>
-                                    <input type="text" id="email" name="email" class="form-control" value="{{ @$email }}">
+                                    <label><span class="star">* </span>通知信箱</label>
+                                    <input type="text" id="email" name="email" class="form-control {{ $require }}" value="{{ @$email }}">
                                 </div>
                             </div>
                             <div class="row mt-3">

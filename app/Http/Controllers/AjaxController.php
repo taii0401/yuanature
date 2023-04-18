@@ -280,7 +280,6 @@ class AjaxController extends Controller
             $add_data["birthday"] = $input["birthday"]??"1999-01-01";
             $add_data["phone"] = trim($input["phone"])??NULL;
             $add_data["address"] = $input["address"]??NULL;
-            $add_data["register_type"] = 1;
         }
 
         if($action_type == "add") { //新增
@@ -296,6 +295,7 @@ class AjaxController extends Controller
                 $uuid = Str::uuid()->toString();
                 $add_data["uuid"] = $uuid;
                 $add_data["user_id"] = $user_id;
+                $add_data["register_type"] = 1;
                 $user_data = WebUser::create($add_data);
                 if((int)$user_data->id > 0) {//新增成功
                     $this->error = false;

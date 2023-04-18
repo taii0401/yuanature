@@ -43,14 +43,15 @@ class ThirdController extends Controller
             //檢查是否已註冊
             $user = User::where("line_id",$input["line_id"])->first();
             if(empty($user)) {
+                $add_user_data = [];
+                $add_user_data = $input;
                 //預設會員姓名
-                $name = "line_".$input["line_id"];
-                if($input["name"] == "") {
-                    $input["name"] = $name;
+                if($add_user_data["name"] == "") {
+                    $add_user_data["name"] = "line_".$input["line_id"];
                 }
                 //新增會員
-                $input["email"] = $name."@mail.com";
-                $user_id = UserAuth::createUser($input);
+                $add_user_data["email"] = "line_".$input["line_id"]."@mail.com";
+                $user_id = UserAuth::createUser($add_user_data);
 
                 //新增會員資料
                 if($user_id > 0) {
@@ -121,28 +122,31 @@ class ThirdController extends Controller
                 ->redirectUrl($redirect_url)->user();
            
             $facebook_email = $FacebookUser->email;
+            $facebook_id = $FacebookUser->id;
+            $facebook_name = $FacebookUser->name;
     
-            if(is_null($facebook_email)) {
-                throw new Exception("未授權取得使用者 Email");
+            if(is_null($facebook_id) || is_null($facebook_email)) {
+                throw new Exception("未授權取得使用者ID及Email");
             }
 
             //Facebook回傳資料
             $input = [];
             $input["email"] = $facebook_email;
-            $input["facebook_id"] = $FacebookUser->id??"";
-            $input["name"] = $FacebookUser->name??"";
+            $input["facebook_id"] = $facebook_id;
+            $input["name"] = $facebook_name;
             
             $isSuccess = false;
             //檢查是否已註冊
             $user = User::where("facebook_id",$input["facebook_id"])->first();
             if(empty($user)) {
+                $add_user_data = [];
+                $add_user_data = $input;
                 //預設會員姓名
-                $name = "facebook_".$input["facebook_id"];
-                if($input["name"] == "") {
-                    $input["name"] = $name;
+                if($add_user_data["name"] == "") {
+                    $add_user_data["name"] = "facebook_".$input["facebook_id"];
                 }
                 //新增會員
-                $user_id = UserAuth::createUser($input);
+                $user_id = UserAuth::createUser($add_user_data);
 
                 //新增會員資料
                 if($user_id > 0) {
@@ -151,8 +155,9 @@ class ThirdController extends Controller
                     $add_data["uuid"] = $uuid;
                     $add_data["user_id"] = $user_id;
                     $add_data["name"] = $input["name"];
+                    $add_data["email"] = $input["email"];
                     $add_data["birthday"] = "1999-01-01";
-                    $add_data["register_type"] = 3;
+                    $add_data["register_type"] = 2;
                     $add_data["is_verified"] = 1;
                     $user_data = WebUser::create($add_data);
                     //dd($user_data->id);
