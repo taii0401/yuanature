@@ -10,7 +10,10 @@
             </a>
         @else
             <a href="/users/">
-                <img src="{{ asset('img/icons/member.png') }}" height="20px">&nbsp;&nbsp;登入 / 註冊
+                <img src="{{ asset('img/icons/member.png') }}" height="20px">&nbsp;&nbsp;登入
+            </a>
+            <a href="/users/create">
+                /&nbsp;註冊 
             </a>
         @endif
             &nbsp;&nbsp;
