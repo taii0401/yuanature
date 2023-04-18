@@ -326,6 +326,16 @@ function setModalInput(modal_values, input_modal_keys, select_modal_keys) {
             } else {
                 $('#input_modal_' + input_modal_key).val(value);
             }
+
+            if (input_modal_key == 'action_type') {
+                if (value == 'add') {
+                    $('#modal_title_name').text('新增');
+                } else if (value == 'edit') {
+                    $('#modal_title_name').text('編輯');
+                } else if (value == 'delete') {
+                    $('#modal_title_name').text('刪除');
+                }
+            }
         }
     }
 }

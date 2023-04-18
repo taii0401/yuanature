@@ -120,7 +120,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="semi-bold"><span id="modal_title_name"></span>會員</h5>
+                    <h6 class="semi-bold"><span id="modal_title_name"></span>會員</h6>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">×</button>
                 </div>
                 <div class="modal-body">
@@ -173,13 +173,6 @@
         var input_modal_keys = ['action_type','uuid','name','email','phone','is_verified'];
         var select_modal_keys = ['is_verified'];
         setModalInput($(this).data('id'),input_modal_keys,select_modal_keys);
-
-        var action_type = $('#input_modal_action_type').val();
-        if(action_type == 'add') {
-            $('#modal_title_name').text('新增');
-        } else if(action_type == 'edit') {
-            $('#modal_title_name').text('編輯');
-        }
     });
 </script>
 @endsection

@@ -47,7 +47,7 @@
                         <img src="{{ asset('img/icons/logo.jpg') }}" height="80px">
                         <h6 class="tm-site-title mb-0">後台
                             @if(@$datas["assign_data"] != "")
-                                {{ @$datas["assign_data"]["title_txt"] }}
+                                - {{ @$datas["assign_data"]["title_txt"] }}
                             @endif
                         </h6>
                     </a>    
