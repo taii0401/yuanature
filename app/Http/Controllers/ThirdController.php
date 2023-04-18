@@ -107,28 +107,82 @@ class ThirdController extends Controller
     //Facebook登入重新導向授權資料處理
     public function fbLoginCallback()
     {
-        if(request()->error=="access_denied") {
-            throw new Exception("授權失敗，存取錯誤");
-        }
-        //依照網域產出重新導向連結 (來驗證是否為發出時同一callback)
-        $redirect_url = env("FB_REDIRECT");
-        //取得第三方使用者資料
-        $FacebookUser = Socialite::driver("facebook")
-            ->fields([
-                "name",
-                "email",
-            ])
-            ->redirectUrl($redirect_url)->user();
-       
-        $facebook_email = $FacebookUser->email;
+        try {
+            if(request()->error=="access_denied") {
+                throw new Exception("授權失敗，存取錯誤");
+            }
+            //依照網域產出重新導向連結(來驗證是否為發出時同一callback)
+            $redirect_url = env("FB_REDIRECT");
+            //取得第三方使用者資料
+            $FacebookUser = Socialite::driver("facebook")
+                ->fields([
+                    "name",
+                    "email",
+                ])
+                ->redirectUrl($redirect_url)->user();
+           
+            $facebook_email = $FacebookUser->email;
+    
+            if(is_null($facebook_email)) {
+                throw new Exception("未授權取得使用者 Email");
+            }
 
-        if(is_null($facebook_email)) {
-            throw new Exception("未授權取得使用者 Email");
-        }
-        //取得 Facebook 資料
-        $facebook_id = $FacebookUser->id;
-        $facebook_name = $FacebookUser->name;
+            //Facebook回傳資料
+            $input = [];
+            $input["email"] = $facebook_email;
+            $input["facebook_id"] = $FacebookUser->id??"";
+            $input["name"] = $FacebookUser->name??"";
+            
+            $isSuccess = false;
+            //檢查是否已註冊
+            $user = User::where("facebook_id",$input["facebook_id"])->first();
+            if(empty($user)) {
+                //預設會員姓名
+                $name = "facebook_".$input["facebook_id"];
+                if($input["name"] == "") {
+                    $input["name"] = $name;
+                }
+                //新增會員
+                $user_id = UserAuth::createUser($input);
 
-        echo "facebook_id=".$facebook_id.", facebook_name=".$facebook_name;
+                //新增會員資料
+                if($user_id > 0) {
+                    $uuid = Str::uuid()->toString();
+                    $add_data = [];
+                    $add_data["uuid"] = $uuid;
+                    $add_data["user_id"] = $user_id;
+                    $add_data["name"] = $input["name"];
+                    $add_data["birthday"] = "1999-01-01";
+                    $add_data["register_type"] = 3;
+                    $add_data["is_verified"] = 1;
+                    $user_data = WebUser::create($add_data);
+                    //dd($user_data->id);
+                    if((int)$user_data->id > 0) {
+                        $isSuccess = true;
+                    } else {
+                        //刪除使用者
+                        User::destroy($user_id);
+                    }
+                }
+            } else {
+                $isSuccess = true;
+                $input["user_id"] = $user->id;
+            }
+
+            //自動登入
+            $login = false;
+            if($isSuccess) {
+                $login = UserAuth::logIn($input,"facebook");
+            }
+            
+            if(!$login) {
+                return back()->withErrors("FACEBOOK登入錯誤！");
+            } else { 
+                //編輯會員
+                return redirect("users/edit");
+            }
+        } catch (Exception $ex) {
+            Log::error($ex);
+        }
     }
 }
