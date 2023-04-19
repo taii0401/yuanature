@@ -34,7 +34,7 @@ class WebUser extends Model
     public static function getName($user_id)
     {
         $name = "";
-        $data = self::where(["user_id" => $user_id])->first("name");
+        $data = self::where(["user_id" => $user_id])->withTrashed()->first("name");
         if(isset($data) && $data->exists("name")) {
             $name = $data->name;
         }

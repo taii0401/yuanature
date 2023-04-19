@@ -22,7 +22,7 @@ class WebCode extends Model
     public static function getName($id)
     {
         $name = "";
-        $data = self::where(["id" => $id])->first("name");
+        $data = self::where(["id" => $id])->withTrashed()->first("name");
         if(isset($data) && $data->exists("name")) {
             $name = $data->name;
         }

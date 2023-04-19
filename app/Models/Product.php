@@ -6,19 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Administrator extends Model
+class Product extends Model
 {
     use HasFactory,SoftDeletes;
 
-    const STATUS_SUCCESS = 1;
-    const STATUS_FAIL = 2;
+    const IS_DISPLAY_NO = 0;
+    const IS_DISPLAY_YES = 1;
 
     public static $statusName = [
-        self::STATUS_SUCCESS => "啟用",
-        self::STATUS_FAIL => "未啟用",
+        self::IS_DISPLAY_NO => "否",
+        self::IS_DISPLAY_YES => "是",
     ];
 
-    protected $table = "administrator"; //指定資料表名稱
+    protected $table = "product"; //指定資料表名稱
     protected $guarded = [];
     protected $casts = [
         "created_at" => "datetime:Y-m-d H:i:s",
@@ -53,10 +53,10 @@ class Administrator extends Model
         $all_datas = $conds = $conds_in = $conds_like = [];
         
         //條件欄位
-		$cols = ["id","uuid","account","name","status","admin_group_id"];
+		$cols = ["id","uuid","category","serial","name","is_display"];
 		foreach($cols as $col) {
 			if(isset($cond[$col])) {
-                if(in_array($col,["account","name"])) {
+                if(in_array($col,["serial","name"])) {
                     $conds_like[$col] = $cond[$col];
                 } else {
                     if(is_array($cond[$col])) {
@@ -86,7 +86,7 @@ class Administrator extends Model
         //關鍵字
         if(isset($cond["keywords"]) && $cond["keywords"] != "") {
             $keywords = $cond["keywords"];
-            $conds_or = array("account","name");
+            $conds_or = array("serial","name");
             $all_datas = $all_datas->where(function ($query) use($conds_or,$keywords) {
                 foreach($conds_or as $value) {
                     $query->orWhere($value,"like","%".$keywords."%");

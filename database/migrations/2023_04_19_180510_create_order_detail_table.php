@@ -13,9 +13,9 @@ class CreateOrderDetailTable extends Migration
      */
     public function up()
     {
-        Schema::create('order_detail', function (Blueprint $table) {
+        Schema::create('orders_detail', function (Blueprint $table) {
             $table->id();
-            $table->integer('order_id')->comment('order.id');
+            $table->integer('orders_id')->comment('orders.id');
             $table->integer('product_id')->comment('product.id');
             $table->integer('amount')->default(0)->comment('數量');
             $table->integer('price')->default(0)->comment('價格');
@@ -34,6 +34,6 @@ class CreateOrderDetailTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_detail');
+        Schema::dropIfExists('orders_detail');
     }
 }

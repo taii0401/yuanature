@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class WebCart extends Model
+class Cart extends Model
 {
     use HasFactory;
 
-    protected $table = "web_cart"; //指定資料表名稱
+    protected $table = "cart"; //指定資料表名稱
     protected $primaryKey = "id"; //主鍵，Model會另外自動加入id
     protected $guarded = [];
 
@@ -45,7 +45,7 @@ class WebCart extends Model
             }
         }
         //排序
-        $all_datas = $all_datas->orderBy("create_time","asc");
+        $all_datas = $all_datas->orderBy("created_at","asc");
         //print_r($all_datas->toSql());
 
         return $all_datas;

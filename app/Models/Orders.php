@@ -6,40 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Administrator extends Model
+class Orders extends Model
 {
     use HasFactory,SoftDeletes;
 
-    const STATUS_SUCCESS = 1;
-    const STATUS_FAIL = 2;
-
-    public static $statusName = [
-        self::STATUS_SUCCESS => "啟用",
-        self::STATUS_FAIL => "未啟用",
-    ];
-
-    protected $table = "administrator"; //指定資料表名稱
+    protected $table = "orders"; //指定資料表名稱
     protected $guarded = [];
     protected $casts = [
         "created_at" => "datetime:Y-m-d H:i:s",
         "updated_at" => "datetime:Y-m-d H:i:s",
         "deleted_at" => "datetime:Y-m-d H:i:s"
     ];
-
-    /**
-     * 取得名稱
-     * @param  id
-     * @return string
-     */
-    public static function getName($id)
-    {
-        $name = "";
-        $data = self::where(["id" => $id])->withTrashed()->first("name");
-        if(isset($data) && $data->exists("name")) {
-            $name = $data->name;
-        }
-        return $name;
-    }
 
     /**
      * 取得資料
@@ -53,10 +30,10 @@ class Administrator extends Model
         $all_datas = $conds = $conds_in = $conds_like = [];
         
         //條件欄位
-		$cols = ["id","uuid","account","name","status","admin_group_id"];
+		$cols = ["id","uuid","user_id","serial","name","phone","payment","delivery","status"];
 		foreach($cols as $col) {
 			if(isset($cond[$col])) {
-                if(in_array($col,["account","name"])) {
+                if(in_array($col,["serial","name","phone"])) {
                     $conds_like[$col] = $cond[$col];
                 } else {
                     if(is_array($cond[$col])) {
@@ -86,7 +63,7 @@ class Administrator extends Model
         //關鍵字
         if(isset($cond["keywords"]) && $cond["keywords"] != "") {
             $keywords = $cond["keywords"];
-            $conds_or = array("account","name");
+            $conds_or = array("serial","name","phone");
             $all_datas = $all_datas->where(function ($query) use($conds_or,$keywords) {
                 foreach($conds_or as $value) {
                     $query->orWhere($value,"like","%".$keywords."%");
