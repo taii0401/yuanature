@@ -16,7 +16,7 @@ class CreateProductTable extends Migration
         Schema::create('product', function (Blueprint $table) {
             $table->id();
             $table->string('uuid',50)->comment('uuid');
-            $table->integer('category')->comment('商品分類');
+            $table->integer('category')->nullable()->comment('商品分類');
             $table->string('serial_code',2)->nullable()->comment('商品代碼');
             $table->integer('serial_num')->nullable()->comment('商品序號');
             $table->string('serial')->nullable()->comment('商品編號');
