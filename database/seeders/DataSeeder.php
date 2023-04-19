@@ -142,7 +142,7 @@ class DataSeeder extends Seeder
             ],
             [
                 "type" => "product_category",
-                "code" => 1,
+                "code" => "BA",
                 "name" => "beauty",
                 "cname" => "美容"
             ]
