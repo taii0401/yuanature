@@ -111,19 +111,19 @@ class DataSeeder extends Seeder
                 "cname" => "已出貨"
             ],
             [
-                "type" => "order_pay",
+                "type" => "order_payment",
                 "code" => 1,
                 "name" => "card",
                 "cname" => "信用卡"
             ],
             [
-                "type" => "order_pay",
+                "type" => "order_payment",
                 "code" => 2,
                 "name" => "atm",
                 "cname" => "ATM"
             ],
             [
-                "type" => "order_pay",
+                "type" => "order_payment",
                 "code" => 3,
                 "name" => "linepay",
                 "cname" => "LINE PAY"
