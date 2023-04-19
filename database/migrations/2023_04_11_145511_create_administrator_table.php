@@ -15,7 +15,7 @@ class CreateAdministratorTable extends Migration
     {
         Schema::create('administrator', function (Blueprint $table) {
             $table->id();
-            $table->string('uuid',50);
+            $table->string('uuid',50)->comment('uuid');
             $table->string('account')->unique()->comment('帳號');
             $table->string('password')->comment('密碼');
             $table->string('name')->comment('名稱');
