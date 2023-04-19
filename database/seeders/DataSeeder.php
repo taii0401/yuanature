@@ -139,6 +139,12 @@ class DataSeeder extends Seeder
                 "code" => 2,
                 "name" => "home",
                 "cname" => "宅配配送"
+            ],
+            [
+                "type" => "product_category",
+                "code" => 1,
+                "name" => "beauty",
+                "cname" => "美容"
             ]
         ];
 
