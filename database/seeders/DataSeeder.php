@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Administrator;
 use App\Models\AdminGroup;
 use App\Models\WebCode;
+use App\Models\Product;
 
 /*
     初始化資料
