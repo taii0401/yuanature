@@ -17,7 +17,7 @@
             </a>
         @endif
             &nbsp;&nbsp;
-            <a href="/users/cart">
+            <a href="/orders/cart">
                 <img src="{{ asset('img/icons/cart.png') }}" height="20px">&nbsp;&nbsp;購物車
             </a>
         </div>
