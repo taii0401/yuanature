@@ -24,9 +24,11 @@ class UserAuth
     public static function userdata() 
     {
         if(empty(self::$userdata) && session()->exists("user")) {
-            $web_user = WebUser::where(["uuid" => session("user"),"is_verified" => 1,"deleted_at" => NULL])->first();
-            if(isset($web_user->uuid) && $web_user->uuid != "") {
-                self::$userdata = $web_user;
+            if(session("user") != "") {
+                $web_user = WebUser::where(["uuid" => session("user"),"is_verified" => 1,"deleted_at" => NULL])->first();
+                if(isset($web_user->uuid) && $web_user->uuid != "") {
+                    self::$userdata = $web_user;
+                }
             }
         }
         return self::$userdata;

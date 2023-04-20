@@ -18,10 +18,11 @@ class AdminAuth
     public static function admindata() 
     {
         if(empty(self::$admindata) && session()->exists("admin")) {
-            $data = Administrator::where(["uuid" => session("admin"),"status" => 1,"deleted_at" => NULL])->first();
-
-            if(isset($data->uuid) && $data->uuid != "") {
-                self::$admindata = $data;
+            if(session("admin") != "") {
+                $data = Administrator::where(["uuid" => session("admin"),"status" => 1,"deleted_at" => NULL])->first();
+                if(isset($data->uuid) && $data->uuid != "") {
+                    self::$admindata = $data;
+                }
             }
         }
         return self::$admindata;
