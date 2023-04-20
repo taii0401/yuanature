@@ -521,7 +521,11 @@ function cartSubmit(action_type) {
                     changeForm('/orders/cart');
                 }
             } else if (response.error == true) {
-                showMsg('msg_error', response.message, false);
+                if (action_type == 'add') { //新增
+                    alert(response.message);
+                } else {
+                    showMsg('msg_error', response.message, false);
+                }
                 return false;
             } else {
                 alert('傳送錯誤！');
