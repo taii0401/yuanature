@@ -357,4 +357,43 @@ class AjaxController extends Controller
 
         return response()->json($this->returnResult());
     }
+
+    //購物車-新增、編輯、刪除
+    public function cart_data(Request $request)
+    {
+        $this->resetResult();
+
+        $input = $request->all();
+
+        //表單動作類型(新增、刪除)
+        $action_type = $input["action_type"]??"add";
+        $product_id = $input["product_id"]??1;
+        $amount = $input["amount"]??1;
+
+        //取得購物車資料
+        $cart_data = session("cart");
+        if($action_type == "add" || $action_type == "edit") {
+            if(isset($cart_data[$product_id]) && $cart_data[$product_id] >= 0) {
+                if($action_type == "add") {
+                    $cart_data[$product_id] += $amount;
+                } else {
+                    $cart_data[$product_id] = $amount;
+                }
+                session(["cart" => [$product_id => $cart_data[$product_id]]]);
+            } else {
+                session(["cart" => [$product_id => $amount]]);
+            }
+            $this->error = false;
+        } else if($action_type == "delete") {
+            if(isset($cart_data[$product_id])) {
+                unset($cart_data[$product_id]);
+                session(["cart" => $cart_data]);
+            }
+            $this->error = false;
+        } else {
+            $this->message = "操作錯誤";
+        }
+        
+        return response()->json($this->returnResult());
+    }
 }

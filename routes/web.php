@@ -76,6 +76,16 @@ Route::group([
     });
 });
 
+//購物車、訂單
+Route::group([
+    "prefix" => "orders"
+], function($router) {    
+    Route::controller(UserController::class)->group(function() { 
+        //購物車
+        Route::get("cart","cart");
+    });
+});
+
 //第三方註冊、登入
 Route::group([
     "prefix" => "users/third"

@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Storage;
 //DB
 use Illuminate\Support\Facades\DB;
 //Model
+use App\Models\Product;
 use App\Models\WebCode;
 use App\Models\WebFile;
 use App\Models\WebFileData;
@@ -261,5 +262,70 @@ class Controller extends BaseController
                 $mail->subject($subject);
             });
         }
+    }
+
+    /**
+     * 取得購物車資料
+     * @param  is_total：是否計算合計
+     * @return array
+     */
+    public function getCartData($is_total=false)
+    {
+        $datas = [];
+
+        //合計
+        $total = 0;
+        //取得購物車資料
+        $cart_datas = session("cart");
+        if(!empty($cart_datas)) {
+            //取得商品ID
+            $product_ids = array_keys($cart_datas);  
+            //取得商品資料
+            $conds = array();
+            $conds["id"] = $product_ids;
+            $product = Product::getAllDatas($conds)->get()->toArray();
+            //dd($product);
+            $product_datas = collect($product)->mapWithKeys(function ($value,$key) {
+                return [$value["id"] => $value];
+            })->all();
+        
+            foreach($cart_datas as $key => $val) {
+                if(isset($product_datas[$key]) && !empty($product_datas[$key])) {
+                    //商品資料
+                    $product_data = $product_datas[$key];
+                    //購買數量
+                    if($val <= 0) {
+                        $amount = 1;
+                    } else {
+                        $amount = $val;
+                    }
+                    $product_data["amount"] = $amount;
+                    //售價
+                    $price = 0;
+                    $sales = isset($product_data["sales"])?$product_data["sales"]:0; //售價
+                    if($sales > 0) {
+                        $price = $sales;
+                    } else { //原價
+                        $price = isset($product_data["price"])?$product_data["price"]:0;
+                    }
+                    $product_data["price"] = $price;
+                    //小計
+                    $subtotal = $amount*$price;
+                    $product_data["subtotal"] = $subtotal;
+                    //合計
+                    $total += $subtotal;
+                    
+                    $datas[] = $product_data;
+                }
+            }
+        }
+
+        //合計
+        if($is_total) {
+            $datas["total"] = $total;
+        }
+
+        //$this->pr($datas);
+        return $datas;
     }
 }
