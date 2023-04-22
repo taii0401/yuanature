@@ -5,6 +5,7 @@ use App\Http\Controllers\FrontController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\ThirdController;
+use App\Http\Controllers\OrderController;
 
 //後台
 use App\Http\Controllers\BackEnd\AuthController as BackEndAuthController;
@@ -68,7 +69,7 @@ Route::group([
         //編輯會員(畫面)
         Route::get("edit","edit");
         //編輯會員密碼(畫面)
-        Route::get("edit_password","edit_password");
+        Route::get("edit_password","editPassword");
         //驗證會員
         Route::get("verify/{type}/{user_uuid}","verify");
         //重發驗證信
@@ -77,12 +78,16 @@ Route::group([
 });
 
 //購物車、訂單
+Route::get("orders/cart",[OrderController::class,"cart"]);
 Route::group([
+    "middleware" => ["auth.user"],
     "prefix" => "orders"
 ], function($router) {    
-    Route::controller(UserController::class)->group(function() { 
-        //購物車
-        Route::get("cart","cart");
+    Route::controller(OrderController::class)->group(function() { 
+        //購物車-收件人資料
+        Route::get("/pay_user","payUser");
+        //購物車結帳
+        Route::get("/pay_check","payCheck");
     });
 });
 
