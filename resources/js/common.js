@@ -576,6 +576,12 @@ function orderSubmit(action_type) {
                 return false;
             }
         }
+        //檢查電子郵件
+        if ($('#email').val() != '') {
+            if (checkFormat('email', $('#email').val(), 0, true) == false) {
+                return false;
+            }
+        }
     }
     if (action_type == 'delete') { //刪除
         var yes = confirm("你確定要刪除嗎？");
