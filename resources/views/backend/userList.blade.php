@@ -16,7 +16,7 @@
                 <div class="col-md-6 col-sm-12">
                     <input type="hidden" id="register_type" name="register_type" class="form-control search_input_data" value="{{ @$datas["assign_data"]["register_type"] }}">
                     <input type="hidden" id="is_verified" name="is_verified" class="form-control search_input_data" value="{{ @$datas["assign_data"]["is_verified"] }}">
-                    <input type="hidden" id="orderby" name="orderby" class="form-control search_input_data" value="{{ @$assign_data["orderby"] }}">
+                    <input type="hidden" id="orderby" name="orderby" class="form-control search_input_data" value="{{ @$datas["assign_data"]["orderby"] }}">
 
                     @if(isset($datas["option_data"]) && !empty($datas["option_data"]))
                         @foreach($datas["option_data"] as $option_key => $option_val)
