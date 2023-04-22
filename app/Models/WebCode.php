@@ -39,7 +39,7 @@ class WebCode extends Model
      * @param  return_value：回傳的值
      * @return array
      */
-    public static function getCodeOptions($type="",$is_all=false,$orderby="code",$sort="asc",$return_key="id",$return_value="cname")
+    public static function getCodeOptions($type="",$is_all=false,$orderby="code",$sort="asc",$return_key="code",$return_value="cname")
     {
         $return_datas = [];
         if($is_all) {
