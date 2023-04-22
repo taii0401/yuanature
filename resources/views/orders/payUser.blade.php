@@ -52,12 +52,16 @@
                                     @if(isset($datas["option_data"]["delivery"]) && !empty($datas["option_data"]["delivery"]))    
                                         @foreach($datas["option_data"]["delivery"] as $key => $val) 
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="delivery" id="delivery_{{ @$key }}" value="{{ @$key }}" @if($key == $datas["assign_data"]["delivery"]) checked @endif>
+                                                <input class="form-check-input" type="radio" name="delivery" id="delivery_{{ @$key }}" value="{{ @$key }}" @if($key == $datas["assign_data"]["delivery"]) checked @endif onclick="changeRadio('{{ @$key }}');">
                                                 <label class="form-check-label">{{ @$val }}</label>
                                             </div>
                                         @endforeach
                                     @endif
                                     </div>                  
+                                </div>
+                                <div id="div_address" class="col-xl-4 col-lg-4 col-md-6 col-sm-12" style="display:none;">
+                                    <label>宅配地址</label>
+                                    <input type="text" id="address" name="address" class="form-control" value="{{ @$datas["assign_data"]["address"] }}">
                                 </div>
                             </div> 
                             <div class="row">
@@ -74,4 +78,24 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('script')
+<script>
+    $(function () {
+        changeRadio('{{ $datas["assign_data"]["delivery"] }}');
+    });
+
+    //配送方式-是否顯示宅配地址欄位
+    function changeRadio(id) {
+        if(id == 2) { //宅配配送
+            //顯示宅配地址欄位
+            $('#div_address').css('display','');
+            $('#address').addClass('require');
+        } else {
+            $('#div_address').css('display','none');
+            $('#address').removeClass('require');
+        }
+    }
+</script>
 @endsection
