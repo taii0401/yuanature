@@ -19,6 +19,8 @@ use App\Models\User;
 use App\Models\WebUser;
 use App\Models\WebFile;
 use App\Models\WebFileData;
+use App\Models\Orders;
+use App\Models\OrdersDetail;
 
 class AjaxController extends Controller
 {
@@ -394,6 +396,127 @@ class AjaxController extends Controller
             $this->message = "操作錯誤";
         }
         
+        return response()->json($this->returnResult());
+    }
+
+    
+    //訂單-新增、編輯、刪除
+    public function order_data(Request $request)
+    {
+        $this->resetResult();
+
+        $input = $request->all();
+        //去除空白
+        foreach($input as $key => $val) {
+            if(in_array($key,["name","address","email"])) {
+                $input[$key] = trim($val);
+            }
+        }
+
+        //表單動作類型(新增、編輯、刪除)
+        $action_type = $input["action_type"]??"add";
+
+        //檢查欄位、檢查訊息
+        $validator_data = $validator_message = [];
+        if($action_type == "add") { //新增
+            $validator_data["name"] = "required"; //姓名
+            $validator_data["phone"] = "required"; //手機
+            $validator_data["total"] = "required|integer"; //總價
+        }
+        
+        $validator = Validator::make($input,$validator_data,$validator_message);
+
+        if($validator->fails()) {
+            foreach($validator->errors()->all() as $message) {
+                $this->message = $message;
+            }
+        }
+
+        if($input["total"] <= 0) {
+            $this->message = "請返回上一步確認購物車是否有商品！";
+        }
+
+        if($this->message != "") {
+            return response()->json($this->returnResult());
+        }
+
+        DB::beginTransaction();
+
+        $user_id = UserAuth::userdata()->user_id??0;
+        if($user_id > 0) {
+            if($action_type == "add") { //新增
+                $isSuccess = false;
+                //UUID
+                $uuid = Str::uuid()->toString();
+                //取得新編號
+                $serial_num = Orders::getSerial();
+                
+                $add_data = [];
+                $add_data["uuid"] = $uuid;
+                $add_data["user_id"] = $user_id;
+                $add_data["serial_code"] = "YO";
+                $add_data["serial_num"] = $serial_num;
+                $add_data["serial"] = "YO".date("YmdHis").str_pad($serial_num,4,0,STR_PAD_LEFT); //訂單編號
+                $add_data["name"] = $input["name"];
+                $add_data["phone"] = $input["phone"];
+                $add_data["address"] = $input["address"]??"";
+                $add_data["payment"] = $input["payment"]??1;
+                $add_data["delivery"] = $input["delivery"]??1;
+                $add_data["status"] = 1;
+                $add_data["total"] = $input["total"];
+                
+                try {
+                    $orders_data = Orders::create($add_data);
+                    $isSuccess = true;
+                } catch(QueryException $e) {
+                    $this->message = "建立訂單錯誤！";
+                }
+
+                //新增成功
+                if($orders_data->exists("id")) {
+                    $orders_id = $orders_data->id;
+
+                    if($orders_id > 0) {
+                        //取得購物車資料
+                        $cart_datas = $this->getCartData();
+                        //新增訂單項目
+                        if(!empty($cart_datas)) {
+                            foreach($cart_datas as $cart_data) {
+                                $detail_data = [];
+                                $detail_data["orders_id"] = $orders_id;
+                                $detail_data["product_id"] = $cart_data["id"]??0;
+                                $detail_data["amount"] = $cart_data["amount"]??0;
+                                $detail_data["price"] = $cart_data["sales"]??0;
+                                $detail_data["total"] = $cart_data["subtotal"]??0;
+        
+                                try {
+                                    OrdersDetail::create($detail_data);
+                                } catch(QueryException $e) {
+                                    $isSuccess = false;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if($isSuccess) {
+                    try {
+                        session()->forget("cart");
+                        $this->error = false;
+                        $this->message = $uuid;
+                    } catch(QueryException $e) {
+                        $this->message = "刪除購物車錯誤！";
+                    }
+                }
+            } else {
+                $this->message = "操作錯誤！";
+            }
+        } else {
+            $this->message = "請先登入！";
+        }
+
+        DB::commit();
+
         return response()->json($this->returnResult());
     }
 }
