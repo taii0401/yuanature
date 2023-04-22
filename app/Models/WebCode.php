@@ -30,6 +30,22 @@ class WebCode extends Model
     }
 
     /**
+     * 依類型及代碼取得名稱
+     * @param  type：類型
+     * @param  code：代碼
+     * @return string
+     */
+    public static function getCnameByCode($type,$code)
+    {
+        $cname = "";
+        $data = self::where(["type" => $type,"code" => $code])->withTrashed()->first("cname");
+        if(isset($data) && $data->exists("cname")) {
+            $cname = $data->cname;
+        }
+        return $cname;
+    }
+
+    /**
      * 依類型取得資料
      * @param  cond：搜尋條件
      * @param  is_all：是否回傳全部的選項

@@ -54,7 +54,7 @@ class UserController extends Controller
         //轉換名稱
         if(!empty($list_data)) {
             foreach($list_data as $key => $val) {
-                $list_data[$key]["register_type_name"] = $val["register_type"]?WebCode::getName($val["register_type"]):"";
+                $list_data[$key]["register_type_name"] = $val["register_type"]?WebCode::getCnameByCode("user_register",$val["register_type"]):"";
                 $list_data[$key]["is_verified_name"] = WebUser::class::$isVerifiedName[$val["is_verified"]]??"";
             }
         }
