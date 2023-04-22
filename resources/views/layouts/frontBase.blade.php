@@ -31,6 +31,7 @@
 <script src="{{ mix('js/jquery-3.6.0.min.js') }}"></script>
 <script src="{{ mix('js/popper.min.js') }}"></script>
 <script src="{{ mix('js/bootstrap.min.js') }}"></script>
+<script src="{{ mix('js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ mix('js/common.js') }}"></script>
 <!-- 日期 -->
 <script src="{{ mix('js/bootstrap-datepicker.min.js') }}"></script>
