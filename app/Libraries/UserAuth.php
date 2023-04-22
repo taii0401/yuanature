@@ -158,6 +158,7 @@ class UserAuth
     {
        //刪除session
        session()->forget("user");
+       session()->forget("cart");
        self::$userdata = null;
     }
 }
