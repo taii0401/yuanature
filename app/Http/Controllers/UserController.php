@@ -115,7 +115,7 @@ class UserController extends Controller
     }
 
     //修改密碼(畫面)
-    public function edit_password()
+    public function editPassword()
     {
         //判斷是否登入
         if(!UserAuth::isLoggedIn()) {
@@ -264,40 +264,5 @@ class UserController extends Controller
         }
 
         return redirect("users");
-    }
-
-    //購物車
-    public function cart(Request $request)
-    {
-        $datas = $assign_data = [];
-        $assign_data["title_txt"] = "購物車";
-        //來源
-        $assign_data["source"] = "cart";
-        //顯示欄位
-        $assign_data["danger_none"] = $assign_data["success_none"] = "none"; //顯示訊息
-        $assign_data["order_none"] = "";
-        $assign_data["cart_none"] = "none";
-        //隱藏按鈕-結帳
-        $assign_data["btn_none"] = "none";
-
-        $total = 0; //合計
-        //取得購物車資料
-        $cart_data = $this->getCartData(true);
-        //合計
-        if(isset($cart_data["total"])) {
-            $total = $cart_data["total"];
-            unset($cart_data["total"]);
-        }
-
-        //顯示結帳按鈕
-        if(!empty($cart_data)) {
-            $assign_data["btn_none"] = "";
-        }
-        $assign_data["total"] = $total;
-
-        $datas["cart_data"] = $cart_data;
-        $datas["assign_data"] = $assign_data;
-        
-        return view("orders.data",["datas" => $datas]);
     }
 }
