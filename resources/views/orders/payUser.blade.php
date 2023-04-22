@@ -11,7 +11,7 @@
                     <input type="hidden" id="total" name="total" value="{{ @$datas["assign_data"]["total"] }}">
                     <div class="row">
                         <div class="col-12">
-                            <h2 class="tm-block-title">{{ @$datas["assign_data"]["title_txt"] }}</h2>
+                            <h2 class="tm-block-title">{{ @$datas["assign_data"]["title_txt"] }}&nbsp;&nbsp;總金額：{{ @$datas["assign_data"]["total"] }}</h2>
                         </div>
                     </div>
                     <div class="row">
