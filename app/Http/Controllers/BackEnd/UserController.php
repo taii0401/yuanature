@@ -22,7 +22,7 @@ class UserController extends Controller
         $assign_data = $list_data = $page_data = $option_data = [];
 
         //選單搜尋條件-登入方式、是否驗證、排序
-        $option_data["register_type"] = ["name" => "登入方式","data" => WebCode::getCodeOptions("user_register")];
+        $option_data["register_type"] = ["name" => "登入方式","data" => WebCode::getCodeOptions("user_register",true)];
         $option_data["is_verified"] = ["name" => "是否驗證","data" => ["" => "全部",WebUser::IS_VERIFIED_YES => WebUser::class::$isVerifiedName[WebUser::IS_VERIFIED_YES],WebUser::IS_VERIFIED_NO => WebUser::class::$isVerifiedName[WebUser::IS_VERIFIED_NO]]];
         $option_data["orderby"] = ["name" => "排序","data" => ["asc_created_at" => "建立時間 小 ~ 大","desc_created_at" => "建立時間 大 ~ 小"]];
         //取得目前頁數及搜尋條件

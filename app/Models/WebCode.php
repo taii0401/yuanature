@@ -32,15 +32,19 @@ class WebCode extends Model
     /**
      * 依類型取得資料
      * @param  cond：搜尋條件
+     * @param  is_all：是否回傳全部的選項
      * @param  orderby：排序欄位
      * @param  sort：排序-遞增、遞減
      * @param  return_key：回傳的KEY值
      * @param  return_value：回傳的值
      * @return array
      */
-    public static function getCodeOptions($type="",$orderby="code",$sort="asc",$return_key="id",$return_value="cname")
+    public static function getCodeOptions($type="",$is_all=false,$orderby="code",$sort="asc",$return_key="id",$return_value="cname")
     {
-        $return_datas = ["" => "全部"];
+        $return_datas = [];
+        if($is_all) {
+            $return_datas = ["" => "全部"];
+        }
         $all_datas = self::where("type",$type)->orderBy($orderby,$sort)->get()->toArray();
         if(!empty($all_datas)) {
             foreach($all_datas as $val) {
