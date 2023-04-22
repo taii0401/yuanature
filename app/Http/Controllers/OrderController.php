@@ -55,9 +55,7 @@ class OrderController extends Controller
         //取得會員資料
         $user_data = UserAuth::userdata();
         if(!empty($user_data)) {
-            $assign_data["name"] = $user_data->name;
-            $assign_data["phone"] = $user_data->phone;
-            $assign_data["email"] = $user_data->email;
+            $assign_data = $user_data->toArray();
         }
 
         //取得付款方式、配送方式
