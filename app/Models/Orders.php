@@ -19,6 +19,21 @@ class Orders extends Model
     ];
 
     /**
+     * 取得新編號
+     * @return number
+     */
+    public static function getSerial()
+    {
+        $serial_num = 0;
+        $data = self::orderBy("serial_num","desc")->first("serial_num");
+        if(isset($data) && $data->exists("serial_num")) {
+            $serial_num = $data->serial_num;
+        }
+        $serial_num += 1;
+        return $serial_num;
+    }
+
+    /**
      * 取得資料
      * @param  cond：搜尋條件
      * @param  orderby：排序欄位
