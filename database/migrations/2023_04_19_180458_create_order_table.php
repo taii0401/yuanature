@@ -28,6 +28,9 @@ class CreateOrderTable extends Migration
             $table->integer('delivery')->nullable()->comment('配送方式：web_code.type = order_delivery');
             $table->integer('status')->nullable()->comment('訂單狀態：web_code.type = order_status');
             $table->longText('remark')->nullable()->comment('備註');
+            $table->integer('created_id')->nullable()->comment('建立者id');
+            $table->integer('updated_id')->nullable()->comment('修改者id');
+            $table->integer('deleted_id')->nullable()->comment('刪除者id');
             $table->timestamps();
             $table->softDeletes();
 
