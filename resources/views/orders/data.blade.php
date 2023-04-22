@@ -104,7 +104,11 @@
                     <div class="col-12 col-sm-6"></div>
                     <div class="col-12 col-sm-6 tm-btn-right" style="display:{{ @$datas["assign_data"]["order_none"] }};">
                         <button type="button" class="btn btn-primary" onclick="changeForm('/product')">繼續購買</button>
-                        <button type="button" class="btn btn-danger" style="display:{{ @$datas["assign_data"]["btn_none"] }};" onclick="changeForm('/orders/pay')">下一步</button>
+                        @if(UserAuth::isLoggedIn())
+                            <button type="button" class="btn btn-danger" style="display:{{ @$datas["assign_data"]["btn_none"] }};" onclick="changeForm('/orders/pay_user');">下一步</button>
+                        @else
+                            <button type="button" class="btn btn-danger" style="display:{{ @$datas["assign_data"]["btn_none"] }};" onclick="alert('請先登入會員！');changeForm('/users')">下一步</button>
+                        @endif
                     </div>
                     <div class="col-12 col-sm-6 tm-btn-right" style="display:{{ @$datas["assign_data"]["cart_none"] }};">
                         <button type="button" class="btn btn-primary" onclick="changeForm('/orders')">返回</button>
