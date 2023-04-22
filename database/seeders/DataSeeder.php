@@ -142,6 +142,24 @@ class DataSeeder extends Seeder
                 "cname" => "宅配配送"
             ],
             [
+                "type" => "order_cancel",
+                "code" => 1,
+                "name" => "wrong",
+                "cname" => "下錯訂單"
+            ],
+            [
+                "type" => "order_cancel",
+                "code" => 2,
+                "name" => "rebuy",
+                "cname" => "重新購買"
+            ],
+            [
+                "type" => "order_cancel",
+                "code" => 3,
+                "name" => "other",
+                "cname" => "其他"
+            ],
+            [
                 "type" => "product_category",
                 "code" => "BA",
                 "name" => "beauty",

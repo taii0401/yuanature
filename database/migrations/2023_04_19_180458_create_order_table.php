@@ -27,7 +27,11 @@ class CreateOrderTable extends Migration
             $table->integer('payment')->nullable()->comment('付款方式：web_code.type = order_pay');
             $table->integer('delivery')->nullable()->comment('配送方式：web_code.type = order_delivery');
             $table->integer('status')->nullable()->comment('訂單狀態：web_code.type = order_status');
-            $table->longText('remark')->nullable()->comment('備註');
+            $table->integer('cancel')->nullable()->comment('取消原因：web_code.type = order_cancel');
+            $table->longText('cancel_remark')->nullable()->comment('取消備註');
+            $table->longText('order_remark')->nullable()->comment('訂單備註');
+            $table->string('cancel_by',10)->nullable()->comment('取消：user 會員、admin 管理員');
+            $table->integer('cancel_id')->nullable()->comment('取消者id');
             $table->integer('created_id')->nullable()->comment('建立者id');
             $table->integer('updated_id')->nullable()->comment('修改者id');
             $table->integer('deleted_id')->nullable()->comment('刪除者id');
