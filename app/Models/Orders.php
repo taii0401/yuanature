@@ -73,7 +73,7 @@ class Orders extends Model
         $all_datas = $conds = $conds_in = $conds_like = [];
         
         //條件欄位
-		$cols = ["id","uuid","user_id","serial","name","phone","payment","delivery","status"];
+		$cols = ["id","uuid","user_id","serial","name","phone","payment","delivery","status","cancel"];
 		foreach($cols as $col) {
 			if(isset($cond[$col])) {
                 if(in_array($col,["serial","name","phone"])) {
