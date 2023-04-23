@@ -621,6 +621,11 @@ function orderSubmit(action_type) {
         }
     }
 
+    var form_name = 'form_data';
+    if(action_type == 'cancel') {
+        form_name = 'form_data_cancel';
+    }
+
     $('.form-control').attr('disabled', false);
 
     $.ajax({
@@ -628,7 +633,7 @@ function orderSubmit(action_type) {
         url: '/ajax/orders_data',
         dataType: 'json',
         async: false,
-        data: $('#form_data').serialize(),
+        data: $('#'+form_name).serialize(),
         error: function(xhr) {
             //console.log(xhr);
             alert('傳送錯誤！');
@@ -671,9 +676,16 @@ function adminSubmit(type) {
         change_url = '/admin/list';
     } else if (type == 'user') {
         change_url = '/admin/user/';
+    } else if (type == 'orders') {
+        change_url = '/admin/orders/';
     }
 
     var action_type = $('#input_modal_action_type').val();
+
+    var form_name = 'form_data';
+    if(action_type == 'cancel' && type == 'orders') {
+        form_name = 'form_data_cancel';
+    }
 
     if (action_type == 'delete') { //刪除
         var yes = confirm("你確定要刪除嗎？");
@@ -696,7 +708,7 @@ function adminSubmit(type) {
         url: '/ajax/admin/' + type + '_data',
         dataType: 'json',
         async: false,
-        data: $('#form_data').serialize(),
+        data: $('#'+form_name).serialize(),
         error: function(xhr) {
             //console.log(xhr);
             alert('傳送錯誤！');

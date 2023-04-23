@@ -1,0 +1,57 @@
+<form id="form_data_cancel" class="tm-signup-form" method="post">
+    @csrf
+    <input type="hidden" id="input_modal_action_type" name="action_type" value="cancel">
+    <input type="hidden" id="input_modal_uuid" name="uuid" value="">
+    <input type="hidden" id="input_modal_serial" name="serial" value="">
+    <div class="modal fade" id="dataModalOrderCancel" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="semi-bold">取消訂單<span id="serial_text"></span>？</h6>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">×</button>
+                </div>
+                <div class="modal-body">
+                    <div id="msg_error" class="col-12 alert alert-danger" role="alert" style="display:none;"></div>
+                    <div id="msg_success" class="col-12 alert alert-success" role="alert" style="display:none;"></div>
+                    <div class="col-12">
+                        <div class="row m-t-10">
+                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                                <label class="col-form-label">取消原因</label>
+                                <select class="custom-select col-12" id="input_modal_cancel" name="cancel" onchange="changeSelect()">
+                                    @if(isset($datas["modal_data"]["cancel"]) && !empty($datas["modal_data"]["cancel"]))
+                                        @foreach($datas["modal_data"]["cancel"] as $key => $val)
+                                            <option value="{{ $key }}">{{ $val }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            <div id="div_cancel_remark" class="col-xl-6 col-lg-6 col-md-12 col-sm-12" style="display:none;margin-top:20px;">
+                                <textarea id="cancel_remark" name="cancel_remark" class="form-control" cols="100" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn_submit" onclick="orderSubmit($('#input_modal_action_type').val());">送出</button>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">取消</button>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</form>
+
+<script>
+    //取消原因
+    function changeSelect() {
+        val = $('#input_modal_cancel').val();
+        if(val == 3) { //其他
+            //顯示取消原因備註
+            $('#div_cancel_remark').css('display','');
+            $('#cancel_remark').addClass('require');
+        } else {
+            $('#div_cancel_remark').css('display','none');
+            $('#cancel_remark').removeClass('require');
+        }
+    }
+</script>

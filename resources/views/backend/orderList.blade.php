@@ -64,7 +64,7 @@
                             <th scope="col" class="text-center" style="width:12%;">配送方式</th>
                             <th scope="col" class="text-center" style="width:12%;">付款方式</th>
                             <th scope="col" class="text-center" style="width:12%;">訂購金額</th>
-                            <th scope="col" style="width:15%;"></th>
+                            <th scope="col" style="width:8%;"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -87,13 +87,12 @@
                                 <td class="text-center">{{ @$data["total"] }}元</td>
                                 <td>
                                     <div class="col-12">
-                                        <div class="btn-action">
-                                            <i class="fas fa-edit tm-edit-icon dataModalBtn"data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["uuid"] }},{{ @$data["status"] }},{{ @$data["delivery"] }},{{ @$data["payment"] }}">
-                                            </i>
-                                        </div>
-                                        <div class="btn-action">
-                                            <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');orderSubmit('delete');"></i>
-                                        </div>
+                                        @if(@$data["cancel"] == "")
+                                            <div class="btn-action">
+                                                <i class="fas fa-trash-alt tm-trash-icon dataModalBtnOrderCancel" data-bs-toggle="modal" data-bs-target="#dataModalOrderCancel" data-id="{{ @$data["uuid"] }},{{ @$data["serial"] }}">
+                                                </i>
+                                            </div>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -114,67 +113,17 @@
     </div>
 </div>
 
-<form id="form_data" class="tm-signup-form" method="post">
-    @csrf
-    <input type="hidden" id="input_modal_action_type" name="action_type" value="">
-    <input type="hidden" id="input_modal_uuid" name="uuid" value="">
-    <input type="hidden" id="check_list" name="check_list" value="">
-    <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h6 class="semi-bold"><span id="modal_title_name"></span>會員</h6>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">×</button>
-                </div>
-                <div class="modal-body">
-                    <div id="msg_error" class="col-12 alert alert-danger" role="alert" style="display:none;"></div>
-                    <div id="msg_success" class="col-12 alert alert-success" role="alert" style="display:none;"></div>
-                    <div class="col-12">
-                        <div class="row m-t-10">
-                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label>姓名</label>
-                                <input type="text" id="input_modal_name" name="name" class="form-control require" value="" >
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label>EMAIL</label>
-                                <input type="text" id="input_modal_email" name="email" class="form-control " value="">                  
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label>手機</label>
-                                <input type="text" id="input_modal_phone" name="phone" class="form-control " value="">
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label class="col-12">是否驗證</label>
-                                <label class="form-switch">
-                                    <input type="checkbox" id="input_modal_is_verified" name="is_verified" class="form-control" onclick="changeSwitch('input_modal_is_verified');">
-                                    <i></i> <span id="input_switch_text_input_modal_is_verified"></span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn_submit" onclick="adminSubmit('user');">送出</button>
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">取消</button>
-                </div>
-            </div>
-            
-        </div>
-    </div>
-</form>
+@include('forms.orderCancel')
 @endsection
 
 @section('script')
 <script>
-    $(function () {
-        //是否驗證
-        changeSwitch('input_modal_is_verified');
-    });
-
-    $('.dataModalBtn').click(function () {
-        var input_modal_keys = ['action_type','uuid','name','email','phone','is_verified'];
-        var select_modal_keys = ['is_verified'];
+    $('.dataModalBtnOrderCancel').click(function () {
+        var input_modal_keys = ['uuid','serial'];
+        var select_modal_keys = [];
         setModalInput($(this).data('id'),input_modal_keys,select_modal_keys);
+
+        $('#serial_text').text($('#input_modal_serial').val());
     });
 </script>
 @endsection

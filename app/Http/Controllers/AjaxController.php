@@ -461,12 +461,12 @@ class AjaxController extends Controller
                 $add_data["serial"] = "YO".date("YmdHis").str_pad($serial_num,4,0,STR_PAD_LEFT); //訂單編號
                 $add_data["name"] = $input["name"];
                 $add_data["phone"] = $input["phone"];
-                $add_data["address"] = $input["address"]??NULL;
+                $add_data["address"] = $input["delivery"] == 2 && $input["address"] != ""?$input["address"]:NULL;
                 $add_data["payment"] = $input["payment"]??1;
                 $add_data["delivery"] = $input["delivery"]??1;
                 $add_data["status"] = 1;
                 $add_data["total"] = $input["total"];
-                $add_data["order_remark"] = $input["order_remark"]??NULL;
+                $add_data["order_remark"] = $input["order_remark"] != ""?$input["order_remark"]:NULL;
                 $add_data["created_id"] = $user_id;
                 
                 try {
@@ -514,7 +514,7 @@ class AjaxController extends Controller
                 }
             } else if($action_type == "cancel") { //取消
                 $uuid = $input["uuid"]??"";
-                $data = Orders::where("uuid",$uuid)->first();
+                $data = Orders::where("uuid",$uuid)->whereNull("cancel")->first();
                 if(isset($data) && !empty($data)) {
                     try {
                         $data->cancel = $input["cancel"];
