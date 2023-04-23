@@ -84,6 +84,10 @@ Route::group([
     "prefix" => "orders"
 ], function($router) {    
     Route::controller(OrderController::class)->group(function() { 
+        //訂單列表
+        Route::get("/","index");
+        //訂單明細
+        Route::get("/detail","detail");
         //購物車-收件人資料
         Route::get("/pay_user","payUser");
         //購物車結帳

@@ -400,7 +400,7 @@ class AjaxController extends Controller
     }
 
     
-    //訂單-新增、編輯、刪除
+    //訂單-新增、編輯、刪除、取消
     public function order_data(Request $request)
     {
         $this->resetResult();
@@ -422,6 +422,8 @@ class AjaxController extends Controller
             $validator_data["name"] = "required"; //姓名
             $validator_data["phone"] = "required"; //手機
             $validator_data["total"] = "required|integer"; //總價
+        } else if($action_type == "cancel") { //取消
+            $validator_data["cancel"] = "required"; //取消原因
         }
         
         $validator = Validator::make($input,$validator_data,$validator_message);
@@ -432,7 +434,7 @@ class AjaxController extends Controller
             }
         }
 
-        if($input["total"] <= 0) {
+        if($action_type == "add" && $input["total"] <= 0) {
             $this->message = "請返回上一步確認購物車是否有商品！";
         }
 
@@ -459,11 +461,13 @@ class AjaxController extends Controller
                 $add_data["serial"] = "YO".date("YmdHis").str_pad($serial_num,4,0,STR_PAD_LEFT); //訂單編號
                 $add_data["name"] = $input["name"];
                 $add_data["phone"] = $input["phone"];
-                $add_data["address"] = $input["address"]??"";
+                $add_data["address"] = $input["address"]??NULL;
                 $add_data["payment"] = $input["payment"]??1;
                 $add_data["delivery"] = $input["delivery"]??1;
                 $add_data["status"] = 1;
                 $add_data["total"] = $input["total"];
+                $add_data["order_remark"] = $input["order_remark"]??NULL;
+                $add_data["created_id"] = $user_id;
                 
                 try {
                     $orders_data = Orders::create($add_data);
@@ -507,6 +511,26 @@ class AjaxController extends Controller
                     } catch(QueryException $e) {
                         $this->message = "刪除購物車錯誤！";
                     }
+                }
+            } else if($action_type == "cancel") { //取消
+                $uuid = $input["uuid"]??"";
+                $data = Orders::where("uuid",$uuid)->first();
+                if(isset($data) && !empty($data)) {
+                    try {
+                        $data->cancel = $input["cancel"];
+                        $data->cancel_remark = $input["cancel_remark"]??NULL;
+                        $data->cancel_by = "user";
+                        $data->cancel_id = $user_id;
+                        $data["status"] = 4;
+                        $data->save();
+                        
+                        $this->error = false;
+                        $this->message = "取消成功！";
+                    } catch(QueryException $e) {
+                        $this->message = "取消失敗！";
+                    }
+                } else {
+                    $this->message = "取消失敗！";
                 }
             } else {
                 $this->message = "操作錯誤！";

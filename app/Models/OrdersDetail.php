@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Models\Product;
+
 class OrdersDetail extends Model
 {
     use HasFactory,SoftDeletes;
@@ -17,6 +19,31 @@ class OrdersDetail extends Model
         "updated_at" => "datetime:Y-m-d H:i:s",
         "deleted_at" => "datetime:Y-m-d H:i:s"
     ];
+
+    /**
+     * 依訂單ID取得資料
+     * @param  orders_id
+     * @return array
+     */
+    public static function getDataByOrderid($orders_id)
+    {
+        $datas = [];
+        $get_data = self::where("orders_id",$orders_id)->get();
+        if(isset($get_data) && !empty($get_data)) {
+            $datas = $get_data->toArray();
+        }
+        if(!empty($datas)) {
+            foreach($datas as $key => $val) {
+                $datas[$key]["name"] = "";
+                if(isset($val["product_id"]) && $val["product_id"] > 0) {
+                    $datas[$key]["name"] = Product::getName($val["product_id"]);
+                }
+
+                $datas[$key]["subtotal"] = $val["amount"]*$val["price"];
+            }
+        }
+        return $datas;
+    }
 
     /**
      * 取得資料

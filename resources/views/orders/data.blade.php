@@ -27,15 +27,21 @@
                             </tr>
                             <tr>
                                 <th class="text-center tm-bg-gray">訂購日期：</th>
-                                <th>{{ @$datas["assign_data"]["create_time"] }}</th>
+                                <th>{{ @$datas["assign_data"]["created_at"] }}</th>
                             </tr>
                             <tr>
                                 <th class="text-center tm-bg-gray">訂單狀態：</th>
                                 <th>{{ @$datas["assign_data"]["status_name"] }}</th>
                             </tr>
+                            @if(@$datas["assign_data"]["status"] == 4)
+                            <tr>
+                                <th class="text-center tm-bg-gray">取消原因：</th>
+                                <th>{{ @$datas["assign_data"]["cancel_name"] }}</th>
+                            </tr>
+                            @endif
                             <tr>
                                 <th class="text-center tm-bg-gray">配送方式：</th>
-                                <th>{{ @$datas["assign_data"]["send_name"] }}</th>
+                                <th>{{ @$datas["assign_data"]["delivery_name"] }}</th>
                             </tr>
                             <tr>
                                 <th class="text-center tm-bg-gray">付款方式：</th>
@@ -69,7 +75,7 @@
                                     </td>
                                     <td class="text-center tm-product-name">{{ @$data["name"] }}</td>
                                     <td class="text-center" style="display:{{ @$datas["assign_data"]["order_none"] }};">
-                                        <input type="number" min="0" id="amount_{{ @$data["id"] }}" name="amount[]" value="{{ @$data["amount"] }}" style="width: 50px;" onchange="cartChangeTotal('{{ @$data["id"] }}')">
+                                        <input type="number" min="1" id="amount_{{ @$data["id"] }}" name="amount[]" value="{{ @$data["amount"] }}" style="width: 50px;" onchange="cartChangeTotal('{{ @$data["id"] }}')">
                                     </td>
                                     <td class="text-center" style="display:{{ @$datas["assign_data"]["cart_none"] }};">{{ @$data["amount"] }}</td>
                                     <td class="text-center">

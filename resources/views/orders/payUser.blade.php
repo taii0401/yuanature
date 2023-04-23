@@ -67,7 +67,7 @@
                             <div class="row">
                                 <div class="col-12">
                                     <label>備註：</label>
-                                    <textarea id="order_remark" name="order_remark" class="form-control">{!! @$datas["assign_data"]["order_remark"] !!}</textarea>
+                                    <textarea id="order_remark" name="order_remark" class="form-control"></textarea>
                                 </div>
                             </div>
                             <div class="row">

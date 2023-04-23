@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Models\WebCode;
+
 class Orders extends Model
 {
     use HasFactory,SoftDeletes;
@@ -31,6 +33,32 @@ class Orders extends Model
         }
         $serial_num += 1;
         return $serial_num;
+    }
+
+    /**
+     * 依訂單UUID取得資料
+     * @param  uuid
+     * @param  user_id
+     * @return array
+     */
+    public static function getDataByUuid($uuid,$user_id='')
+    {
+        $data = [];
+        $get_data = self::where("uuid",$uuid);
+        if($user_id > 0) {
+            $get_data = $get_data->where("user_id",$user_id);
+        }
+        $get_data = $get_data->first();
+        if(isset($get_data) && !empty($get_data)) {
+            $data = $get_data->toArray();
+        }
+        if(!empty($data)) {
+            $data["status_name"] = $data["status"]?WebCode::getCnameByCode("order_status",$data["status"]):"";
+            $data["payment_name"] = $data["payment"]?WebCode::getCnameByCode("order_payment",$data["payment"]):"";
+            $data["delivery_name"] = $data["delivery"]?WebCode::getCnameByCode("order_delivery",$data["delivery"]):"";
+            $data["cancel_name"] = $data["cancel"]?WebCode::getCnameByCode("order_cancel",$data["cancel"]):"";
+        }
+        return $data;
     }
 
     /**
