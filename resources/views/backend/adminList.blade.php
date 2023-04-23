@@ -122,8 +122,7 @@
                     <div id="msg_error" class="col-12 alert alert-danger" role="alert" style="display:none;"></div>
                     <div id="msg_success" class="col-12 alert alert-success" role="alert" style="display:none;"></div>
                     <div class="col-12">
-                    <div class="row m-t-10">
-                        <div class="row">
+                        <div class="row m-t-10">
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
                                 <label>帳號</label>
                                 <input type="text" id="input_modal_account" name="account" class="form-control require" value="" >
