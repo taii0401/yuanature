@@ -53,9 +53,15 @@ class Orders extends Model
             $data = $get_data->toArray();
         }
         if(!empty($data)) {
+            //建立時間
+            $data["created_at_format"] = date("Y-m-d H:i:s",strtotime($data["created_at"]." + 8 hours"));
+            //訂單狀態
             $data["status_name"] = $data["status"]?WebCode::getCnameByCode("order_status",$data["status"]):"";
+            //付款方式
             $data["payment_name"] = $data["payment"]?WebCode::getCnameByCode("order_payment",$data["payment"]):"";
+            //配送方式
             $data["delivery_name"] = $data["delivery"]?WebCode::getCnameByCode("order_delivery",$data["delivery"]):"";
+            //取消原因
             $data["cancel_name"] = $data["cancel"]?WebCode::getCnameByCode("order_cancel",$data["cancel"]):"";
         }
         return $data;

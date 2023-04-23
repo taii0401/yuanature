@@ -81,7 +81,7 @@
                                 <td class="text-center">{{ @$data["phone"] }}</td>
                                 <td class="text-center">{{ @$data["register_type_name"] }}</td>
                                 <td class="text-center">{{ @$data["is_verified_name"] }}</td>
-                                <td class="text-center">{{ @$data["created_at"] }}</td>
+                                <td class="text-center">{{ @$data["created_at_format"] }}</td>
                                 <td>
                                     <div class="col-12">
                                         <div class="btn-action">

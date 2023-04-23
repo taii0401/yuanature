@@ -52,9 +52,15 @@ class OrderController extends Controller
         //轉換名稱
         if(!empty($list_data)) {
             foreach($list_data as $key => $val) {
+                //建立時間
+                $list_data[$key]["created_at_format"] = date("Y-m-d H:i:s",strtotime($val["created_at"]." + 8 hours"));
+                //訂單狀態
                 $list_data[$key]["status_name"] = $val["status"]?WebCode::getCnameByCode("order_status",$val["status"]):"";
+                //付款方式
                 $list_data[$key]["payment_name"] = $val["payment"]?WebCode::getCnameByCode("order_payment",$val["payment"]):"";
+                //配送方式
                 $list_data[$key]["delivery_name"] = $val["delivery"]?WebCode::getCnameByCode("order_delivery",$val["delivery"]):"";
+                //取消原因
                 $list_data[$key]["cancel_name"] = $val["cancel"]?WebCode::getCnameByCode("order_cancel",$val["cancel"]):"";
             }
         }

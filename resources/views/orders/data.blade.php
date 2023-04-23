@@ -27,7 +27,7 @@
                             </tr>
                             <tr>
                                 <th class="text-center tm-bg-gray" height="50px">訂購日期：</th>
-                                <th>{{ @$datas["assign_data"]["created_at"] }}</th>
+                                <th>{{ @$datas["assign_data"]["created_at_format"] }}</th>
                             </tr>
                             <tr>
                                 <th class="text-center tm-bg-gray" height="50px">訂單狀態：</th>

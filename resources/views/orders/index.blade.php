@@ -63,7 +63,7 @@
                                     <td class="text-center" height="50px">
                                         <a href="#" onclick="changeForm('/orders/detail?orders_uuid={{ @$data["uuid"] }}');">{{ @$data["serial"] }}</a>
                                     </td>
-                                    <td class="text-center">{{ @$data["created_at"] }}</td>
+                                    <td class="text-center">{{ @$data["created_at_format"] }}</td>
                                     <td class="text-center">{{ @$data["status_name"] }}</td>
                                     <td class="text-center">{{ @$data["delivery_name"] }}</td>
                                     <td class="text-center">{{ @$data["payment_name"] }}</td>

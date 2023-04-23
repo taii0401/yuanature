@@ -54,7 +54,11 @@ class UserController extends Controller
         //轉換名稱
         if(!empty($list_data)) {
             foreach($list_data as $key => $val) {
+                //建立時間
+                $list_data[$key]["created_at_format"] = date("Y-m-d H:i:s",strtotime($val["created_at"]." + 8 hours"));
+                //登入方式
                 $list_data[$key]["register_type_name"] = $val["register_type"]?WebCode::getCnameByCode("user_register",$val["register_type"]):"";
+                //是否驗證
                 $list_data[$key]["is_verified_name"] = WebUser::class::$isVerifiedName[$val["is_verified"]]??"";
             }
         }
