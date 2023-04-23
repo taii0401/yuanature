@@ -147,6 +147,8 @@ Route::group([
     Route::controller(BackEndOrderController::class)->group(function() {
         //列表
         Route::get("orders/","list");
+        //訂單明細
+        Route::get("orders/detail","detail");
     });
 });
 
@@ -161,7 +163,7 @@ $ajaxs[] = "user_exist"; //會員資料-檢查帳號是否存在
 $ajaxs[] = "user_forget"; //會員資料-忘記密碼
 $ajaxs[] = "user_data"; //會員資料-新增、編輯、刪除
 $ajaxs[] = "cart_data"; //購物車-新增、編輯、刪除
-$ajaxs[] = "orders_data"; //訂單-新增、編輯、刪除、取消
+$ajaxs[] = "orders_data"; //訂單-新增、編輯、取消
 foreach($ajaxs as $ajax) {
     Route::post("/ajax/".$ajax,[AjaxController::class,$ajax]); 
 }
@@ -170,7 +172,7 @@ foreach($ajaxs as $ajax) {
 $ajaxs_admin = [];
 $ajaxs_admin[] = "admin_data"; //管理員資料-新增、編輯、刪除
 $ajaxs_admin[] = "user_data"; //管理員資料-編輯、刪除
-$ajaxs_admin[] = "orders_data"; //訂單資料-編輯、刪除、取消
+$ajaxs_admin[] = "orders_data"; //訂單資料-編輯、取消
 foreach($ajaxs_admin as $ajax_admin) {
     Route::post("/ajax/admin/".$ajax_admin,[BackEndAjaxController::class,$ajax_admin])->middleware("auth.admin"); 
 }

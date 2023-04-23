@@ -63,6 +63,10 @@ class Orders extends Model
             $data["delivery_name"] = $data["delivery"]?WebCode::getCnameByCode("order_delivery",$data["delivery"]):"";
             //取消原因
             $data["cancel_name"] = $data["cancel"]?WebCode::getCnameByCode("order_cancel",$data["cancel"]):"";
+            //取消備註
+            $data["cancel_remark_format"] = nl2br($data["cancel_remark"]);
+            //訂單備註
+            $data["order_remark_format"] = nl2br($data["order_remark"]);
         }
         return $data;
     }

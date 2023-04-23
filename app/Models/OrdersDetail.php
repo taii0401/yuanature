@@ -34,11 +34,12 @@ class OrdersDetail extends Model
         }
         if(!empty($datas)) {
             foreach($datas as $key => $val) {
+                //商品名稱
                 $datas[$key]["name"] = "";
                 if(isset($val["product_id"]) && $val["product_id"] > 0) {
                     $datas[$key]["name"] = Product::getName($val["product_id"]);
                 }
-
+                //小計
                 $datas[$key]["subtotal"] = $val["amount"]*$val["price"];
             }
         }

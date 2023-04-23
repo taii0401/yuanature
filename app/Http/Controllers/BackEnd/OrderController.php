@@ -75,4 +75,28 @@ class OrderController extends Controller
 
         return view("backend.orderList",["datas" => $datas,"page_data" => $page_data]);
     }
+
+    //訂單明細資料
+    public function detail(Request $request) 
+    {
+        $input = $request->all();
+        $orders_uuid = $input["orders_uuid"]??"";
+
+        $assign_data = [];
+
+        //取得訂單資料
+        $orders_data = [];
+        if($orders_uuid != "") {
+            $orders_data = Orders::getDataByUuid($orders_uuid);
+        }
+        $assign_data = $orders_data;
+        //標題
+        $assign_data["title_txt"] = "訂單明細";
+    
+        $datas["assign_data"] = $assign_data;
+        //訂單明細資料
+        $datas["detail_data"] = OrdersDetail::getDataByOrderid($orders_data["id"]);
+        
+        return view("backend.orderData",["datas" => $datas]);
+    }
 }
