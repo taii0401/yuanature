@@ -77,7 +77,7 @@
                             </div>
                             <div class="row mt-3">
                                 <div class="col-12 tm-btn-center">
-                                    <button type="button" class="btn btn-primary" onclick="userSubmit('{{ @$action_type }}');">送出</button>
+                                    <button type="button" class="btn btn-primary btn_submit" onclick="userSubmit('{{ @$action_type }}');">送出</button>
                                     <button type="button" class="btn btn-danger" onclick="changeForm('/users/edit')">取消</button>
                                 </div>
                             </div>

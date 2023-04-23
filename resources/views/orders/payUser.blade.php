@@ -63,12 +63,18 @@
                                     <label>宅配地址</label>
                                     <input type="text" id="address" name="address" class="form-control" value="{{ @$datas["assign_data"]["address"] }}">
                                 </div>
-                            </div> 
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>備註：</label>
+                                    <textarea id="order_remark" name="order_remark" class="form-control">{!! @$datas["assign_data"]["order_remark"] !!}</textarea>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-12 col-sm-6"></div>
                                 <div class="col-12 col-sm-6 tm-btn-right">
-                                    <button type="button" class="btn btn-primary" onclick="changeForm('/orders/cart');">上一步</button>
-                                    <button type="button" class="btn btn-danger" onclick="orderSubmit('add')">結帳</button>
+                                    <button type="button" class="btn btn-primary btn_submit" onclick="changeForm('/orders/cart');">上一步</button>
+                                    <button type="button" class="btn btn-danger btn_submit" onclick="orderSubmit('add')">結帳</button>
                                 </div>
                             </div>
                         </div>

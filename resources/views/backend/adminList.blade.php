@@ -35,7 +35,7 @@
                 </div>
                 <div class="col-md-4 col-sm-12 text-right">
                     <button type="button" class="btn btn-primary dataModalBtn" data-bs-toggle="modal" data-bs-target="#dataModal" data-id="add">新增</button>
-                    <button type="button" class="btn btn-danger check_btn" style="display:none" onclick="adminSubmit('admin');">刪除</button>
+                    <button type="button" class="btn btn-danger check_btn btn_submit" style="display:none" onclick="adminSubmit('admin');">刪除</button>
                 </div>
             </div>
             <div class="tm-table-mt tm-table-actions-row">
@@ -84,7 +84,7 @@
                                             </i>
                                         </div>
                                         <div class="btn-action">
-                                            <i class="fas fa-trash-alt tm-trash-icon" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('admin');"></i>
+                                            <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('admin');"></i>
                                         </div>
                                     </div>
                                 </td>
@@ -161,7 +161,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="adminSubmit('admin');">送出</button>
+                    <button type="button" class="btn btn-primary btn_submit" onclick="adminSubmit('admin');">送出</button>
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">取消</button>
                 </div>
             </div>

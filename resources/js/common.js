@@ -21,6 +21,11 @@ function getToken() {
     return csrf_token;
 }
 
+//中斷結束
+function returnFalseAction() {
+    $('.btn_submit').attr('disabled', false);
+}
+
 //跳轉頁面
 function changeForm(url) {
     if (url != '') {
@@ -142,6 +147,7 @@ function uploadFile() {
                     ui_multi_update_file_progress(id, 100, 'success', false);
                 } else {
                     alert(jsdata.message);
+                    returnFalseAction();
                     return false;
                 }
             }
@@ -152,10 +158,12 @@ function uploadFile() {
         },
         onFileSizeError: function(file) { //檢查檔案大小
             alert('\'' + file.name + '\' 無法上傳: 檔案超過限制大小');
+            returnFalseAction();
             return false;
         },
         onFileExtError: function(file) { //檢查檔案格式
             alert('僅支援上傳圖檔');
+            returnFalseAction();
             return false;
         }
     });
@@ -165,6 +173,7 @@ function uploadFile() {
 function deleteFile(id, type) {
     var yes = confirm("你確定要刪除嗎？");
     if (!yes) {
+        returnFalseAction();
         return false;
     }
 
@@ -182,6 +191,7 @@ function deleteFile(id, type) {
             error: function(xhr) {
                 //console.log(xhr);
                 alert('傳送錯誤！');
+                returnFalseAction();
                 return false;
             },
             success: function(response) {
@@ -190,9 +200,11 @@ function deleteFile(id, type) {
 
                 } else if (response.error == true) {
                     alert(response.message);
+                    returnFalseAction();
                     return false;
                 } else {
                     alert('傳送錯誤！');
+                    returnFalseAction();
                     return false;
                 }
             }
@@ -209,6 +221,7 @@ function checkFileCount() {
 
     if (count >= 6) {
         alert('上傳不可超過6張圖片！');
+        returnFalseAction();
         return false;
     }
 }
@@ -246,6 +259,7 @@ function checkRequiredClass(classStr, isShowMsg) {
     if (required_num > 0) {
         message = '您有' + required_num + '個必填欄位未選填！';
         showMsg('msg_error', message, isShowMsg);
+        returnFalseAction();
         return false;
     }
 }
@@ -291,6 +305,7 @@ function checkFormat(type, data, strLength, isShowMsg) {
 
     if (message != '') {
         showMsg('msg_error', message, isShowMsg);
+        returnFalseAction();
         return false;
     }
 }
@@ -334,6 +349,8 @@ function setModalInput(modal_values, input_modal_keys, select_modal_keys) {
                     $('#modal_title_name').text('編輯');
                 } else if (value == 'delete') {
                     $('#modal_title_name').text('刪除');
+                } else if (value == 'cancel') {
+                    $('#modal_title_name').text('取消');
                 }
             }
         }
@@ -375,6 +392,7 @@ function userExist(account) {
 function userForget() {
     //檢查必填
     if (checkRequiredClass('require', true) == false) {
+        returnFalseAction();
         return false;
     }
 
@@ -407,28 +425,34 @@ function userForget() {
 
 //送出-會員資料
 function userSubmit(action_type) {
+    $('.btn_submit').attr('disabled', true);
     $('#action_type').val(action_type);
     //檢查必填
     if (checkRequiredClass('require', true) == false) {
+        returnFalseAction();
         return false;
     }
     if (action_type == 'add') { //新增
         //檢查登入帳號(電子郵件)
         if (checkFormat('email', $('#account').val(), 0, true) == false) {
+            returnFalseAction();
             return false;
         }
         //檢查登入帳號(電子郵件)是否存在
         if (userExist($('#account').val()) == false) {
+            returnFalseAction();
             return false;
         }
     }
     if (action_type == 'add' || action_type == 'edit_password') { //新增、編輯密碼
         //檢查密碼
         if (checkFormat('en_number', $('#password').val(), 30, true) == false) {
+            returnFalseAction();
             return false;
         }
         //檢查確認密碼
         if (checkFormat('confirm_password', $('#confirm_password').val(), 30, true) == false) {
+            returnFalseAction();
             return false;
         }
     }
@@ -436,6 +460,7 @@ function userSubmit(action_type) {
         //檢查手機號碼
         if ($('#phone').val() != '') {
             if (checkFormat('phone', $('#phone').val(), 0, true) == false) {
+                returnFalseAction();
                 return false;
             }
         }
@@ -444,6 +469,7 @@ function userSubmit(action_type) {
     if (action_type == 'delete') { //刪除
         var yes = confirm("你確定要刪除嗎？");
         if (!yes) {
+            returnFalseAction();
             return false;
         }
     }
@@ -459,6 +485,7 @@ function userSubmit(action_type) {
         error: function(xhr) {
             //console.log(xhr);
             alert('傳送錯誤！');
+            returnFalseAction();
             return false;
         },
         success: function(response) {
@@ -479,9 +506,11 @@ function userSubmit(action_type) {
                 }
             } else if (response.error == true) {
                 showMsg('msg_error', response.message, true);
+                returnFalseAction();
                 return false;
             } else {
                 alert('傳送錯誤！');
+                returnFalseAction();
                 return false;
             }
         }
@@ -490,11 +519,13 @@ function userSubmit(action_type) {
 
 //購物車-新增、編輯、刪除
 function cartSubmit(action_type) {
+    $('.btn_submit').attr('disabled', true);
     $('#action_type').val(action_type);
 
     if (action_type == 'delete') { //刪除
         var yes = confirm("你確定要刪除嗎？");
         if (!yes) {
+            returnFalseAction();
             return false;
         }
     }
@@ -508,6 +539,7 @@ function cartSubmit(action_type) {
         error: function(xhr) {
             //console.log(xhr);
             alert('傳送錯誤！');
+            returnFalseAction();
             return false;
         },
         success: function(response) {
@@ -526,9 +558,11 @@ function cartSubmit(action_type) {
                 } else {
                     showMsg('msg_error', response.message, false);
                 }
+                returnFalseAction();
                 return false;
             } else {
                 alert('傳送錯誤！');
+                returnFalseAction();
                 return false;
             }
         }
@@ -561,32 +595,29 @@ function cartChangeTotal(id) {
     $('#total').html(total);
 }
 
-//訂單-新增、編輯、刪除
+//訂單-新增、編輯、刪除、取消
 function orderSubmit(action_type) {
-    $('#action_type').val(action_type);
+    $('.btn_submit').attr('disabled', true);
 
     if (action_type == 'add') { //新增
         //檢查必填
         if (checkRequiredClass('require', true) == false) {
+            returnFalseAction();
             return false;
         }
         //檢查手機號碼
         if ($('#phone').val() != '') {
             if (checkFormat('phone', $('#phone').val(), 0, true) == false) {
+                returnFalseAction();
                 return false;
             }
         }
         //檢查電子郵件
         if ($('#email').val() != '') {
             if (checkFormat('email', $('#email').val(), 0, true) == false) {
+                returnFalseAction();
                 return false;
             }
-        }
-    }
-    if (action_type == 'delete') { //刪除
-        var yes = confirm("你確定要刪除嗎？");
-        if (!yes) {
-            return false;
         }
     }
 
@@ -601,6 +632,7 @@ function orderSubmit(action_type) {
         error: function(xhr) {
             //console.log(xhr);
             alert('傳送錯誤！');
+            returnFalseAction();
             return false;
         },
         success: function(response) {
@@ -608,16 +640,21 @@ function orderSubmit(action_type) {
             if (response.error == false) {
                 if (action_type == 'add') { //新增
                     uuid = response.message;
-                    changeForm('/orders/pay_check?order_uuid=' + uuid);
+                    //changeForm('/orders/pay_check?order_uuid=' + uuid);
 
-                    //alert("購買成功！");
-                    //changeForm('/orders/detail?order_uuid='+uuid);
+                    alert("購買成功！");
+                    changeForm('/orders/detail?order_uuid='+uuid);
+                } else if (action_type == 'cancel') { //取消
+                    alert("取消成功！");
+                    changeForm('/orders');
                 }
             } else if (response.error == true) {
                 showMsg('msg_error', response.message, false);
+                returnFalseAction();
                 return false;
             } else {
                 alert('傳送錯誤！');
+                returnFalseAction();
                 return false;
             }
         }
@@ -628,6 +665,8 @@ function orderSubmit(action_type) {
 /* =================================後台================================= */
 //送出-管理員資料、會員資料
 function adminSubmit(type) {
+    $('.btn_submit').attr('disabled', true);
+
     if (type == 'admin') {
         change_url = '/admin/list';
     } else if (type == 'user') {
@@ -639,11 +678,13 @@ function adminSubmit(type) {
     if (action_type == 'delete') { //刪除
         var yes = confirm("你確定要刪除嗎？");
         if (!yes) {
+            returnFalseAction();
             return false;
         }
     } else {
         //檢查必填
         if (checkRequiredClass('require', true) == false) {
+            returnFalseAction();
             return false;
         }
     }
@@ -659,6 +700,7 @@ function adminSubmit(type) {
         error: function(xhr) {
             //console.log(xhr);
             alert('傳送錯誤！');
+            returnFalseAction();
             return false;
         },
         success: function(response) {
@@ -674,9 +716,11 @@ function adminSubmit(type) {
                 changeForm(change_url);
             } else if (response.error == true) {
                 showMsg('msg_error', response.message, true);
+                returnFalseAction();
                 return false;
             } else {
                 alert('傳送錯誤！');
+                returnFalseAction();
                 return false;
             }
         }

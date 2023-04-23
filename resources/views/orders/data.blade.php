@@ -83,7 +83,7 @@
                                     <td class="text-center" style="display:{{ @$datas["assign_data"]["order_none"] }};">
                                         <div class="col">
                                             <div class="btn-action">
-                                                <i class="fas fa-trash-alt tm-trash-icon" onclick="$('#product_id').val('{{ @$data["id"] }}');cartSubmit('delete');"></i>
+                                                <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#product_id').val('{{ @$data["id"] }}');cartSubmit('delete');"></i>
                                             </div>
                                         </div>
                                     </td>
