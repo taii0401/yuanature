@@ -29,7 +29,7 @@ class OrderController extends Controller
         }
 
         //選單搜尋條件-排序
-        $option_data["orderby"] = ["name" => "排序","data" => ["asc_created_at" => "建立時間 小 ~ 大","desc_created_at" => "建立時間 大 ~ 小"]];
+        $option_data["orderby"] = ["name" => "排序","data" => ["asc_created_at" => "建立時間 遠 ~ 近","desc_created_at" => "建立時間 近 ~ 遠"]];
         //取得目前頁數及搜尋條件
         $search_datas = ["page","orderby","keywords"];
         $get_search_data = $this->getSearch($search_datas,$input);
@@ -84,7 +84,7 @@ class OrderController extends Controller
     public function detail(Request $request) 
     {
         $input = $request->all();
-        $order_uuid = $input["order_uuid"]??"";
+        $orders_uuid = $input["orders_uuid"]??"";
 
         $assign_data = [];
 
@@ -95,11 +95,11 @@ class OrderController extends Controller
             $user_id = $user_data->user_id;
         }
         //取得訂單資料
-        $order_data = [];
-        if($user_id > 0 && $order_uuid != "") {
-            $order_data = Orders::getDataByUuid($order_uuid,$user_id);
+        $orders_data = [];
+        if($user_id > 0 && $orders_uuid != "") {
+            $orders_data = Orders::getDataByUuid($orders_uuid,$user_id);
         }
-        $assign_data = $order_data;
+        $assign_data = $orders_data;
         //標題
         $assign_data["title_txt"] = "訂單明細";
         //顯示欄位
@@ -109,7 +109,7 @@ class OrderController extends Controller
     
         $datas["assign_data"] = $assign_data;
         //訂單明細資料
-        $datas["cart_data"] = OrdersDetail::getDataByOrderid($order_data["id"]);
+        $datas["cart_data"] = OrdersDetail::getDataByOrderid($orders_data["id"]);
         
         return view("orders.data",["datas" => $datas]);
     }

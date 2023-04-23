@@ -401,7 +401,7 @@ class AjaxController extends Controller
 
     
     //訂單-新增、編輯、刪除、取消
-    public function order_data(Request $request)
+    public function orders_data(Request $request)
     {
         $this->resetResult();
 

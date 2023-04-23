@@ -625,7 +625,7 @@ function orderSubmit(action_type) {
 
     $.ajax({
         type: 'POST',
-        url: '/ajax/order_data',
+        url: '/ajax/orders_data',
         dataType: 'json',
         async: false,
         data: $('#form_data').serialize(),
@@ -640,10 +640,10 @@ function orderSubmit(action_type) {
             if (response.error == false) {
                 if (action_type == 'add') { //新增
                     uuid = response.message;
-                    //changeForm('/orders/pay_check?order_uuid=' + uuid);
+                    //changeForm('/orders/pay_check?orders_uuid=' + uuid);
 
                     alert("購買成功！");
-                    changeForm('/orders/detail?order_uuid='+uuid);
+                    changeForm('/orders/detail?orders_uuid='+uuid);
                 } else if (action_type == 'cancel') { //取消
                     alert("取消成功！");
                     changeForm('/orders');

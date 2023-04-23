@@ -47,7 +47,7 @@
                     <table class="table table-hover table-striped tm-table-striped-even mt-3"  style="vertical-align: middle;">
                         <thead>
                             <tr class="tm-bg-gray">
-                                <th scope="col" class="text-center" style="width:15%;height:60px;">訂單編號</th>
+                                <th scope="col" class="text-center" style="width:15%;" height="50px">訂單編號</th>
                                 <th scope="col" class="text-center">訂購日期</th>
                                 <th scope="col" class="text-center" style="width:12%;">訂單狀態</th>
                                 <th scope="col" class="text-center" style="width:12%;">配送方式</th>
@@ -60,8 +60,8 @@
                             @if(isset($datas["list_data"]) && !empty($datas["list_data"]))
                                 @foreach($datas["list_data"] as $data)  
                                 <tr>
-                                    <td class="text-center" style="height:60px;">
-                                        <a href="#" onclick="changeForm('/orders/detail?order_uuid={{ @$data["uuid"] }}');">{{ @$data["serial"] }}</a>
+                                    <td class="text-center" height="50px">
+                                        <a href="#" onclick="changeForm('/orders/detail?orders_uuid={{ @$data["uuid"] }}');">{{ @$data["serial"] }}</a>
                                     </td>
                                     <td class="text-center">{{ @$data["created_at"] }}</td>
                                     <td class="text-center">{{ @$data["status_name"] }}</td>

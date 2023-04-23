@@ -22,33 +22,33 @@
                     <table class="table table-hover table-striped tm-table-striped-even mt-3"  style="vertical-align: middle;">
                         <thead>
                             <tr>
-                                <th class="text-center tm-bg-gray">訂單編號：</th>
+                                <th class="text-center tm-bg-gray" height="50px">訂單編號：</th>
                                 <th>{{ @$datas["assign_data"]["serial"] }}</th>
                             </tr>
                             <tr>
-                                <th class="text-center tm-bg-gray">訂購日期：</th>
+                                <th class="text-center tm-bg-gray" height="50px">訂購日期：</th>
                                 <th>{{ @$datas["assign_data"]["created_at"] }}</th>
                             </tr>
                             <tr>
-                                <th class="text-center tm-bg-gray">訂單狀態：</th>
+                                <th class="text-center tm-bg-gray" height="50px">訂單狀態：</th>
                                 <th>{{ @$datas["assign_data"]["status_name"] }}</th>
                             </tr>
                             @if(@$datas["assign_data"]["status"] == 4)
                             <tr>
-                                <th class="text-center tm-bg-gray">取消原因：</th>
+                                <th class="text-center tm-bg-gray" height="50px">取消原因：</th>
                                 <th>{{ @$datas["assign_data"]["cancel_name"] }}</th>
                             </tr>
                             @endif
                             <tr>
-                                <th class="text-center tm-bg-gray">配送方式：</th>
+                                <th class="text-center tm-bg-gray" height="50px">配送方式：</th>
                                 <th>{{ @$datas["assign_data"]["delivery_name"] }}</th>
                             </tr>
                             <tr>
-                                <th class="text-center tm-bg-gray">付款方式：</th>
+                                <th class="text-center tm-bg-gray" height="50px">付款方式：</th>
                                 <th>{{ @$datas["assign_data"]["payment_name"] }}</th>
                             </tr>
                             <tr>
-                                <th class="text-center tm-bg-gray">訂購金額：</th>
+                                <th class="text-center tm-bg-gray" height="50px">訂購金額：</th>
                                 <th>{{ @$datas["assign_data"]["total"] }}元</th>
                             </tr>
                         </thead>
@@ -58,11 +58,10 @@
                     <table class="table table-hover table-striped tm-table-striped-even mt-3"  style="vertical-align: middle;">
                         <thead>
                             <tr class="tm-bg-gray">
-                                <th scope="col" class="text-center" style="width:12%;display: none;">商品編號</th>
-                                <th scope="col" class="text-center">商品名稱</th>
-                                <th scope="col" class="text-center" style="width:8%;">數量</th>
-                                <th scope="col" class="text-center" style="width:8%;">售價</th>
-                                <th scope="col" class="text-center" style="width:10%;">小計</th>
+                                <th scope="col" class="text-center" height="50px">商品名稱</th>
+                                <th scope="col" class="text-center" style="width:10%;">數量</th>
+                                <th scope="col" class="text-center" style="width:10%;">售價</th>
+                                <th scope="col" class="text-center" style="width:15%;">小計</th>
                                 <th scope="col" class="text-center" style="width:8%; display:{{ @$datas["assign_data"]["order_none"] }};">刪除</th>
                             </tr>
                         </thead>
@@ -70,10 +69,7 @@
                             @if(isset($datas["cart_data"]) && !empty($datas["cart_data"]))
                                 @foreach($datas["cart_data"] as $data) 
                                 <tr>
-                                    <td class="text-center" style="display: none;">
-                                        <a href="#" target="_blank" class="tm-bg-blue tm-text-white tm-buy" onclick="changeForm('/');">{{ @$data["serial"] }}</a>
-                                    </td>
-                                    <td class="text-center tm-product-name">{{ @$data["name"] }}</td>
+                                    <td class="text-center tm-product-name" height="50px">{{ @$data["name"] }}</td>
                                     <td class="text-center" style="display:{{ @$datas["assign_data"]["order_none"] }};">
                                         <input type="number" min="1" id="amount_{{ @$data["id"] }}" name="amount[]" value="{{ @$data["amount"] }}" style="width: 50px;" onchange="cartChangeTotal('{{ @$data["id"] }}')">
                                     </td>
@@ -101,7 +97,7 @@
                     <table class="table table-hover table-striped tm-table-striped-even mt-3"  style="vertical-align: middle;">
                         <thead>
                             <tr class="tm-bg-gray">
-                                <th scope="col">合計：<span id="total">{{ @$datas["assign_data"]["total"] }}</span>元</th>
+                                <th scope="col" height="50px">合計：<span id="total">{{ @$datas["assign_data"]["total"] }}</span>元</th>
                             </tr>
                         </thead>
                     </table>

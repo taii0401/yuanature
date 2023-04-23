@@ -67,7 +67,7 @@
                                 <a class="nav-link" href="/admin/user">會員管理</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="/admin/order">訂單管理</a>
+                                <a class="nav-link" href="/admin/orders">訂單管理</a>
                             </li>
                         @endif
                         </ul>
