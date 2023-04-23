@@ -41,7 +41,7 @@ class OrderController extends Controller
         $assign_data["title_txt"] = "訂單查詢";
 
         //排序
-        $orderby_sort = "asc";
+        $orderby_sort = "desc";
         $orderby_col = "created_at";
         if(isset($assign_data["orderby"]) && $assign_data["orderby"] != "") {
             $orderby = $assign_data["orderby"];
