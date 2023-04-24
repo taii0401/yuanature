@@ -158,7 +158,7 @@ class AjaxController extends Controller
         }
 
         $account = $input["account"]??"";
-        $count = User::where(["email" => $account])->count();
+        $count = User::where(["email" => $account])->whereNull("facebook_id")->whereNull("line_id")->count();
         if($count == 0) {
             $this->error = false;
             $this->message = "帳號可新增！";
@@ -462,9 +462,9 @@ class AjaxController extends Controller
                 $add_data["name"] = $input["name"];
                 $add_data["phone"] = $input["phone"];
                 $add_data["address"] = $input["delivery"] == 2 && $input["address"] != ""?$input["address"]:NULL;
-                $add_data["payment"] = $input["payment"]??1;
-                $add_data["delivery"] = $input["delivery"]??1;
-                $add_data["status"] = 1;
+                $add_data["payment"] = $input["payment"]??NULL;
+                $add_data["delivery"] = $input["delivery"]??NULL;
+                $add_data["status"] = "nopaid";
                 $add_data["total"] = $input["total"];
                 $add_data["order_remark"] = $input["order_remark"] != ""?$input["order_remark"]:NULL;
                 $add_data["created_id"] = $user_id;
@@ -521,7 +521,7 @@ class AjaxController extends Controller
                         $data->cancel_remark = $input["cancel_remark"]??NULL;
                         $data->cancel_by = "user";
                         $data->cancel_id = $user_id;
-                        $data["status"] = 4;
+                        $data["status"] = "cancel";
                         $data->save();
                         
                         $this->error = false;
