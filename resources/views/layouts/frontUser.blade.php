@@ -8,7 +8,7 @@
                 <h4 class="text-center">會員中心</h4>
                 <ul>
                     <li><a href="/users/edit">會員資料</a></li>
-                    @if(UserAuth::userdata()->register_type == 1)
+                    @if(UserAuth::userdata()->register_type == "email")
                         <li><a href="/users/edit_password">修改密碼</a></li>
                     @endif
                     <li><a href="/orders">訂單查詢</a></li>

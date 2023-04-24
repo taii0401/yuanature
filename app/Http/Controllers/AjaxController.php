@@ -297,7 +297,7 @@ class AjaxController extends Controller
                 $uuid = Str::uuid()->toString();
                 $add_data["uuid"] = $uuid;
                 $add_data["user_id"] = $user_id;
-                $add_data["register_type"] = 1;
+                $add_data["register_type"] = "email";
                 $user_data = WebUser::create($add_data);
                 if((int)$user_data->id > 0) {//新增成功
                     $this->error = false;
