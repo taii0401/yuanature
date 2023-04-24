@@ -40,7 +40,7 @@ class OrderController extends Controller
         $option_data["orderby"] = ["name" => "排序","data" => ["asc_created_at" => "建立時間 遠 ~ 近","desc_created_at" => "建立時間 近 ~ 遠"]];
         //取得目前頁數及搜尋條件
         $search_datas = ["page","orderby","keywords"];
-        $get_search_data = $this->getSearch($search_datas,$input);
+        $get_search_data = $this->getSearch($search_datas,$input,"desc_created_at");
         //顯示資料
         $assign_data = $get_search_data["assign_data"]??[];
         //分頁
