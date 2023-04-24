@@ -20,11 +20,11 @@
                         <div class="col-12">
                             <div class="row">
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                    <label>收件人-姓名</label>
+                                    <label><span class="star">* </span>收件人-姓名</label>
                                     <input type="text" id="name" name="name" class="form-control require" value="{{ @$datas["assign_data"]["name"] }}">
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                    <label>收件人-手機號碼</label>
+                                    <label><span class="star">* </span>收件人-手機號碼</label>
                                     <input type="text" id="phone" name="phone" class="form-control require" value="{{ @$datas["assign_data"]["phone"] }}">                  
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
@@ -34,7 +34,7 @@
                             </div> 
                             <div class="row">
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                    <label>付款方式</label>
+                                    <label><span class="star">* </span>付款方式</label>
                                     <div class="col-12">
                                     @if(isset($datas["option_data"]["payment"]) && !empty($datas["option_data"]["payment"]))    
                                         @foreach($datas["option_data"]["payment"] as $key => $val) 
@@ -47,7 +47,7 @@
                                     </div>                  
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                    <label>配送方式</label>
+                                    <label><span class="star">* </span>配送方式</label>
                                     <div class="col-12">
                                     @if(isset($datas["option_data"]["delivery"]) && !empty($datas["option_data"]["delivery"]))    
                                         @foreach($datas["option_data"]["delivery"] as $key => $val) 
@@ -60,7 +60,7 @@
                                     </div>                  
                                 </div>
                                 <div id="div_orders_address" class="col-xl-4 col-lg-4 col-md-6 col-sm-12" style="display:none;">
-                                    <label>宅配地址</label>
+                                    <label><span class="star">* </span>宅配地址</label>
                                     <input type="text" id="orders_address" name="address" class="form-control" value="{{ @$datas["assign_data"]["address"] }}">
                                 </div>
                             </div>
