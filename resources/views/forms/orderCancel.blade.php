@@ -17,7 +17,7 @@
                         <div class="row m-t-10">
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
                                 <label class="col-form-label">取消原因</label>
-                                <select class="custom-select col-12" id="input_modal_cancel" name="cancel" onchange="changeSelect()">
+                                <select class="custom-select col-12" id="input_modal_cancel" name="cancel" onchange="changeDataDisplay('select','input_modal_cancel','cancel_remark','other',true)">
                                     @if(isset($datas["modal_data"]["cancel"]) && !empty($datas["modal_data"]["cancel"]))
                                         @foreach($datas["modal_data"]["cancel"] as $key => $val)
                                             <option value="{{ $key }}">{{ $val }}</option>
@@ -32,26 +32,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn_submit" onclick="orderSubmit($('#input_modal_action_type').val());">送出</button>
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger btn_submit" onclick="orderSubmit($('#input_modal_action_type').val());">送出</button>
+                    
                 </div>
             </div>
             
         </div>
     </div>
 </form>
-
-<script>
-    //取消原因
-    function changeSelect() {
-        val = $('#input_modal_cancel').val();
-        if(val == 3) { //其他
-            //顯示取消原因備註
-            $('#div_cancel_remark').css('display','');
-            $('#cancel_remark').addClass('require');
-        } else {
-            $('#div_cancel_remark').css('display','none');
-            $('#cancel_remark').removeClass('require');
-        }
-    }
-</script>

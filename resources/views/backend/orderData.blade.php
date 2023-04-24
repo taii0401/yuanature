@@ -30,7 +30,7 @@
                         </tr>
                         @if(@$datas["assign_data"]["delivery"] == 2 && @$datas["assign_data"]["address"] != "")
                             <tr>
-                                <th class="text-center tm-bg-gray" height="50px">收件人地址：</th>
+                                <th class="text-center tm-bg-gray" height="50px">宅配地址：</th>
                                 <th>{{ @$datas["assign_data"]["address"] }}</th>
                             </tr>
                         @endif
@@ -103,7 +103,7 @@
             <div class="row">
                 <div class="col-12 col-sm-6"></div>
                 <div class="col-12 col-sm-6 tm-btn-right">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$datas["assign_data"]["uuid"] }},{{ @$datas["assign_data"]["status"] }},{{ @$datas["assign_data"]["delivery"] }},{{ @$datas["assign_data"]["payment"] }}">修改訂單</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dataModal">修改訂單</button>
                     <button type="button" class="btn btn-primary" onclick="changeForm('/admin/orders')">返回</button>
                 </div>
             </div>
@@ -113,14 +113,13 @@
 
 <form id="form_data" class="tm-signup-form" method="post">
     @csrf
-    <input type="hidden" id="input_modal_action_type" name="action_type" value="">
-    <input type="hidden" id="input_modal_uuid" name="uuid" value="">
-    <input type="hidden" id="check_list" name="check_list" value="">
+    <input type="hidden" id="input_modal_action_type" name="action_type" value="edit">
+    <input type="hidden" id="input_modal_uuid" name="uuid" value="{{ @$datas["assign_data"]["uuid"] }}">
     <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="semi-bold"><span id="modal_title_name"></span>會員</h6>
+                    <h6 class="semi-bold"><span id="modal_title_name"></span>訂單{{ @$datas["assign_data"]["serial"] }}</h6>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">×</button>
                 </div>
                 <div class="modal-body">
@@ -128,30 +127,46 @@
                     <div id="msg_success" class="col-12 alert alert-success" role="alert" style="display:none;"></div>
                     <div class="col-12">
                         <div class="row m-t-10">
-                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label>姓名</label>
-                                <input type="text" id="input_modal_name" name="name" class="form-control require" value="" >
+                            <div class="col-12">
+                                <label>配送方式：</label>
+                                @if(isset($datas["option_data"]["delivery"]) && !empty($datas["option_data"]["delivery"]))    
+                                    @foreach($datas["option_data"]["delivery"] as $key => $val) 
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="delivery" id="delivery_{{ @$key }}" value="{{ @$key }}" @if($key == $datas["assign_data"]["delivery"]) checked @endif onclick="changeDataDisplay('checked','delivery','order_address','home',true);">
+                                            <label class="form-check-label">{{ @$val }}</label>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+                            <div class="col-12">
+                                <label>訂單狀態：</label>
+                                @if(isset($datas["option_data"]["status"]) && !empty($datas["option_data"]["status"]))    
+                                    @foreach($datas["option_data"]["status"] as $key => $val) 
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="status" id="status_{{ @$key }}" value="{{ @$key }}" @if($key == $datas["assign_data"]["status"]) checked @endif onclick="changeDataDisplay('checked','status','orders_cancel','cancel',true);">
+                                            <label class="form-check-label">{{ @$val }}</label>
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label>EMAIL</label>
-                                <input type="text" id="input_modal_email" name="email" class="form-control " value="">                  
+                                <label>收件人姓名</label>
+                                <input type="text" id="input_modal_name" name="name" class="form-control require" value="{{ @$datas["assign_data"]["name"] }}" >
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label>手機</label>
-                                <input type="text" id="input_modal_phone" name="phone" class="form-control " value="">
+                                <label>收件人手機</label>
+                                <input type="text" id="input_modal_phone" name="phone" class="form-control " value="{{ @$datas["assign_data"]["phone"] }}">                  
                             </div>
-                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label class="col-12">是否驗證</label>
-                                <label class="form-switch">
-                                    <input type="checkbox" id="input_modal_is_verified" name="is_verified" class="form-control" onclick="changeSwitch('input_modal_is_verified');">
-                                    <i></i> <span id="input_switch_text_input_modal_is_verified"></span>
-                                </label>
+                            <div id="div_orders_address" class="col-xl-6 col-lg-6 col-md-12 col-sm-12" style="display:none;">
+                                <label>宅配地址</label>
+                                <input type="text" id="orders_address" name="address" class="form-control" value="{{ @$datas["assign_data"]["address"] }}">
                             </div>
+                            
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn_submit" onclick="adminSubmit('user');">送出</button>
+                    <button type="button" class="btn btn-primary btn_submit" onclick="adminSubmit('orders');">送出</button>
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">取消</button>
                 </div>
             </div>
@@ -164,13 +179,12 @@
 @section('script')
 <script>
     $(function () {
-        //是否驗證
-        changeSwitch('input_modal_is_verified');
+        changeDataDisplay('checked','delivery','orders_address','home',true);
     });
 
     $('.dataModalBtn').click(function () {
-        var input_modal_keys = ['action_type','uuid','name','email','phone','is_verified'];
-        var select_modal_keys = ['is_verified'];
+        var input_modal_keys = [];
+        var select_modal_keys = [];
         setModalInput($(this).data('id'),input_modal_keys,select_modal_keys);
     });
 </script>

@@ -49,7 +49,7 @@
                             <div class="row mt-3">
                                 <div class="col-12 tm-btn-center">
                                     <button type="submit" class="btn btn-small btn-primary d-inline-block mx-auto">登入</button>
-                                    <button type="button" class="btn btn-small btn-primary d-inline-block mx-auto" onclick="changeForm('/users/create')">註冊</button>
+                                    <button type="button" class="btn btn-small btn-danger d-inline-block mx-auto" onclick="changeForm('/users/create')">註冊</button>
                                 </div>
                             </div>
                         </form>

@@ -236,6 +236,27 @@ function changeSwitch(id) {
     }
 }
 
+//切換選項欄位，判斷是否顯示其他輸入欄位
+function changeDataDisplay(type, id_name, display_name, check_value, isRequire) {
+    if(type == 'checked') {
+        var val = $('input[name*="'+id_name+'"]:checked').val();
+    } else {
+        var val = $('#'+id_name).val();
+    }
+    
+    if(val == check_value) { //顯示
+        $('#div_'+display_name).css('display','');
+        if(isRequire) {
+            $('#'+display_name).addClass('require');
+        }
+    } else { //隱藏
+        $('#div_'+display_name).css('display','none');
+        if(isRequire) {
+            $('#'+display_name).removeClass('require');
+        }
+    }
+}
+
 //檢查必填欄位(class對應的欄位,是否顯示錯誤訊息區)
 function checkRequiredClass(classStr, isShowMsg) {
     var class_arr = classStr.split(',');
@@ -668,7 +689,7 @@ function orderSubmit(action_type) {
 
 
 /* =================================後台================================= */
-//送出-管理員資料、會員資料
+//送出-管理員資料、會員資料、訂單資料
 function adminSubmit(type) {
     $('.btn_submit').attr('disabled', true);
 
@@ -724,6 +745,8 @@ function adminSubmit(type) {
                     alert("編輯成功！");
                 } else if (action_type == 'delete') { //刪除
                     alert("刪除成功！");
+                } else if (action_type == 'cancel') { //取消
+                    alert("取消成功！");
                 }
                 changeForm(change_url);
             } else if (response.error == true) {

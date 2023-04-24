@@ -70,7 +70,7 @@
                                     <td class="text-center">{{ @$data["total"] }}元</td>
                                     <td>
                                         <div class="col-12">
-                                            @if($data["status"] == 1)
+                                            @if($data["status"] == "nopaid")
                                                 <div class="btn-action">
                                                     <i class="fas fa-trash-alt tm-trash-icon dataModalBtnOrderCancel" data-bs-toggle="modal" data-bs-target="#dataModalOrderCancel" data-id="{{ @$data["uuid"] }},{{ @$data["serial"] }}">
                                                     </i>

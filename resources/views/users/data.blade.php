@@ -72,13 +72,14 @@
                             <div class="row" style="display:{{ $add_none}};">
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                     <label><span class="star">* </span>通知信箱</label>
-                                    <input type="text" id="email" name="email" class="form-control {{ $require }}" value="{{ @$email }}">
+                                    <input type="text" id="email" name="email" class="form-control {{ $edit_require }}" value="{{ @$email }}">
                                 </div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col-12 tm-btn-center">
-                                    <button type="button" class="btn btn-primary btn_submit" onclick="userSubmit('{{ @$action_type }}');">送出</button>
-                                    <button type="button" class="btn btn-danger" onclick="changeForm('/users/edit')">取消</button>
+                                    <button type="button" class="btn btn-primary" onclick="changeForm('/users/edit')">取消</button>
+                                    <button type="button" class="btn btn-danger btn_submit" onclick="userSubmit('{{ @$action_type }}');">送出</button>
+                                    
                                 </div>
                             </div>
                         </form>

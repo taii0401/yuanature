@@ -37,7 +37,7 @@
                                 <th class="text-center tm-bg-gray" height="50px">收件人電話：</th>
                                 <th>{{ @$datas["assign_data"]["phone"] }}</th>
                             </tr>
-                            @if(@$datas["assign_data"]["delivery"] == 2 && @$datas["assign_data"]["address"] != "")
+                            @if(@$datas["assign_data"]["delivery"] == "home" && @$datas["assign_data"]["address"] != "")
                                 <tr>
                                     <th class="text-center tm-bg-gray" height="50px">收件人地址：</th>
                                     <th>{{ @$datas["assign_data"]["address"] }}</th>
@@ -47,7 +47,7 @@
                                 <th class="text-center tm-bg-gray" height="50px">訂單狀態：</th>
                                 <th>{{ @$datas["assign_data"]["status_name"] }}</th>
                             </tr>
-                            @if(@$datas["assign_data"]["status"] == 4)
+                            @if(@$datas["assign_data"]["status"] == "cancel")
                                 <tr>
                                     <th class="text-center tm-bg-gray" height="50px">取消原因：</th>
                                     <th>{{ @$datas["assign_data"]["cancel_name"] }}</th>
@@ -69,7 +69,7 @@
                                 <th class="text-center tm-bg-gray" height="50px">訂單備註：</th>
                                 <th>{!! @$datas["assign_data"]["order_remark_format"] !!}</th>
                             </tr>
-                            @if(@$datas["assign_data"]["status"] == 4 && @$datas["assign_data"]["cancel"] == 3 && @$datas["assign_data"]["cancel_remark"] != "")
+                            @if(@$datas["assign_data"]["status"] == "cancel" && @$datas["assign_data"]["cancel"] == "other" && @$datas["assign_data"]["cancel_remark"] != "")
                                 <tr>
                                     <th class="text-center tm-bg-gray" height="50px">取消備註：</th>
                                     <th>{!! @$datas["assign_data"]["cancel_remark_format"] !!}</th>
