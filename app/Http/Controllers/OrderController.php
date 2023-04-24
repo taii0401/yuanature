@@ -84,8 +84,8 @@ class OrderController extends Controller
             }
         }
 
-        //取消原因
-        $datas["modal_data"]["cancel"] = $this->getConfigOptions("orders_cancel");
+        //模組視窗選項-取消原因
+        $datas["modal_data"]["cancel"] = $this->getConfigOptions("orders_cancel",false);
         
         $datas["assign_data"] = $assign_data;
         $datas["option_data"] = $option_data;
@@ -174,8 +174,8 @@ class OrderController extends Controller
         }
 
         //取得付款方式、配送方式
-        $option_data["payment"] = $this->getConfigOptions("orders_payment");
-        $option_data["delivery"] = $this->getConfigOptions("orders_delivery");
+        $option_data["payment"] = $this->getConfigOptions("orders_payment",false);
+        $option_data["delivery"] = $this->getConfigOptions("orders_delivery",false);
         $assign_data["payment"] = array_key_first($option_data["payment"]);
         $assign_data["delivery"] = array_key_first($option_data["delivery"]);
         

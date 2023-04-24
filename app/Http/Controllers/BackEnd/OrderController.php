@@ -75,7 +75,7 @@ class OrderController extends Controller
         }
 
         //模組視窗選項-取消原因
-        $datas["modal_data"]["cancel"] = $this->getConfigOptions("orders_cancel");
+        $datas["modal_data"]["cancel"] = $this->getConfigOptions("orders_cancel",false);
 
         $datas["assign_data"] = $assign_data;
         $datas["option_data"] = $option_data;
@@ -106,8 +106,8 @@ class OrderController extends Controller
         //訂單明細資料
         $datas["detail_data"] = OrdersDetail::getDataByOrderid($orders_data["id"]);
         //選項-訂單狀態、配送方式
-        $datas["option_data"]["status"] = $this->getConfigOptions("orders_status");
-        $datas["option_data"]["delivery"] = $this->getConfigOptions("orders_delivery");
+        $datas["option_data"]["status"] = $this->getConfigOptions("orders_status",false);
+        $datas["option_data"]["delivery"] = $this->getConfigOptions("orders_delivery",false);
         
         return view("backend.orderData",["datas" => $datas]);
     }
