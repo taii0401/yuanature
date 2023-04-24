@@ -1,5 +1,6 @@
 <form id="form_data_cancel" class="tm-signup-form" method="post">
     @csrf
+    <input type="hidden" id="input_modal_source" name="source" value="">
     <input type="hidden" id="input_modal_action_type" name="action_type" value="cancel">
     <input type="hidden" id="input_modal_uuid" name="uuid" value="">
     <input type="hidden" id="input_modal_serial" name="serial" value="">
@@ -33,11 +34,25 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-danger btn_submit" onclick="orderSubmit($('#input_modal_action_type').val());">送出</button>
-                    
+                    <button type="button" class="btn btn-danger btn_submit" onclick="orderCancelSubmit();">送出</button>
                 </div>
             </div>
             
         </div>
     </div>
 </form>
+
+@section('script')
+<script>
+    function orderCancelSubmit() {
+        var source = $('#input_modal_source').val();
+        var action_type = $('#input_modal_action_type').val();
+
+        if(source == 'admin') {
+            adminSubmit('orders');
+        } else {
+            orderSubmit(action_type);
+        }
+    }
+</script>
+@endsection
