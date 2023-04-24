@@ -23,7 +23,7 @@ class CreateWebUserTable extends Migration
             $table->date('birthday')->nullable()->comment('生日');
             $table->string('phone',10)->nullable()->comment('手機');
             $table->string('address')->nullable()->comment('地址');
-            $table->integer('register_type')->default(1)->comment('登入方式(web_code.type=user_register)：1 email、2 facebook、3 line、4 google');
+            $table->integer('register_type')->default(1)->comment('登入方式：config.user_register');
             $table->tinyInteger('is_verified')->default(0)->comment('是否驗證：0 否、1 是');
             $table->integer('updated_id')->nullable()->comment('修改者id');
             $table->integer('deleted_id')->nullable()->comment('刪除者id');

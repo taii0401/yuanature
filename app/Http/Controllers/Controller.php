@@ -16,11 +16,8 @@ use Illuminate\Support\Str;
 use Illuminate\Database\QueryException;
 //上傳檔案
 use Illuminate\Support\Facades\Storage;
-//DB
-use Illuminate\Support\Facades\DB;
 //Model
 use App\Models\Product;
-use App\Models\WebCode;
 use App\Models\WebFile;
 use App\Models\WebFileData;
 use App\Models\WebUser;
@@ -203,6 +200,28 @@ class Controller extends BaseController
             }
         }
 
+        return $return_datas;
+    }
+
+    /**
+     * 依類型取得設定檔選項
+     * @param  cond：搜尋條件
+     * @param  is_all：是否回傳全部的選項
+     * @return array
+     */
+    public static function getConfigOptions($type="",$is_all=true)
+    {
+        $return_datas = [];
+        if($is_all) {
+            $return_datas = ["" => "全部"];
+        }
+        $all_datas = config("yuanature.".$type);
+        if(!empty($all_datas)) {
+            foreach($all_datas as $key => $val) {
+                $return_datas[$key] = $val["name"];
+            }
+        }
+        
         return $return_datas;
     }
 

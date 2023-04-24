@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 //使用者權限
 use App\Libraries\UserAuth;
 //Model
-use App\Models\WebCode;
 use App\Models\Orders;
 use App\Models\OrdersDetail;
 
@@ -19,6 +18,15 @@ class OrderController extends Controller
     public function index(Request $request) 
     {
         $input = $request->all();
+        //訂單狀態
+        $orders_status_datas = config("yuanature.orders_status");
+        //付款方式
+        $orders_payment_datas = config("yuanature.orders_payment");
+        //配送方式
+        $orders_delivery_datas = config("yuanature.orders_delivery");
+        //取消原因
+        $orders_cancel_datas = config("yuanature.orders_cancel");
+
         $assign_data = $list_data = $page_data = $option_data = [];
 
         //取得會員資料
@@ -66,18 +74,18 @@ class OrderController extends Controller
                 //建立時間
                 $list_data[$key]["created_at_format"] = date("Y-m-d H:i:s",strtotime($val["created_at"]." + 8 hours"));
                 //訂單狀態
-                $list_data[$key]["status_name"] = $val["status"]?WebCode::getCnameByCode("order_status",$val["status"]):"";
+                $list_data[$key]["status_name"] = $orders_status_datas[$val["status"]]["name"]??"";
                 //付款方式
-                $list_data[$key]["payment_name"] = $val["payment"]?WebCode::getCnameByCode("order_payment",$val["payment"]):"";
+                $list_data[$key]["payment_name"] = $orders_payment_datas[$val["payment"]]["name"]??"";
                 //配送方式
-                $list_data[$key]["delivery_name"] = $val["delivery"]?WebCode::getCnameByCode("order_delivery",$val["delivery"]):"";
+                $list_data[$key]["delivery_name"] = $orders_delivery_datas[$val["delivery"]]["name"]??"";
                 //取消原因
-                $list_data[$key]["cancel_name"] = $val["cancel"]?WebCode::getCnameByCode("order_cancel",$val["cancel"]):"";
+                $list_data[$key]["cancel_name"] = $orders_cancel_datas[$val["cancel"]]["name"]??"";
             }
         }
 
         //取消原因
-        $datas["modal_data"]["cancel"] = WebCode::getCodeOptions("order_cancel");
+        $datas["modal_data"]["cancel"] = $this->getConfigOptions("orders_cancel");
         
         $datas["assign_data"] = $assign_data;
         $datas["option_data"] = $option_data;
@@ -166,8 +174,8 @@ class OrderController extends Controller
         }
 
         //取得付款方式、配送方式
-        $option_data["payment"] = WebCode::getCodeOptions("order_payment");
-        $option_data["delivery"] = WebCode::getCodeOptions("order_delivery");
+        $option_data["payment"] = $this->getConfigOptions("orders_payment");
+        $option_data["delivery"] = $this->getConfigOptions("orders_delivery");
         $assign_data["payment"] = array_key_first($option_data["payment"]);
         $assign_data["delivery"] = array_key_first($option_data["delivery"]);
         

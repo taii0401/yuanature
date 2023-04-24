@@ -4,14 +4,9 @@ namespace App\Http\Controllers\BackEnd;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-//URL
-use Illuminate\Support\Facades\URL;
-//使用者權限
-use App\Libraries\AdminAuth;
 
-use App\Models\User;
+//Model
 use App\Models\WebUser;
-use App\Models\WebCode;
 
 class UserController extends Controller
 {
@@ -19,10 +14,13 @@ class UserController extends Controller
     public function list(Request $request) 
     {
         $input = $request->all();
+        //登入方式
+        $user_register_datas = config("yuanature.user_register");
+
         $assign_data = $list_data = $page_data = $option_data = [];
 
         //選單搜尋條件-登入方式、是否驗證、排序
-        $option_data["register_type"] = ["name" => "登入方式","data" => WebCode::getCodeOptions("user_register",true)];
+        $option_data["register_type"] = ["name" => "登入方式","data" => $this->getConfigOptions("user_register")];
         $option_data["is_verified"] = ["name" => "是否驗證","data" => ["" => "全部",WebUser::IS_VERIFIED_YES => WebUser::class::$isVerifiedName[WebUser::IS_VERIFIED_YES],WebUser::IS_VERIFIED_NO => WebUser::class::$isVerifiedName[WebUser::IS_VERIFIED_NO]]];
         $option_data["orderby"] = ["name" => "排序","data" => ["asc_created_at" => "建立時間 遠 ~ 近","desc_created_at" => "建立時間 近 ~ 遠"]];
         //取得目前頁數及搜尋條件
@@ -57,7 +55,7 @@ class UserController extends Controller
                 //建立時間
                 $list_data[$key]["created_at_format"] = date("Y-m-d H:i:s",strtotime($val["created_at"]." + 8 hours"));
                 //登入方式
-                $list_data[$key]["register_type_name"] = $val["register_type"]?WebCode::getCnameByCode("user_register",$val["register_type"]):"";
+                $list_data[$key]["register_type_name"] = $user_register_datas[$val["register_type"]]["name"]??"";
                 //是否驗證
                 $list_data[$key]["is_verified_name"] = WebUser::class::$isVerifiedName[$val["is_verified"]]??"";
             }

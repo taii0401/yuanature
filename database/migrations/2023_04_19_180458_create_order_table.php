@@ -24,12 +24,13 @@ class CreateOrderTable extends Migration
             $table->string('phone',10)->nullable()->comment('收件人手機');
             $table->string('address')->nullable()->comment('收件人地址');
             $table->integer('total')->default(0)->comment('總價');
-            $table->integer('payment')->nullable()->comment('付款方式：web_code.type = order_pay');
-            $table->integer('delivery')->nullable()->comment('配送方式：web_code.type = order_delivery');
-            $table->integer('status')->nullable()->comment('訂單狀態：web_code.type = order_status');
-            $table->integer('cancel')->nullable()->comment('取消原因：web_code.type = order_cancel');
+            $table->string('payment',10)->nullable()->comment('付款方式：config.orders_payment');
+            $table->string('delivery',10)->nullable()->comment('配送方式：config.orders_delivery');
+            $table->string('status',10)->nullable()->comment('訂單狀態：config.orders_status');
+            $table->string('cancel',10)->nullable()->comment('取消原因：config.orders_cancel');
             $table->longText('cancel_remark')->nullable()->comment('取消備註');
             $table->longText('order_remark')->nullable()->comment('訂單備註');
+            $table->longText('delivery_remark')->nullable()->comment('出貨備註');
             $table->string('cancel_by',10)->nullable()->comment('取消：user 會員、admin 管理員');
             $table->integer('cancel_id')->nullable()->comment('取消者id');
             $table->integer('created_id')->nullable()->comment('建立者id');

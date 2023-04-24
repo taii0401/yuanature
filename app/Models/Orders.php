@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Models\WebCode;
-
 class Orders extends Model
 {
     use HasFactory,SoftDeletes;
@@ -43,6 +41,15 @@ class Orders extends Model
      */
     public static function getDataByUuid($uuid,$user_id='')
     {
+        //訂單狀態
+        $orders_status_datas = config("yuanature.orders_status");
+        //付款方式
+        $orders_payment_datas = config("yuanature.orders_payment");
+        //配送方式
+        $orders_delivery_datas = config("yuanature.orders_delivery");
+        //取消原因
+        $orders_cancel_datas = config("yuanature.orders_cancel");
+
         $data = [];
         $get_data = self::where("uuid",$uuid);
         if($user_id > 0) {
@@ -56,13 +63,13 @@ class Orders extends Model
             //建立時間
             $data["created_at_format"] = date("Y-m-d H:i:s",strtotime($data["created_at"]." + 8 hours"));
             //訂單狀態
-            $data["status_name"] = $data["status"]?WebCode::getCnameByCode("order_status",$data["status"]):"";
+            $data["status_name"] = $orders_status_datas[$data["status"]]["name"]??"";
             //付款方式
-            $data["payment_name"] = $data["payment"]?WebCode::getCnameByCode("order_payment",$data["payment"]):"";
+            $data["payment_name"] = $orders_payment_datas[$data["payment"]]["name"]??"";
             //配送方式
-            $data["delivery_name"] = $data["delivery"]?WebCode::getCnameByCode("order_delivery",$data["delivery"]):"";
+            $data["delivery_name"] = $orders_delivery_datas[$data["delivery"]]["name"]??"";
             //取消原因
-            $data["cancel_name"] = $data["cancel"]?WebCode::getCnameByCode("order_cancel",$data["cancel"]):"";
+            $data["cancel_name"] = $orders_cancel_datas[$data["cancel"]]["name"]??"";
             //取消備註
             $data["cancel_remark_format"] = nl2br($data["cancel_remark"]);
             //訂單備註
