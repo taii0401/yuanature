@@ -56,6 +56,7 @@ class UserController extends Controller
                 $list_data[$key]["created_at_format"] = date("Y-m-d H:i:s",strtotime($val["created_at"]." + 8 hours"));
                 //登入方式
                 $list_data[$key]["register_type_name"] = $user_register_datas[$val["register_type"]]["name"]??"";
+                $list_data[$key]["register_type_color"] = $user_register_datas[$val["register_type"]]["color"]??"";
                 //是否驗證
                 $list_data[$key]["is_verified_name"] = WebUser::class::$isVerifiedName[$val["is_verified"]]??"";
             }

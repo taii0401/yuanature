@@ -45,7 +45,7 @@
                             @endif
                             <tr>
                                 <th class="text-center tm-bg-gray" height="50px">訂單狀態：</th>
-                                <th>{{ @$datas["assign_data"]["status_name"] }}</th>
+                                <th style="color:{{ @$datas["assign_data"]["status_color"] }}">{{ @$datas["assign_data"]["status_name"] }}</th>
                             </tr>
                             @if(@$datas["assign_data"]["status"] == "cancel")
                                 <tr>
@@ -55,11 +55,11 @@
                             @endif
                             <tr>
                                 <th class="text-center tm-bg-gray" height="50px">配送方式：</th>
-                                <th>{{ @$datas["assign_data"]["delivery_name"] }}</th>
+                                <th style="color:{{ @$datas["assign_data"]["delivery_color"] }}">{{ @$datas["assign_data"]["delivery_name"] }}</th>
                             </tr>
                             <tr>
                                 <th class="text-center tm-bg-gray" height="50px">付款方式：</th>
-                                <th>{{ @$datas["assign_data"]["payment_name"] }}</th>
+                                <th style="color:{{ @$datas["assign_data"]["payment_color"] }}">{{ @$datas["assign_data"]["payment_name"] }}</th>
                             </tr>
                             <tr>
                                 <th class="text-center tm-bg-gray" height="50px">訂購金額：</th>
@@ -73,6 +73,12 @@
                                 <tr>
                                     <th class="text-center tm-bg-gray" height="50px">取消備註：</th>
                                     <th>{!! @$datas["assign_data"]["cancel_remark_format"] !!}</th>
+                                </tr>
+                            @endif
+                            @if((@$datas["assign_data"]["status"] == "deliver" || @$datas["assign_data"]["status"] == "complete") && @$datas["assign_data"]["deliver_remark"] != "")
+                                <tr>
+                                    <th class="text-center tm-bg-gray" height="50px">出貨備註：</th>
+                                    <th>{!! @$datas["assign_data"]["deliver_remark_format"] !!}</th>
                                 </tr>
                             @endif
                         </thead>

@@ -9,9 +9,9 @@ return [
 
     //登入方式
     "user_register" => [
-        "email" => ["name" => "EMAIL","color" => "#B87800"],
+        "email" => ["name" => "EMAIL","color" => "#696969"],
         "facebook" => ["name" => "FACEBOOK","color" => "#2626FF"],
-        "line" => ["name" => "LINE","color" => "#00E600"],
+        "line" => ["name" => "LINE","color" => "#008F00"],
         "google" => ["name" => "GOOGLE","color" => "#FF2626"]
     ],
 
@@ -21,21 +21,21 @@ return [
         "paid" => ["name" => "已付款","color" => "#8100E0"],
         "handle" => ["name" => "處理中","color" => "#696969"],
         "cancel" => ["name" => "已取消","color" => "#E00000"],
-        "delivery" => ["name" => "已出貨","color" => "#00E600"],
-        "complete" => ["name" => "已完成","color" => "#00B800"]
+        "delivery" => ["name" => "已出貨","color" => "#008F00"],
+        "complete" => ["name" => "已完成","color" => "#808000"]
     ],
 
     //付款狀態
     "orders_payment" => [
-        "card" => ["name" => "信用卡","color" => "#00B800"],
-        "atm" => ["name" => "ATM","color" => "#B87800"],
-        "linepay" => ["name" => "LINE PAY","color" => "#00E600"]
+        "card" => ["name" => "信用卡","color" => "#B87800"],
+        "atm" => ["name" => "ATM","color" => "#696969"],
+        "linepay" => ["name" => "LINE PAY","color" => "#008F00"]
     ],
 
     //配送狀態
     "orders_delivery" => [
-        "store" => ["name" => "超商取貨","color" => "#00E600"],
-        "home" => ["name" => "宅配配送","color" => "#B87800"]
+        "store" => ["name" => "超商取貨","color" => "#B87800"],
+        "home" => ["name" => "宅配配送","color" => "#696969"]
     ],
 
     //取消狀態

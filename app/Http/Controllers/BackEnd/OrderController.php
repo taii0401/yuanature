@@ -65,12 +65,16 @@ class OrderController extends Controller
                 $list_data[$key]["created_at_format"] = date("Y-m-d H:i:s",strtotime($val["created_at"]." + 8 hours"));
                 //訂單狀態
                 $list_data[$key]["status_name"] = $orders_status_datas[$val["status"]]["name"]??"";
+                $list_data[$key]["status_color"] = $orders_status_datas[$val["status"]]["color"]??"";
                 //付款方式
                 $list_data[$key]["payment_name"] = $orders_payment_datas[$val["payment"]]["name"]??"";
+                $list_data[$key]["payment_color"] = $orders_payment_datas[$val["payment"]]["color"]??"";
                 //配送方式
                 $list_data[$key]["delivery_name"] = $orders_delivery_datas[$val["delivery"]]["name"]??"";
+                $list_data[$key]["delivery_color"] = $orders_delivery_datas[$val["delivery"]]["color"]??"";
                 //取消原因
                 $list_data[$key]["cancel_name"] = $orders_cancel_datas[$val["cancel"]]["name"]??"";
+                $list_data[$key]["cancel_color"] = $orders_cancel_datas[$val["cancel"]]["color"]??"";
             }
         }
 

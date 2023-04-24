@@ -79,7 +79,7 @@
                                 <td class="text-center">{{ @$data["name"] }}</td>
                                 <td class="text-center">{{ @$data["email"] }}</td>
                                 <td class="text-center">{{ @$data["phone"] }}</td>
-                                <td class="text-center">{{ @$data["register_type_name"] }}</td>
+                                <td class="text-center" style="color:{{ @$data["register_type_color"] }}">{{ @$data["register_type_name"] }}</td>
                                 <td class="text-center">{{ @$data["is_verified_name"] }}</td>
                                 <td class="text-center">{{ @$data["created_at_format"] }}</td>
                                 <td>

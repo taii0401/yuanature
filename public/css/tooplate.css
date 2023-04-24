@@ -80,6 +80,10 @@ p {
     font-weight: 500;
 }
 
+.user_menu ul li a:hover {
+    color: #0266c4;
+}
+
 
 /* header start */
 
@@ -413,7 +417,7 @@ label {
 
 .table-hover tbody tr:hover {
     background-color: white;
-    color: #3aabd0;
+    color: #0266c4;
 }
 
 .tm-bg-gray {

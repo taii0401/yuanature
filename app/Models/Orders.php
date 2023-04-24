@@ -64,16 +64,22 @@ class Orders extends Model
             $data["created_at_format"] = date("Y-m-d H:i:s",strtotime($data["created_at"]." + 8 hours"));
             //訂單狀態
             $data["status_name"] = $orders_status_datas[$data["status"]]["name"]??"";
+            $data["status_color"] = $orders_status_datas[$data["status"]]["color"]??"";
             //付款方式
             $data["payment_name"] = $orders_payment_datas[$data["payment"]]["name"]??"";
+            $data["payment_color"] = $orders_payment_datas[$data["payment"]]["color"]??"";
             //配送方式
             $data["delivery_name"] = $orders_delivery_datas[$data["delivery"]]["name"]??"";
+            $data["delivery_color"] = $orders_delivery_datas[$data["delivery"]]["color"]??"";
             //取消原因
             $data["cancel_name"] = $orders_cancel_datas[$data["cancel"]]["name"]??"";
+            $data["cancel_color"] = $orders_cancel_datas[$data["cancel"]]["color"]??"";
             //取消備註
             $data["cancel_remark_format"] = nl2br($data["cancel_remark"]);
             //訂單備註
             $data["order_remark_format"] = nl2br($data["order_remark"]);
+            //出貨備註
+            $data["delivery_remark_format"] = nl2br($data["delivery_remark"]);
         }
         return $data;
     }

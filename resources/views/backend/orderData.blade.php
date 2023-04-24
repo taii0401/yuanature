@@ -14,7 +14,7 @@
                     <thead>
                         <tr>
                             <th class="text-center tm-bg-gray" height="50px">訂單編號：</th>
-                            <th>{{ @$datas["assign_data"]["serial"] }}</th>
+                            <th style="color:#007bff">{{ @$datas["assign_data"]["serial"] }}</th>
                         </tr>
                         <tr>
                             <th class="text-center tm-bg-gray" height="50px">訂購日期：</th>
@@ -28,7 +28,7 @@
                             <th class="text-center tm-bg-gray" height="50px">收件人電話：</th>
                             <th>{{ @$datas["assign_data"]["phone"] }}</th>
                         </tr>
-                        @if(@$datas["assign_data"]["delivery"] == 2 && @$datas["assign_data"]["address"] != "")
+                        @if(@$datas["assign_data"]["delivery"] == "home" && @$datas["assign_data"]["address"] != "")
                             <tr>
                                 <th class="text-center tm-bg-gray" height="50px">宅配地址：</th>
                                 <th>{{ @$datas["assign_data"]["address"] }}</th>
@@ -36,9 +36,9 @@
                         @endif
                         <tr>
                             <th class="text-center tm-bg-gray" height="50px">訂單狀態：</th>
-                            <th>{{ @$datas["assign_data"]["status_name"] }}</th>
+                            <th style="color:{{ @$datas["assign_data"]["status_color"] }}">{{ @$datas["assign_data"]["status_name"] }}</th>
                         </tr>
-                        @if(@$datas["assign_data"]["status"] == 4)
+                        @if(@$datas["assign_data"]["status"] == "cancel")
                             <tr>
                                 <th class="text-center tm-bg-gray" height="50px">取消原因：</th>
                                 <th>{{ @$datas["assign_data"]["cancel_name"] }}</th>
@@ -46,11 +46,11 @@
                         @endif
                         <tr>
                             <th class="text-center tm-bg-gray" height="50px">配送方式：</th>
-                            <th>{{ @$datas["assign_data"]["delivery_name"] }}</th>
+                            <th style="color:{{ @$datas["assign_data"]["delivery_color"] }}">{{ @$datas["assign_data"]["delivery_name"] }}</th>
                         </tr>
                         <tr>
                             <th class="text-center tm-bg-gray" height="50px">付款方式：</th>
-                            <th>{{ @$datas["assign_data"]["payment_name"] }}</th>
+                            <th style="color:{{ @$datas["assign_data"]["payment_color"] }}">{{ @$datas["assign_data"]["payment_name"] }}</th>
                         </tr>
                         <tr>
                             <th class="text-center tm-bg-gray" height="50px">訂購金額：</th>
@@ -60,10 +60,16 @@
                             <th class="text-center tm-bg-gray" height="50px">訂單備註：</th>
                             <th>{!! @$datas["assign_data"]["order_remark_format"] !!}</th>
                         </tr>
-                        @if(@$datas["assign_data"]["status"] == 4 && @$datas["assign_data"]["cancel"] == 3 && @$datas["assign_data"]["cancel_remark"] != "")
+                        @if(@$datas["assign_data"]["status"] == "cancel" && @$datas["assign_data"]["cancel"] == "other" && @$datas["assign_data"]["cancel_remark"] != "")
                             <tr>
                                 <th class="text-center tm-bg-gray" height="50px">取消備註：</th>
                                 <th>{!! @$datas["assign_data"]["cancel_remark_format"] !!}</th>
+                            </tr>
+                        @endif
+                        @if((@$datas["assign_data"]["status"] == "deliver" || @$datas["assign_data"]["status"] == "complete") && @$datas["assign_data"]["deliver_remark"] != "")
+                            <tr>
+                                <th class="text-center tm-bg-gray" height="50px">出貨備註：</th>
+                                <th>{!! @$datas["assign_data"]["deliver_remark_format"] !!}</th>
                             </tr>
                         @endif
                     </thead>
@@ -132,7 +138,7 @@
                                 @if(isset($datas["option_data"]["delivery"]) && !empty($datas["option_data"]["delivery"]))    
                                     @foreach($datas["option_data"]["delivery"] as $key => $val) 
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="delivery" id="delivery_{{ @$key }}" value="{{ @$key }}" @if($key == $datas["assign_data"]["delivery"]) checked @endif onclick="changeDataDisplay('checked','delivery','order_address','home',true);">
+                                            <input class="form-check-input" type="radio" name="delivery" id="delivery_{{ @$key }}" value="{{ @$key }}" @if($key == $datas["assign_data"]["delivery"]) checked @endif onclick="changeDataDisplay('checked','delivery','orders_address','home',true);">
                                             <label class="form-check-label">{{ @$val }}</label>
                                         </div>
                                     @endforeach
@@ -157,7 +163,7 @@
                                 <label>收件人手機</label>
                                 <input type="text" id="input_modal_phone" name="phone" class="form-control " value="{{ @$datas["assign_data"]["phone"] }}">                  
                             </div>
-                            <div id="div_orders_address" class="col-xl-6 col-lg-6 col-md-12 col-sm-12" style="display:none;">
+                            <div id="div_orders_address" class="col-12" style="display:none;">
                                 <label>宅配地址</label>
                                 <input type="text" id="orders_address" name="address" class="form-control" value="{{ @$datas["assign_data"]["address"] }}">
                             </div>

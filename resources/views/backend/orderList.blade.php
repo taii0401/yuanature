@@ -81,9 +81,9 @@
                                     <a href="#" onclick="changeForm('/admin/orders/detail?orders_uuid={{ @$data["uuid"] }}');">{{ @$data["serial"] }}</a>
                                 </td>
                                 <td class="text-center">{{ @$data["created_at_format"] }}</td>
-                                <td class="text-center">{{ @$data["status_name"] }}</td>
-                                <td class="text-center">{{ @$data["delivery_name"] }}</td>
-                                <td class="text-center">{{ @$data["payment_name"] }}</td>
+                                <td class="text-center" style="color:{{ @$data["status_color"] }}">{{ @$data["status_name"] }}</td>
+                                <td class="text-center" style="color:{{ @$data["delivery_color"] }}">{{ @$data["delivery_name"] }}</td>
+                                <td class="text-center" style="color:{{ @$data["payment_color"] }}">{{ @$data["payment_name"] }}</td>
                                 <td class="text-center">{{ @$data["total"] }}元</td>
                                 <td>
                                     <div class="col-12">
