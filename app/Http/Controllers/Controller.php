@@ -234,20 +234,26 @@ class Controller extends BaseController
     {
         //信件主旨
         $subject = "原生學 Pure Nature ";
+        //按鈕連結
+        $btn_link = "https://www.yuanature.tw/";
         //信件樣板
         $email_tpl = "emails.user";
         //收件人
         $email = $data["email"]??"";
+        //來源
+        $source = $data["source"]??"admin";
         //傳送內容
         $mail_data = [];
 
+        $isSendUser = $isSendAdmin = false;
         switch($type) {
             case "user_register": //會員註冊
             case "user_resend": //會員重寄驗證信
+                $isSendUser = true;
                 $name = $data["name"]??"";
                 $uuid = $data["uuid"]??"";
                 $btn_txt = "驗證";
-                $btn_url = "https://www.yuanature.tw/users/verify/email/$uuid";
+                $btn_url = "users/verify/email/$uuid";
 
                 if($type == "user_register") {
                     $subject .= "恭喜註冊成功!";
@@ -258,9 +264,10 @@ class Controller extends BaseController
                 }                
                 break;
             case "user_forget": //會員忘記密碼
+                $isSendUser = true;
                 $subject .= " 新密碼!";
                 $btn_txt = "登入";
-                $btn_url = "https://www.yuanature.tw/users";
+                $btn_url = "users";
                 $text = "您的新密碼為：".$data["ran_str"];
                 break;
             case "orders_add": //建立訂單
@@ -270,14 +277,21 @@ class Controller extends BaseController
                 $serial = $data["serial"]??"";
                 $text = "訂單編號：".$serial;
                 $btn_txt = "訂單";
-                $btn_url = "https://www.yuanature.tw/orders/detail?orders_uuid=$uuid";
+                $btn_url = "orders/detail?orders_uuid=$uuid";
 
                 if($type == "orders_add") {
+                    $isSendUser = $isSendAdmin = true;
                     $subject .= "訂單通知!";
                 } else if($type == "orders_cancel") {
                     $subject .= "取消訂單通知!";
                     $text .= " 已取消";
+                    if($source == "admin") {
+                        $isSendUser = true;
+                    } else {
+                        $isSendAdmin = true;
+                    }
                 } else if($type == "orders_delivery") {
+                    $isSendUser = true;
                     $subject .= "出貨通知!";
                     $text .= " 已出貨";
                 }                
@@ -285,10 +299,11 @@ class Controller extends BaseController
         }
         $mail_data["text"] = $text;
         $mail_data["btn_txt"] = $btn_txt;
-        $mail_data["btn_url"] = $btn_url;
-
-        if($email != "") {
-            Mail::send($email_tpl,$mail_data,
+        $mail_data["btn_url"] = $btn_link.$btn_url;
+        
+        //通知會員
+        if($isSendUser && $email != "") {
+            /*Mail::send($email_tpl,$mail_data,
             function($mail) use ($email,$subject) {
                 //收件人
                 $mail->to($email);
@@ -296,20 +311,20 @@ class Controller extends BaseController
                 $mail->from(env("MAIL_FROM_ADDRESS")); 
                 //郵信件主旨
                 $mail->subject($subject);
-            });
+            });*/
         }
 
-        if($type == "orders_add") { //建立訂單-通知管理者
-            $mail_data["btn_url"] = "https://www.yuanature.tw/admin/orders/detail?orders_uuid=$uuid";
-            Mail::send($email_tpl,$mail_data,
-            function($mail) use ($email,$subject) {
+        //通知管理者
+        if($isSendAdmin) { 
+            $mail_data["btn_url"] = $btn_link."admin/".$btn_url;
+            /*Mail::send($email_tpl,$mail_data,function($mail) use ($email,$subject) {
                 //收件人
                 $mail->to(env("MAIL_FROM_ADDRESS"));
                 //寄件人
                 $mail->from(env("MAIL_FROM_ADDRESS")); 
                 //郵信件主旨
                 $mail->subject($subject);
-            });
+            });*/
         }
     }
 
