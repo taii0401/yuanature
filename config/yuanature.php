@@ -22,7 +22,7 @@ return [
         "handle" => ["name" => "處理中","color" => "#696969"],
         "cancel" => ["name" => "已取消","color" => "#E00000"],
         "delivery" => ["name" => "已出貨","color" => "#008F00"],
-        "complete" => ["name" => "已完成","color" => "#808000"]
+        "complete" => ["name" => "已完成","color" => "#008A8A"]
     ],
 
     //付款狀態
