@@ -517,14 +517,12 @@ class AjaxController extends Controller
                         session()->forget("cart");
                         $this->error = false;
                         //寄送通知信
-                        if(isset($input["email"]) && $input["email"] != "") {
-                            $mail_data = [
-                                "email" => $input["email"],
-                                "serial" => $serial,
-                                "uuid" => $uuid
-                            ];
-                            $this->sendMail("orders_add",$mail_data);
-                        }
+                        $mail_data = [
+                            "email" => $input["email"]??"",
+                            "serial" => $serial,
+                            "uuid" => $uuid
+                        ];
+                        $this->sendMail("orders_add",$mail_data);
                         $this->message = $uuid;
                     } catch(QueryException $e) {
                         $this->message = "刪除購物車錯誤！";
@@ -552,14 +550,13 @@ class AjaxController extends Controller
                         
                         $this->error = false;
                         //寄送通知信
-                        if($email != "") {
-                            $mail_data = [
-                                "email" => $email,
-                                "serial" => $serial,
-                                "uuid" => $uuid
-                            ];
-                            $this->sendMail("orders_cancel",$mail_data);
-                        }
+                        $mail_data = [
+                            "email" => $email,
+                            "serial" => $serial,
+                            "uuid" => $uuid,
+                            "source" => "user",
+                        ];
+                        $this->sendMail("orders_cancel",$mail_data);
                         $this->message = "取消成功！";
                     } catch(QueryException $e) {
                         $this->message = "取消失敗！";

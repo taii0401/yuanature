@@ -235,7 +235,7 @@ class Controller extends BaseController
         //信件主旨
         $subject = "原生學 Pure Nature ";
         //信件樣板
-        $email_tpl = "";
+        $email_tpl = "emails.user";
         //收件人
         $email = $data["email"]??"";
         //傳送內容
@@ -246,7 +246,6 @@ class Controller extends BaseController
             case "user_resend": //會員重寄驗證信
                 $name = $data["name"]??"";
                 $uuid = $data["uuid"]??"";
-                $email_tpl = "emails.user";
                 $btn_txt = "驗證";
                 $btn_url = "https://www.yuanature.tw/users/verify/email/$uuid";
 
@@ -260,10 +259,28 @@ class Controller extends BaseController
                 break;
             case "user_forget": //會員忘記密碼
                 $subject .= " 新密碼!";
-                $email_tpl = "emails.user";
                 $btn_txt = "登入";
                 $btn_url = "https://www.yuanature.tw/users";
                 $text = "您的新密碼為：".$data["ran_str"];
+                break;
+            case "orders_add": //建立訂單
+            case "orders_cancel": //取消訂單
+            case "orders_delivery": //出貨通知
+                $uuid = $data["uuid"]??"";
+                $serial = $data["serial"]??"";
+                $text = "訂單編號：".$serial;
+                $btn_txt = "訂單";
+                $btn_url = "https://www.yuanature.tw/orders/detail?orders_uuid=$uuid";
+
+                if($type == "orders_add") {
+                    $subject .= "訂單通知!";
+                } else if($type == "orders_cancel") {
+                    $subject .= "取消訂單通知!";
+                    $text .= " 已取消";
+                } else if($type == "orders_delivery") {
+                    $subject .= "出貨通知!";
+                    $text .= " 已出貨";
+                }                
                 break;
         }
         $mail_data["text"] = $text;
@@ -275,6 +292,19 @@ class Controller extends BaseController
             function($mail) use ($email,$subject) {
                 //收件人
                 $mail->to($email);
+                //寄件人
+                $mail->from(env("MAIL_FROM_ADDRESS")); 
+                //郵信件主旨
+                $mail->subject($subject);
+            });
+        }
+
+        if($type == "orders_add") { //建立訂單-通知管理者
+            $mail_data["btn_url"] = "https://www.yuanature.tw/admin/orders/detail?orders_uuid=$uuid";
+            Mail::send($email_tpl,$mail_data,
+            function($mail) use ($email,$subject) {
+                //收件人
+                $mail->to(env("MAIL_FROM_ADDRESS"));
                 //寄件人
                 $mail->from(env("MAIL_FROM_ADDRESS")); 
                 //郵信件主旨

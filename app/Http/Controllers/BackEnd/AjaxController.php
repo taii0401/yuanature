@@ -333,7 +333,7 @@ class AjaxController extends Controller
 
                     $this->error = false;
                     //寄送通知信(出貨)
-                    if($data->status == "delivery" && $data->email != "") {
+                    if($data->status == "delivery") {
                         $mail_data = [
                             "email" => $data->email,
                             "serial" => $data->serial,
@@ -370,14 +370,13 @@ class AjaxController extends Controller
                     
                     $this->error = false;
                     //寄送通知信
-                    if($email != "") {
-                        $mail_data = [
-                            "email" => $email,
-                            "serial" => $serial,
-                            "uuid" => $uuid
-                        ];
-                        $this->sendMail("orders_cancel",$mail_data);
-                    }
+                    $mail_data = [
+                        "email" => $email,
+                        "serial" => $serial,
+                        "uuid" => $uuid,
+                        "source" => "admin",
+                    ];
+                    $this->sendMail("orders_cancel",$mail_data);
 
                     $log_msg .= "-訂單UUID：".$uuid;
                 } catch(QueryException $e) {
