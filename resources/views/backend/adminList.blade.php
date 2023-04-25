@@ -80,7 +80,7 @@
                                 <td>
                                     <div class="col-12">
                                         <div class="btn-action">
-                                            <i class="fas fa-edit tm-edit-icon dataModalBtn"data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["uuid"] }},{{ @$data["account"] }},{{ @$data["name"] }},{{ @$data["status"] }},{{ @$data["admin_group_id"] }}">
+                                            <i class="fas fa-edit tm-edit-icon dataModalBtn" data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["uuid"] }},{{ @$data["account"] }},{{ @$data["name"] }},{{ @$data["status"] }},{{ @$data["admin_group_id"] }}">
                                             </i>
                                         </div>
                                         <div class="btn-action">

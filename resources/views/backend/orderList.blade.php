@@ -112,9 +112,9 @@
         </div>
     </div>
 </div>
+@endsection
 
 @include('forms.orderCancel')
-@endsection
 
 @section('script')
 <script>

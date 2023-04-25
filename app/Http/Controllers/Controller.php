@@ -39,16 +39,16 @@ class Controller extends BaseController
     }
 
     //操作紀錄
-    public function createLogRecord($type,$action='',$title='',$record='',$isServer=false) 
+    public function createLogRecord($type="admin",$action="",$title="",$record="",$isServer=false) 
     {
         if($isServer) {
             $admin_id = 99999;
         } else {
-            $admin_data = session("admin");
+            $admin_data = session($type);
             $admin_id = $admin_data["id"]??0;
         }
 
-        if($admin_id > 0 && $action > 0 && $title != '' && $record != '') {
+        if($admin_id > 0 && $action > 0 && $title != "" && $record != "") {
             $logRecordModel = new LogRecord();
             $logRecordModel->type = $type;
             $logRecordModel->operator_id = $admin_id;

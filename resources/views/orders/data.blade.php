@@ -23,7 +23,7 @@
                         <thead>
                             <tr>
                                 <th class="text-center tm-bg-gray" height="50px">訂單編號：</th>
-                                <th>{{ @$datas["assign_data"]["serial"] }}</th>
+                                <th style="color:#007bff">{{ @$datas["assign_data"]["serial"] }}</th>
                             </tr>
                             <tr>
                                 <th class="text-center tm-bg-gray" height="50px">訂購日期：</th>
@@ -36,6 +36,10 @@
                             <tr>
                                 <th class="text-center tm-bg-gray" height="50px">收件人電話：</th>
                                 <th>{{ @$datas["assign_data"]["phone"] }}</th>
+                            </tr>
+                            <tr>
+                                <th class="text-center tm-bg-gray" height="50px">收件人信箱：</th>
+                                <th>{{ @$datas["assign_data"]["email"] }}</th>
                             </tr>
                             @if(@$datas["assign_data"]["delivery"] == "home" && @$datas["assign_data"]["address"] != "")
                                 <tr>
@@ -75,10 +79,10 @@
                                     <th>{!! @$datas["assign_data"]["cancel_remark_format"] !!}</th>
                                 </tr>
                             @endif
-                            @if((@$datas["assign_data"]["status"] == "deliver" || @$datas["assign_data"]["status"] == "complete") && @$datas["assign_data"]["deliver_remark"] != "")
+                            @if((@$datas["assign_data"]["status"] == "delivery" || @$datas["assign_data"]["status"] == "complete") && @$datas["assign_data"]["delivery_remark"] != "")
                                 <tr>
                                     <th class="text-center tm-bg-gray" height="50px">出貨備註：</th>
-                                    <th>{!! @$datas["assign_data"]["deliver_remark_format"] !!}</th>
+                                    <th>{!! @$datas["assign_data"]["delivery_remark_format"] !!}</th>
                                 </tr>
                             @endif
                         </thead>
@@ -89,10 +93,10 @@
                         <thead>
                             <tr class="tm-bg-gray">
                                 <th scope="col" class="text-center" height="50px">商品名稱</th>
-                                <th scope="col" class="text-center" style="width:10%;">數量</th>
-                                <th scope="col" class="text-center" style="width:10%;">售價</th>
-                                <th scope="col" class="text-center" style="width:15%;">小計</th>
-                                <th scope="col" class="text-center" style="width:8%; display:{{ @$datas["assign_data"]["order_none"] }};">刪除</th>
+                                <th scope="col" class="text-center" style="width:15%;">數量</th>
+                                <th scope="col" class="text-center" style="width:15%;">售價</th>
+                                <th scope="col" class="text-center" style="width:100px;">小計</th>
+                                <th scope="col" class="text-center" style="width:20px; display:{{ @$datas["assign_data"]["order_none"] }};">刪除</th>
                             </tr>
                         </thead>
                         <tbody>

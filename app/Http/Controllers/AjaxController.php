@@ -400,7 +400,7 @@ class AjaxController extends Controller
     }
 
     
-    //訂單-新增、編輯、刪除、取消
+    //訂單-新增、取消
     public function orders_data(Request $request)
     {
         $this->resetResult();
@@ -413,7 +413,7 @@ class AjaxController extends Controller
             }
         }
 
-        //表單動作類型(新增、編輯、刪除)
+        //表單動作類型(新增、取消)
         $action_type = $input["action_type"]??"add";
 
         //檢查欄位、檢查訊息
@@ -452,21 +452,30 @@ class AjaxController extends Controller
                 $uuid = Str::uuid()->toString();
                 //取得新編號
                 $serial_num = Orders::getSerial();
+                //訂單編號
+                $serial = "YO".date("YmdHis").str_pad($serial_num,4,0,STR_PAD_LEFT);
                 
                 $add_data = [];
                 $add_data["uuid"] = $uuid;
                 $add_data["user_id"] = $user_id;
                 $add_data["serial_code"] = "YO";
                 $add_data["serial_num"] = $serial_num;
-                $add_data["serial"] = "YO".date("YmdHis").str_pad($serial_num,4,0,STR_PAD_LEFT); //訂單編號
+                $add_data["serial"] = $serial;
                 $add_data["name"] = $input["name"];
                 $add_data["phone"] = $input["phone"];
-                $add_data["address"] = $input["delivery"] == 2 && $input["address"] != ""?$input["address"]:NULL;
+                $add_data["email"] = $input["email"]??NULL;
+                //配送方式選擇宅配配送才紀錄地址
+                if($input["delivery"] == "home" && isset($input["address"]) && $input["address"] != "") {
+                    $add_data["address"] = $input["address"];
+                }
                 $add_data["payment"] = $input["payment"]??NULL;
                 $add_data["delivery"] = $input["delivery"]??NULL;
                 $add_data["status"] = "nopaid";
                 $add_data["total"] = $input["total"];
-                $add_data["order_remark"] = $input["order_remark"] != ""?$input["order_remark"]:NULL;
+                //訂單備註
+                if(isset($input["order_remark"]) && $input["order_remark"] != "") {
+                    $add_data["order_remark"] = $input["order_remark"];
+                }
                 $add_data["created_id"] = $user_id;
                 
                 try {
@@ -507,6 +516,15 @@ class AjaxController extends Controller
                     try {
                         session()->forget("cart");
                         $this->error = false;
+                        //寄送通知信
+                        if(isset($input["email"]) && $input["email"] != "") {
+                            $mail_data = [
+                                "email" => $input["email"],
+                                "serial" => $serial,
+                                "uuid" => $uuid
+                            ];
+                            $this->sendMail("orders_add",$mail_data);
+                        }
                         $this->message = $uuid;
                     } catch(QueryException $e) {
                         $this->message = "刪除購物車錯誤！";
@@ -517,14 +535,31 @@ class AjaxController extends Controller
                 $data = Orders::where("uuid",$uuid)->whereNull("cancel")->first();
                 if(isset($data) && !empty($data)) {
                     try {
+                        //訂單編號
+                        $serial = $data->serial;
+                        //收件人信箱
+                        $email = $data->email;
+
                         $data->cancel = $input["cancel"];
-                        $data->cancel_remark = $input["cancel_remark"]??NULL;
+                        //取消原因選擇其他才紀錄取消備註
+                        if($input["cancel"] == "other" && isset($input["cancel_remark"]) && $input["cancel_remark"] != "") {
+                            $data->cancel_remark = $input["cancel_remark"];
+                        }
                         $data->cancel_by = "user";
                         $data->cancel_id = $user_id;
                         $data["status"] = "cancel";
                         $data->save();
                         
                         $this->error = false;
+                        //寄送通知信
+                        if($email != "") {
+                            $mail_data = [
+                                "email" => $email,
+                                "serial" => $serial,
+                                "uuid" => $uuid
+                            ];
+                            $this->sendMail("orders_cancel",$mail_data);
+                        }
                         $this->message = "取消成功！";
                     } catch(QueryException $e) {
                         $this->message = "取消失敗！";

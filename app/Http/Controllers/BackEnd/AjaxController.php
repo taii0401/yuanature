@@ -19,6 +19,7 @@ use App\Libraries\AdminAuth;
 use App\Models\Administrator;
 use App\Models\WebUser;
 use App\Models\User;
+use App\Models\Orders;
 
 class AjaxController extends Controller
 {
@@ -59,6 +60,9 @@ class AjaxController extends Controller
 
         //表單動作類型(新增、編輯、刪除)
         $action_type = $input["action_type"]??"add";
+        $action_name = config("yuanature.action_name")[$action_type];
+        $log_msg = $action_name;
+
         //檢查欄位、檢查訊息
         $validator_data = $validator_message = [];
         if($action_type == "add") { //新增管理員
@@ -109,6 +113,8 @@ class AjaxController extends Controller
             if((int)$data->id > 0) {
                 $this->error = false;
                 $this->message = $uuid;  
+
+                $log_msg .= "-管理員帳號：".$input["account"]; 
             } else {
                 $this->message = "新增錯誤！";
             }
@@ -123,11 +129,13 @@ class AjaxController extends Controller
                     }
                     Administrator::where(["uuid" => $uuid])->update($add_data);
                     $this->error = false;
+
+                    $log_msg .= "-管理員UUID：".$uuid;
                 } catch(QueryException $e) {
-                    $this->message = "更新錯誤！";
+                    $this->message = "修改錯誤！";
                 }
             } else {
-                $this->message = "更新錯誤！";
+                $this->message = "修改錯誤！";
             }
         } else if($action_type == "delete") { //刪除
             try {
@@ -137,10 +145,14 @@ class AjaxController extends Controller
                 $data->update(["deleted_id" => $admin_id]);
                 $data->delete();
                 $this->error = false;
+
+                $log_msg .= "-管理員UUID：".implode(",",$uuids);
             } catch(QueryException $e) {
                 $this->message = "刪除錯誤！";
             }
         }
+
+        $this->createLogRecord("admin",$action_type,"管理員管理",$log_msg);
 
         DB::commit();
 
@@ -164,6 +176,9 @@ class AjaxController extends Controller
 
         //表單動作類型(編輯、刪除)
         $action_type = $input["action_type"]??"edit";
+        $action_name = config("yuanature.action_name")[$action_type];
+        $log_msg = $action_name;
+
         //檢查欄位、檢查訊息
         $validator_data = $validator_message = [];
         if($action_type == "edit") { 
@@ -212,11 +227,13 @@ class AjaxController extends Controller
                     }
 
                     $this->error = false;
+
+                    $log_msg .= "-會員UUID：".$uuid;
                 } catch(QueryException $e) {
-                    $this->message = "更新錯誤！";
+                    $this->message = "修改錯誤！";
                 }
             } else {
-                $this->message = "更新錯誤！";
+                $this->message = "修改錯誤！";
             }
         } else if($action_type == "delete") { //刪除
             try {
@@ -226,10 +243,14 @@ class AjaxController extends Controller
                 $data->update(["deleted_id" => $admin_id]);
                 $data->delete();
                 $this->error = false;
+
+                $log_msg .= "-會員UUID：".implode(",",$uuids);
             } catch(QueryException $e) {
                 $this->message = "刪除錯誤！";
             }
         }
+
+        $this->createLogRecord("admin",$action_type,"會員管理",$log_msg);
 
         DB::commit();
 
@@ -237,7 +258,7 @@ class AjaxController extends Controller
     }
 
     //訂單資料-編輯、取消
-    public function order_data(Request $request)
+    public function orders_data(Request $request)
     {
         $this->resetResult();
 
@@ -246,19 +267,26 @@ class AjaxController extends Controller
         $input = $request->all();
         //去除空白
         foreach($input as $key => $val) {
-            if(in_array($key,["name","email","phone"])) {
+            if(in_array($key,["name","address","email"])) {
                 $input[$key] = trim($val);
             }
         }
 
-        //表單動作類型(編輯、刪除)
+        //表單動作類型(編輯、取消)
         $action_type = $input["action_type"]??"edit";
+        $action_name = config("yuanature.action_name")[$action_type];
+        $log_msg = $action_name;
+
         //檢查欄位、檢查訊息
         $validator_data = $validator_message = [];
-        if($action_type == "edit") { 
+        if($action_type == "edit") { //編輯
             $validator_data["name"] = "required"; //姓名
-            $validator_message["name.required"] = "請輸入姓名！";
-        } 
+            $validator_data["phone"] = "required"; //手機
+            $validator_data["delivery"] = "required"; //配送方式
+            $validator_data["status"] = "required"; //訂單狀態
+        }  else if($action_type == "cancel") { //取消
+            $validator_data["cancel"] = "required"; //取消原因
+        }
         
         $validator = Validator::make($input,$validator_data,$validator_message);
 
@@ -272,53 +300,97 @@ class AjaxController extends Controller
             return response()->json($this->returnResult());
         }
         
-        $add_data = [];
-        if($action_type == "edit") {
-            $add_data["name"] = $input["name"];
-            $add_data["email"] = $input["email"]??NULL;
-            $add_data["phone"] = $input["phone"]??NULL;
-            $add_data["is_verified"] = isset($input["is_verified"]) && $input["is_verified"] == "on"?1:0;
-        }
-
         DB::beginTransaction();
 
+        $uuid = $input["uuid"]??"";
         if($action_type == "edit") { //編輯
-            $uuid = $input["uuid"]??"";
-
-            if($uuid != "") {
+            $data = Orders::where("uuid",$uuid)->first();
+            if(isset($data) && !empty($data)) {
                 try {
-                    $add_data["updated_id"] = $admin_id;
-                    WebUser::where(["uuid" => $uuid])->update($add_data);
-
-                    //若點選驗證，則直接更新users.email_verified_at
-                    if(isset($add_data["is_verified"]) && $add_data["is_verified"] == 1) {
-                        $user_id = WebUser::where(["uuid" => $uuid])->first()->user_id;
-                        $user = User::where(["id" => $user_id,"email_verified_at" => NULL])->first();
-                        if(!empty($user)) {
-                            $user->email_verified_at = date("Y-m-d H:i:s");
-                            $user->save();
-                        }
+                    $data->name = $input["name"];
+                    $data->phone = $input["phone"];
+                    $data->email = $input["email"]??NULL;
+                    //配送方式選擇宅配配送才紀錄地址
+                    if($input["delivery"] == "home" && isset($input["address"]) && $input["address"] != "") {
+                        $data->address = $input["address"];
                     }
+                    $data->delivery = $input["delivery"];
+                    $data->status = $input["status"];
+                    //訂單備註
+                    if(isset($input["order_remark"]) && $input["order_remark"] != "") {
+                        $data->order_remark = $input["order_remark"];
+                    }
+                    //取消備註
+                    if(isset($input["cancel_remark"]) && $input["cancel_remark"] != "") {
+                        $data->cancel_remark = $input["cancel_remark"];
+                    }
+                    //出貨備註
+                    if(isset($input["delivery_remark"]) && $input["delivery_remark"] != "") {
+                        $data->delivery_remark = $input["delivery_remark"];
+                    }
+                    $data->updated_id = $admin_id;
+                    $data->save();
 
                     $this->error = false;
+                    //寄送通知信(出貨)
+                    if($data->status == "delivery" && $data->email != "") {
+                        $mail_data = [
+                            "email" => $data->email,
+                            "serial" => $data->serial,
+                            "uuid" => $uuid
+                        ];
+                        $this->sendMail("orders_delivery",$mail_data);
+                    }
+
+                    $log_msg .= "-訂單UUID：".$uuid;
                 } catch(QueryException $e) {
-                    $this->message = "更新錯誤！";
+                    $this->message = "修改失敗！";
                 }
             } else {
-                $this->message = "更新錯誤！";
+                $this->message = "修改失敗！";
             }
-        } else if($action_type == "delete") { //刪除
-            try {
-                $check_list = $input["check_list"]??[];
-                $uuids = explode(",",$check_list);
-                $data = WebUser::whereIn("uuid",$uuids);
-                $data->update(["deleted_id" => $admin_id]);
-                $data->delete();
-                $this->error = false;
-            } catch(QueryException $e) {
-                $this->message = "刪除錯誤！";
+        } else if($action_type == "cancel") { //取消
+            $data = Orders::where("uuid",$uuid)->whereNull("cancel")->first();
+            if(isset($data) && !empty($data)) {
+                try {
+                    //訂單編號
+                    $serial = $data->serial;
+                    //收件人信箱
+                    $email = $data->email;
+
+                    $data->cancel = $input["cancel"];
+                    //取消原因選擇其他才紀錄取消備註
+                    if($input["cancel"] == "other" && isset($input["cancel_remark"]) && $input["cancel_remark"] != "") {
+                        $data->cancel_remark = $input["cancel_remark"];
+                    }
+                    $data->cancel_by = "admin";
+                    $data->cancel_id = $admin_id;
+                    $data["status"] = "cancel";
+                    $data->save();
+                    
+                    $this->error = false;
+                    //寄送通知信
+                    if($email != "") {
+                        $mail_data = [
+                            "email" => $email,
+                            "serial" => $serial,
+                            "uuid" => $uuid
+                        ];
+                        $this->sendMail("orders_cancel",$mail_data);
+                    }
+
+                    $log_msg .= "-訂單UUID：".$uuid;
+                } catch(QueryException $e) {
+                    $this->message = "取消失敗！";
+                }
+            } else {
+                $this->message = "取消失敗！";
             }
+        } else {
+            $this->message = "操作錯誤！";
         }
+
+        $this->createLogRecord("admin",$action_type,"訂單管理",$log_msg);
 
         DB::commit();
 

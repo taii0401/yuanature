@@ -20,15 +20,15 @@
                         <div class="col-12">
                             <div class="row">
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                    <label><span class="star">* </span>收件人-姓名</label>
+                                    <label><span class="star">* </span>收件人姓名</label>
                                     <input type="text" id="name" name="name" class="form-control require" value="{{ @$datas["assign_data"]["name"] }}">
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                    <label><span class="star">* </span>收件人-手機號碼</label>
+                                    <label><span class="star">* </span>收件人手機</label>
                                     <input type="text" id="phone" name="phone" class="form-control require" value="{{ @$datas["assign_data"]["phone"] }}">                  
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                    <label>收件人-信箱</label>
+                                    <label>收件人信箱<span style="color:red;font-size:x-small">(建議填寫，才可寄發通知)</span></label>
                                     <input type="text" id="email" name="email" class="form-control" value="{{ @$datas["assign_data"]["email"] }}">
                                 </div>
                             </div> 
@@ -52,19 +52,19 @@
                                     @if(isset($datas["option_data"]["delivery"]) && !empty($datas["option_data"]["delivery"]))    
                                         @foreach($datas["option_data"]["delivery"] as $key => $val) 
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="delivery" id="delivery_{{ @$key }}" value="{{ @$key }}" @if($key == $datas["assign_data"]["delivery"]) checked @endif onclick="changeDataDisplay('checked','delivery','orders_address','home',true);">
+                                                <input class="form-check-input" type="radio" name="delivery" id="delivery_{{ @$key }}" value="{{ @$key }}" @if($key == $datas["assign_data"]["delivery"]) checked @endif onclick="changeDataDisplay('checked','delivery','address','home',true);">
                                                 <label class="form-check-label">{{ @$val }}</label>
                                             </div>
                                         @endforeach
                                     @endif
                                     </div>                  
                                 </div>
-                                <div id="div_orders_address" class="col-xl-4 col-lg-4 col-md-6 col-sm-12" style="display:none;">
-                                    <label><span class="star">* </span>宅配地址</label>
-                                    <input type="text" id="orders_address" name="address" class="form-control" value="{{ @$datas["assign_data"]["address"] }}">
+                                <div id="div_address" class="col-xl-4 col-lg-4 col-md-6 col-sm-12" style="display:none;">
+                                    <label><span class="star">* </span>收件人地址</label>
+                                    <input type="text" id="address" name="address" class="form-control" value="{{ @$datas["assign_data"]["address"] }}">
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row" style="margin-top:20px;">
                                 <div class="col-12">
                                     <label>備註：</label>
                                     <textarea id="order_remark" name="order_remark" class="form-control"></textarea>
@@ -89,7 +89,8 @@
 @section('script')
 <script>
     $(function () {
-        changeDataDisplay('checked','delivery','orders_address','home',true);
+        //配送方式-宅配配送顯示收件人地址
+        changeDataDisplay('checked','delivery','address','home',true);
     });
 </script>
 @endsection

@@ -72,7 +72,7 @@
                                         <div class="col-12">
                                             @if($data["status"] == "nopaid")
                                                 <div class="btn-action">
-                                                    <i class="fas fa-trash-alt tm-trash-icon dataModalBtnOrderCancel" data-bs-toggle="modal" data-bs-target="#dataModalOrderCancel" data-id="{{ @$data["uuid"] }},{{ @$data["serial"] }}">
+                                                    <i class="fas fa-trash-alt tm-trash-icon dataModalOrderCancelBtn" data-bs-toggle="modal" data-bs-target="#dataModalOrderCancel" data-id="{{ @$data["uuid"] }},{{ @$data["serial"] }}">
                                                     </i>
                                                 </div>
                                             @endif
@@ -96,13 +96,13 @@
         </div>
     </div>
 </div>
+@endsection
 
 @include('forms.orderCancel')
-@endsection
 
 @section('script')
 <script>
-    $('.dataModalBtnOrderCancel').click(function () {
+    $('.dataModalOrderCancelBtn').click(function () {
         var input_modal_keys = ['uuid','serial'];
         var select_modal_keys = [];
         setModalInput($(this).data('id'),input_modal_keys,select_modal_keys);

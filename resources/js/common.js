@@ -367,7 +367,7 @@ function setModalInput(modal_values, input_modal_keys, select_modal_keys) {
                 if (value == 'add') {
                     $('#modal_title_name').text('新增');
                 } else if (value == 'edit') {
-                    $('#modal_title_name').text('編輯');
+                    $('#modal_title_name').text('修改');
                 } else if (value == 'delete') {
                     $('#modal_title_name').text('刪除');
                 } else if (value == 'cancel') {
@@ -742,7 +742,7 @@ function adminSubmit(type) {
                 if (action_type == 'add') { //新增
                     alert("新增成功！");
                 } else if (action_type == 'edit') { //編輯
-                    alert("編輯成功！");
+                    alert("修改成功！");
                 } else if (action_type == 'delete') { //刪除
                     alert("刪除成功！");
                 } else if (action_type == 'cancel') { //取消

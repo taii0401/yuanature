@@ -42,7 +42,6 @@
     </div>
 </form>
 
-@section('script')
 <script>
     function orderCancelSubmit() {
         var source = $('#input_modal_source').val();
@@ -55,4 +54,3 @@
         }
     }
 </script>
-@endsection

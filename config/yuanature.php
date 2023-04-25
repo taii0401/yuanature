@@ -1,6 +1,18 @@
 <?php
 
 return [
+    //動作名稱
+    "action_name" => [
+        "create" => "新增",
+        "edit" => "編輯",
+        "delete" => "刪除",
+        "cancel" => "取消",
+        "import" => "匯入",
+        "export" => "匯出",
+        "search" => "查詢",
+        "other" => "其他",
+    ],
+
     //登入後轉向頁面
     "login_url" => "/product",
     

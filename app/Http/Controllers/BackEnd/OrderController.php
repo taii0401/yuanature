@@ -109,9 +109,14 @@ class OrderController extends Controller
         $datas["assign_data"] = $assign_data;
         //訂單明細資料
         $datas["detail_data"] = OrdersDetail::getDataByOrderid($orders_data["id"]);
-        //選項-訂單狀態、配送方式
-        $datas["option_data"]["status"] = $this->getConfigOptions("orders_status",false);
-        $datas["option_data"]["delivery"] = $this->getConfigOptions("orders_delivery",false);
+        //選項-訂單狀態、配送方式、取消原因
+        $datas["modal_data"]["status"] = $this->getConfigOptions("orders_status",false);
+        $datas["modal_data"]["delivery"] = $this->getConfigOptions("orders_delivery",false);
+        //$datas["modal_data"]["cancel"] = $this->getConfigOptions("orders_cancel",false);
+        //將訂單狀態中的取消狀態移除
+        if(isset($datas["modal_data"]["status"]["cancel"])) {
+            unset($datas["modal_data"]["status"]["cancel"]);
+        }
         
         return view("backend.orderData",["datas" => $datas]);
     }

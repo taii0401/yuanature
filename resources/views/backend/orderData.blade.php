@@ -25,12 +25,16 @@
                             <th>{{ @$datas["assign_data"]["name"] }}</th>
                         </tr>
                         <tr>
-                            <th class="text-center tm-bg-gray" height="50px">收件人電話：</th>
+                            <th class="text-center tm-bg-gray" height="50px">收件人手機：</th>
                             <th>{{ @$datas["assign_data"]["phone"] }}</th>
+                        </tr>
+                        <tr>
+                            <th class="text-center tm-bg-gray" height="50px">收件人信箱：</th>
+                            <th>{{ @$datas["assign_data"]["email"] }}</th>
                         </tr>
                         @if(@$datas["assign_data"]["delivery"] == "home" && @$datas["assign_data"]["address"] != "")
                             <tr>
-                                <th class="text-center tm-bg-gray" height="50px">宅配地址：</th>
+                                <th class="text-center tm-bg-gray" height="50px">收件人地址：</th>
                                 <th>{{ @$datas["assign_data"]["address"] }}</th>
                             </tr>
                         @endif
@@ -66,12 +70,10 @@
                                 <th>{!! @$datas["assign_data"]["cancel_remark_format"] !!}</th>
                             </tr>
                         @endif
-                        @if((@$datas["assign_data"]["status"] == "deliver" || @$datas["assign_data"]["status"] == "complete") && @$datas["assign_data"]["deliver_remark"] != "")
-                            <tr>
-                                <th class="text-center tm-bg-gray" height="50px">出貨備註：</th>
-                                <th>{!! @$datas["assign_data"]["deliver_remark_format"] !!}</th>
-                            </tr>
-                        @endif
+                        <tr>
+                            <th class="text-center tm-bg-gray" height="50px">出貨備註：</th>
+                            <th>{!! @$datas["assign_data"]["delivery_remark_format"] !!}</th>
+                        </tr>
                     </thead>
                 </table>
             </div>
@@ -80,9 +82,9 @@
                     <thead>
                         <tr class="tm-bg-gray">
                             <th scope="col" class="text-center" height="50px">商品名稱</th>
-                            <th scope="col" class="text-center" style="width:10%;">數量</th>
-                            <th scope="col" class="text-center" style="width:10%;">售價</th>
-                            <th scope="col" class="text-center" style="width:15%;">小計</th>
+                            <th scope="col" class="text-center" style="width:15%;">數量</th>
+                            <th scope="col" class="text-center" style="width:15%;">售價</th>
+                            <th scope="col" class="text-center" style="width:100px;">小計</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -109,7 +111,9 @@
             <div class="row">
                 <div class="col-12 col-sm-6"></div>
                 <div class="col-12 col-sm-6 tm-btn-right">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dataModal">修改訂單</button>
+                    @if(@$datas["assign_data"]["status"] != "cancel")
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#dataModal">修改訂單</button>
+                    @endif
                     <button type="button" class="btn btn-primary" onclick="changeForm('/admin/orders')">返回</button>
                 </div>
             </div>
@@ -135,10 +139,10 @@
                         <div class="row m-t-10">
                             <div class="col-12">
                                 <label>配送方式：</label>
-                                @if(isset($datas["option_data"]["delivery"]) && !empty($datas["option_data"]["delivery"]))    
-                                    @foreach($datas["option_data"]["delivery"] as $key => $val) 
+                                @if(isset($datas["modal_data"]["delivery"]) && !empty($datas["modal_data"]["delivery"]))    
+                                    @foreach($datas["modal_data"]["delivery"] as $key => $val) 
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="delivery" id="delivery_{{ @$key }}" value="{{ @$key }}" @if($key == $datas["assign_data"]["delivery"]) checked @endif onclick="changeDataDisplay('checked','delivery','orders_address','home',true);">
+                                            <input class="form-check-input" type="radio" name="delivery" id="input_modal_delivery_{{ @$key }}" value="{{ @$key }}" @if($key == $datas["assign_data"]["delivery"]) checked @endif onclick="changeDataDisplay('checked','delivery','input_modal_address','home',true);">
                                             <label class="form-check-label">{{ @$val }}</label>
                                         </div>
                                     @endforeach
@@ -146,10 +150,10 @@
                             </div>
                             <div class="col-12">
                                 <label>訂單狀態：</label>
-                                @if(isset($datas["option_data"]["status"]) && !empty($datas["option_data"]["status"]))    
-                                    @foreach($datas["option_data"]["status"] as $key => $val) 
+                                @if(isset($datas["modal_data"]["status"]) && !empty($datas["modal_data"]["status"]))    
+                                    @foreach($datas["modal_data"]["status"] as $key => $val) 
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="status" id="status_{{ @$key }}" value="{{ @$key }}" @if($key == $datas["assign_data"]["status"]) checked @endif onclick="changeDataDisplay('checked','status','orders_cancel','cancel',true);">
+                                            <input class="form-check-input" type="radio" name="status" id="input_modal_status_{{ @$key }}" value="{{ @$key }}" @if($key == $datas["assign_data"]["status"]) checked @endif onclick="changeDataDisplay('checked','status','cancel','cancel',true);">
                                             <label class="form-check-label">{{ @$val }}</label>
                                         </div>
                                     @endforeach
@@ -163,17 +167,37 @@
                                 <label>收件人手機</label>
                                 <input type="text" id="input_modal_phone" name="phone" class="form-control " value="{{ @$datas["assign_data"]["phone"] }}">                  
                             </div>
-                            <div id="div_orders_address" class="col-12" style="display:none;">
-                                <label>宅配地址</label>
-                                <input type="text" id="orders_address" name="address" class="form-control" value="{{ @$datas["assign_data"]["address"] }}">
+                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+                                <label>收件人信箱</label>
+                                <input type="text" id="input_modal_email" name="email" class="form-control " value="{{ @$datas["assign_data"]["email"] }}">                  
                             </div>
-                            
+                            <div id="div_input_modal_address" class="col-12" style="display:none;">
+                                <label>收件人地址</label>
+                                <input type="text" id="input_modal_address" name="address" class="form-control" value="{{ @$datas["assign_data"]["address"] }}">
+                            </div>
+                            <div class="col-12">
+                                <label>出貨備註：</label>
+                                <textarea id="input_modal_delivery_remark" name="delivery_remark" class="form-control" cols="100" rows="3">{!! @$datas["assign_data"]["delivery_remark"] !!}</textarea>
+                            </div>
+                            <div id="div_cancel" class="col-xl-6 col-lg-6 col-md-12 col-sm-12" style="display:none;">
+                                <label class="col-form-label">取消原因</label>
+                                <select class="custom-select col-12" id="input_modal_cancel" name="cancel" onchange="changeDataDisplay('select','input_modal_cancel','input_modal_cancel_remark','other',true)">
+                                    @if(isset($datas["modal_data"]["cancel"]) && !empty($datas["modal_data"]["cancel"]))
+                                        @foreach($datas["modal_data"]["cancel"] as $key => $val)
+                                            <option value="{{ $key }}">{{ $val }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+                            <div id="div_input_modal_cancel_remark" class="col-xl-6 col-lg-6 col-md-12 col-sm-12" style="display:none;margin-top:20px;">
+                                <textarea id="input_modal_cancel_remark" name="cancel_remark" class="form-control" cols="100" rows="3">{!! @$datas["assign_data"]["cancel_remark"] !!}</textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn_submit" onclick="adminSubmit('orders');">送出</button>
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger btn_submit" onclick="adminSubmit('orders');">送出</button>
                 </div>
             </div>
             
@@ -185,7 +209,10 @@
 @section('script')
 <script>
     $(function () {
-        changeDataDisplay('checked','delivery','orders_address','home',true);
+        //訂單狀態-已取消顯示取消原因
+        changeDataDisplay('checked','status','input_modal_cancel','cancel',true);
+        //配送方式-宅配配送顯示收件人地址
+        changeDataDisplay('checked','delivery','input_modal_address','home',true);
     });
 
     $('.dataModalBtn').click(function () {
