@@ -94,7 +94,7 @@ class AjaxController extends Controller
         if($action_type == "add" || $action_type == "edit") {
             $add_data["name"] = $input["name"]??NULL;
             $add_data["status"] = isset($input["status"]) && $input["status"] == "on"?1:2;
-            $add_data["admin_group_id"] = $input["admin_group_id"]??0;
+            $add_data["admin_group_id"] = $input["admin_group_id"]??2;
         }
 
         DB::beginTransaction();
