@@ -185,6 +185,8 @@
         var action_type = $('#input_modal_action_type').val();
         if(action_type == 'add') {
             $('.password_text').text('');
+            //管理員群組
+            $('#input_modal_admin_group_id').val('{{ @$datas["modal_data"]["admin_group_id"] }}');
         } else if(action_type == 'edit') {
             $('.password_text').text('(若不修改則不需要輸入)');
         }

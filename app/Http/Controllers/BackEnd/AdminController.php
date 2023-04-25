@@ -49,7 +49,7 @@ class AdminController extends Controller
         $all_datas_group = AdminGroup::getAllDatas()->get()->toArray();
         $select_group = $this->getSelect($all_datas_group);
         $datas["modal_data"]["admin_group"] = $select_group;
-        $assign_data["admin_group"] = array_key_first($select_group);
+        $datas["modal_data"]["admin_group_id"] = array_key_first($select_group);
 
         $datas["assign_data"] = $assign_data;
         $datas["option_data"] = $option_data;
