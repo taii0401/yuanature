@@ -22,6 +22,7 @@ class CreateWebUserTable extends Migration
             $table->tinyInteger('sex')->nullable()->comment('性別：1 男、2 女');
             $table->date('birthday')->nullable()->comment('生日');
             $table->string('phone',10)->nullable()->comment('手機');
+            $table->string('address_zip',5)->nullable()->comment('郵遞區號');
             $table->string('address')->nullable()->comment('地址');
             $table->string('register_type',10)->default('email')->comment('登入方式：config.user_register');
             $table->tinyInteger('is_verified')->default(0)->comment('是否驗證：0 否、1 是');
