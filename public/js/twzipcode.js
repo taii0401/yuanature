@@ -1,33 +1,22 @@
 /**
- * TWzipcode
- * https://code.essoduke.org/twzipcode/nojquery
- * Copyright 2019 essoduke.org, Licensed MIT.
- *
- *
- * @author  Essoduke Chang<essoduke@gmail.com>
- * @license MIT License
+ * TWzipcode v3.0 (https://code.essoduke.org/twzipcode)
+ * @license MIT
  */
-(function (root, factory) {
+(function (factory) {
 
     'use strict';
 
-    if (typeof define === 'function' && define.amd) {
-        define(factory);
-    }
-    else if (typeof module != 'undefined' && typeof module.exports != 'undefined') {
+    if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
         module.exports = factory();
-    }
-    else {
+    } else {
         /* jshint sub:true */
         window['TWzipcode'] = factory();
     }
 
-}(this, function TWzipcodeFactory () {
-
-    'use strict';
+}(function TWzipcodeFactory () {
 
     // Zipcode JSON data
-    var database = {
+    let database = {
         '基隆市': {'仁愛區': '200', '信義區': '201', '中正區': '202', '中山區': '203', '安樂區': '204', '暖暖區': '205', '七堵區': '206'},
         '臺北市': {'中正區': '100', '大同區': '103', '中山區': '104', '松山區': '105', '大安區': '106', '萬華區': '108', '信義區': '110', '士林區': '111', '北投區': '112', '內湖區': '114', '南港區': '115', '文山區': '116'},
         '新北市': {
@@ -39,8 +28,7 @@
         },
         '宜蘭縣': {
           '宜蘭市': '260', '頭城鎮': '261', '礁溪鄉': '262', '壯圍鄉': '263', '員山鄉': '264', '羅東鎮': '265',
-          '三星鄉': '266', '大同鄉': '267', '五結鄉': '268', '冬山鄉': '269', '蘇澳鎮': '270', '南澳鄉': '272',
-          '釣魚臺列嶼': '290'
+          '三星鄉': '266', '大同鄉': '267', '五結鄉': '268', '冬山鄉': '269', '蘇澳鎮': '270', '南澳鄉': '272'
         },
         '新竹市': {'東區': '300', '北區': '300', '香山區': '300'},
         '新竹縣': {
@@ -101,7 +89,7 @@
         '高雄市': {
           '新興區': '800', '前金區': '801', '苓雅區': '802', '鹽埕區': '803', '鼓山區': '804', '旗津區': '805',
           '前鎮區': '806', '三民區': '807', '楠梓區': '811', '小港區': '812', '左營區': '813',
-          '仁武區': '814', '大社區': '815', '東沙群島': '817', '南沙群島': '819', '岡山區': '820', '路竹區': '821',
+          '仁武區': '814', '大社區': '815', '岡山區': '820', '路竹區': '821',
           '阿蓮區': '822', '田寮區': '823',
           '燕巢區': '824', '橋頭區': '825', '梓官區': '826', '彌陀區': '827', '永安區': '828', '湖內區': '829',
           '鳳山區': '830', '大寮區': '831', '林園區': '832', '鳥松區': '833', '大樹區': '840', '旗山區': '842',
@@ -132,868 +120,819 @@
     };
 
     /**
-     * Get or Set data-attribute
+     * Trigger the event of Element
+     * @param  {HTMLElement}  el  Element
+     * @param  {string}  eventName  Event name
+     * @param  {Function}  callback
      */
-    var data = (function () {
+    const trigger = (el, eventName, callback) => {
 
-        var db = {};
-
-        return {
-            /**
-             * Get attribute
-             *
-             * @param {Object} elem Element object
-             * @param {string} key  Key name
-             */
-            'get': function (elem, key) {
-
-                if (!elem) {
-                    return false;
-                }
-
-                [].forEach.call(elem.attributes, function (attr) {
-                    if (/^data-/.test(attr.name)) {
-                        var camelCaseName = attr.name.substr(5).replace(/-(.)/g, function ($0, $1) {
-                            return $1.toUpperCase();
-                        });
-                        db[camelCaseName] = attr.value;
-                    }
-                });
-                if ('string' === typeof key && (key in db)) {
-                    return JSON.parse(['"', htmldecode(db[key]), '"'].join(''));
-                } else if ('undefined' === typeof key) {
-                    return db;
-                }
-            },
-            /**
-             * Set data-attribute
-             *
-             * @param {Object} elem Element object
-             * @param {string} key  Key name
-             * @param {string} val  Key value
-             */
-            'set': function (elem, key, val) {
-
-                if (!elem) {
-                    return false;
-                }
-
-                if ('string' === typeof key) {
-                    db[key] = val;
-                }
-
-                Object.keys(db).forEach(function (k) {
-                    var attrName = 'data-' + k.replace(/[A-Z]/g, function ($0) {
-                            return '-' + $0.toLowerCase();
-                        }),
-                        attrValue = htmlencode(JSON.stringify(db[k]).slice(1, -1));
-                    elem.setAttribute(attrName, attrValue);
-                });
-            }
-        };
-    }());
-
-    function htmlencode (s) {
-        var div = document.createElement('div');
-        div.appendChild(document.createTextNode(s));
-        return div.innerHTML;
-    }
-    function htmldecode (s) {
-        var div = document.createElement('div');
-        div.innerHTML = s;
-        return div.innerText || div.textContent;
-    }
-
-    /**
-     * 轉換異體字 [台]為 [臺]
-     *
-     * @param  {string} value
-     * @return {string}
-     */
-    function transfer (value) {
-        return 'string' === typeof value ? value.replace(/[台]+/gi, '臺') : value;
-    }
-
-    // unbind event
-    function on (el, event, fn) {
-        el.addEventListener(event, fn, false);
-    }
-
-    // bind event
-    function off (el, event, fn) {
-        el.removeEventListener(event, fn, false);
-    }
-
-    // getJSON
-    function getJSON (url, params, success, error) {
-
-        var request = new XMLHttpRequest();
-
-        function serialize (obj) {
-            var str = [], p;
-            for (p in obj) {
-                if (obj.hasOwnProperty(p)) {
-                    str.push([encodeURIComponent(p), encodeURIComponent(obj[p])].join('='));
-                }
-            }
-            return str.join('&');
-        }
-
-        request.open('GET', [url, serialize(params)].join('?') , true);
-
-        request.onload = function () {
-            if (request.status >= 200 && request.status < 400) {
-                // Success!
-                var data = JSON.parse(request.responseText);
-                if ('function' === typeof success) {
-                    success.call(this, data);
-                }
-            } else {
-                // We reached our target server, but it returned an error
-            }
-        };
-        request.onerror = 'function' === typeof error ? error : function () {};
-        request.send();
-    }
-
-    /**
-     *
-     */
-    function deepExtend () {
-
-        // Variables
-        var extended = {},
-            deep = false,
-            i = 0,
-            length = arguments.length;
-
-        // Check if a deep merge
-        if ( Object.prototype.toString.call( arguments[0] ) === '[object Boolean]' ) {
-            deep = arguments[0];
-            i += 1;
-        }
-
-        // Merge the object into the extended object
-        var merge = function (obj) {
-            for ( var prop in obj ) {
-                if ( Object.prototype.hasOwnProperty.call( obj, prop ) ) {
-                    // If deep merge and property is an object, merge properties
-                    extended[prop] = deep && Object.prototype.toString.call(obj[prop]) === '[object Object]' ?
-                                     deepExtend( true, extended[prop], obj[prop] ) :
-                                     obj[prop];
-                }
-            }
-        };
-
-        // Loop through each object and conduct a merge
-        for (; i < length; i++ ) {
-            var obj = arguments[i];
-            merge(obj);
-        }
-
-        return extended;
-    };
-
-    /**
-     *
-     */
-    function trigger (el, eventName) {
-
-        var event;
+        let event;
 
         // Namespace
         if (-1 !== eventName.indexOf('.')) {
             if (window.CustomEvent) {
                 event = new CustomEvent(eventName);
-            } else {
-                event = document.createEvent('CustomEvent');
-                event.initCustomEvent(eventName, true, true);
             }
         } else {
-            if (document.createEvent) {
-                event = document.createEvent('HTMLEvents');
-                event.initEvent(eventName, true, true);
-            } else {
-                event = document.createEventObject();
-                event.eventType = eventName;
-            }
+            event = new Event(eventName, {"bubbles": true, "cancelable": true});
+            document.dispatchEvent(event);
         }
 
-        event.eventName = eventName;
+        el.dispatchEvent(event);
 
-        if (document.createEvent) {
-            el.dispatchEvent(event);
-        } else {
-            el.fireEvent('on' + event.eventType, event);
+        if (Helper.isFunction(callback)) {
+            callback.call();
         }
-    }
+    };
 
     /**
      *
      */
-    function isElement (obj) {
-        try {
-            //Using W3 DOM2 (works for FF, Opera and Chrome)
-            return obj instanceof HTMLElement;
-        } catch (ignore) {
-            //Browsers not supporting W3 DOM2 don't have HTMLElement and
-            //an exception is thrown and we end up here. Testing some
-            //properties that all elements have. (works on IE7)
-            return (typeof obj === 'object') &&
-                   (obj.nodeType===1) && (typeof obj.style === 'object') &&
-                   (typeof obj.ownerDocument === 'object');
-        }
-    }
-
-    /**
-     *
-     */
-    function TWzipcode (container, options) {
-
+    class Helper {
         /**
-         * Default options of Plugin
-         * @type {Object}
+         * Deep copy
+         * @param  {*}  [...args]  Arguments
          */
-        var twzipcodeOpts = {
-                'county': {
-                    'label'    : '縣市',
-                    'name'     : 'county',    //表單名稱
-                    'value'    : '',          //預設值
-                    'css'      : '',          //樣式名稱
-                    'hidden'   : false,       //要隱藏的縣市
-                    'required' : true,
-                    'onSelect' : null
-                },
-                'district': {
-                    'label'    : '鄉鎮市區',
-                    'name'     : 'district',  //表單名稱
-                    'value'    : '',          //預設值
-                    'css'      : '',          //樣式名稱
-                    'hidden'   : false,       //要隱藏的鄉鎮市區
-                    'required' : true,
-                    'onSelect' : null
-                },
-                'zipcode': {
-                    'name'       : 'zipcode', //表單名稱
-                    'value'      : '',        //預設值
-                    'css'        : '',        //樣式名稱
-                    'hidden'     : false,     //要隱藏的鄉鎮市區
-                    'type'       : 'text',
-                    'min'        : 0,
-                    'max'        : 0,
-                    'step'       : 1,
-                    'placeholder': '',
-                    'maxlength'  : 3,
-                    'pattern'    : '\\d+',
-                    'readonly'   : false,
-                    'required'   : true,
-                    'onKeyUp'    : null,
-                    'onFocus'    : null,
-                    'onBlur'     : null
-                },
-                'GMAP_KEY'  : '', //
-                'detect'    : false,
-                'combine'   : false,
-                'island'    : true,
-                'database'  : {}
+        static deepExtend (...args) {
+
+            // Variables
+            let extended = {},
+                deep = false,
+                length = args.length,
+                i = 0;
+
+            // Check if a deep merge
+            if ('boolean' === typeof args[0]) {
+                deep = args[0];
+                i += 1;
+            }
+
+            // Merge the object into the extended object
+            const merge = (obj) => {
+                for (let prop in obj) {
+                    if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+                        // If deep merge and property is an object, merge properties
+                        extended[prop] = deep && this.isObject(obj[prop]) ?
+                                         this.deepExtend(true, extended[prop], obj[prop] ) :
+                                         obj[prop];
+                    }
+                }
             };
 
-        /**
-         * 離島縣市、鄉鎮市區
-         * @type {Array}
-         */
-        this.islands = [
-            '釣魚臺列嶼', '東沙群島', '南沙群島', '綠島鄉', '蘭嶼鄉',
-            '金門縣', '連江縣', '澎湖縣'
-        ];
+            // Loop through each object and conduct a merge
+            for (; i < length; i += 1) {
+                let obj = args[i];
+                merge(obj);
+            }
 
-        /**
-         * Plugin Namespace
-         * @type {string}
-         */
-        this.namespace = 'twzipcode';
-
-        /**
-         * DOM of selector
-         * @type {Object}
-         */
-        //this.container = $(container);
-        this.container = 'string' === typeof container ?
-                         document.querySelectorAll(container) :
-                         isElement(container) ? container : false;
-
-
-        if (false === this.container) {
-            throw 'Initialize failed';
-            return false;
+            return extended;
         }
 
         /**
-         * Merge the options
-         * @type {Object}
+         * Find matched key path in Object
+         * @param  {Object}  obj  Object
+         * @param  {string}  field  Key path (with comma)
+         * @return {*}
          */
-        //this.options = $.extend(true, {}, twzipcodeOpts, options);
-        this.options = deepExtend(true, twzipcodeOpts, options);
+        static findObject (obj, field) {
 
-        // 外部 data JSON
-        if (this.options.database && Object.keys(this.options.database).length !== 0) {
-            database = this.options.database;
-            delete this.options.database;
+            if (field && this.isObject(obj)) {
+                let jo = obj;
+                if (this.isString(field)) {
+                    let str = field.split(/\./g);
+                    for (let i of str) {
+                        if (jo.hasOwnProperty(i)) {
+                            jo = jo[i];
+                        }
+                    }
+                    return jo;
+                }
+            }
+        }
+        /**
+         * 轉換異體字 [台]為 [臺]
+         *
+         * @param  {string} value
+         * @return {string}
+         */
+        static transfer (value) {
+            return this.isString(value) ? value.replace(/[台]+/gi, '臺') : value;
+        }
+        /**
+         * Check variable has defined and not null.
+         * @param  {*}  args - Variable
+         * @return {boolean}
+         */
+        static isset (...args) {
+            let i = true;
+            for (let obj of args) {
+                i = i && (('undefined' !== typeof obj || Object.prototype.toString.call(obj) !== '[object Undefined]') && null !== obj);
+            }
+            return i;
+        }
+        /**
+         * Check variable is HTMLElement or not.
+         * @param  {*}  args - Variable
+         * @return {boolean}
+         */
+        static isDOM (...args) {
+            let i = true;
+            for (let obj of args) {
+                i = i && obj instanceof HTMLElement;
+            }
+            return i;
         }
 
         /**
-         * Zipcode data JSON
-         * @type {Object}
+         * Check variable is string or not.
+         * @param  {*}  args - Variable
+         * @return {boolean}
          */
-        this.database = database;
-
-        // Initialize
-        this.init();
+        static isString (...args) {
+            let i = true;
+            for (let obj of args) {
+                i = i && ('string' === typeof obj || Object.prototype.toString.call(obj) === '[object String]');
+            }
+            return i;
+        }
+        /**
+         * Check variable is number or not.
+         * @param  {*}  args - Variable
+         * @return {boolean}
+         */
+        static isNumeric (...args) {
+            let i = true;
+            for (let obj of args) {
+                i = i && /^[0-9]+$/.test(obj);
+            }
+            return i;
+        }
+        /**
+         * Check variable is boolean or not.
+         * @param  {*}  args - Variable
+         * @return {boolean}
+         */
+        static isBool (...args) {
+            let i = true;
+            for (let obj of args) {
+                i = i && 'boolean' === typeof obj || Object.prototype.toString.call(obj) === '[object Boolean]';
+            }
+            return i;
+        }
+        /**
+         * Check variable is Object prototype or not.
+         * @param  {*}  args - Variable
+         * @return {boolean}
+         */
+        static isArray (...args) {
+            let i = true;
+            for (let obj of args) {
+                i = i && (obj instanceof Array || Array.isArray(obj) || Object.prototype.toString.call(obj) === '[object Array]');
+            }
+            return i;
+        }
+        /**
+         * Check variable is Object prototype or not.
+         * @param  {*}  args - Variable
+         * @return {boolean}
+         */
+        static isObject (...args) {
+            let i = true;
+            for (let obj of args) {
+                i = i && ('object' === typeof obj && Object.prototype.toString.call(obj) === '[object Object]' && null !== obj);
+            }
+            return i;
+        }
+        /**
+         * Check variable is function or not.
+         * @param  {*}  args - Variable
+         * @return {boolean}
+         */
+        static isFunction (...args) {
+            let i = true;
+            for (let obj of args) {
+                i = i && ('function' === typeof obj || Object.prototype.toString.call(obj) === '[object Function]');
+            }
+            return i;
+        }
     }
 
-    // 取得指定的選項
-    TWzipcode.prototype.getOpt = function () {
+    /**
+     * TWzipcode class
+     * @class
+     */
+    return class TWzipcode {
 
-        var opt  = this.options,
-            args = Array.prototype.slice.call(arguments, 0),
-            i    = 0,
-            v,
-            obj;
+        version = '3.0';
 
-        args.forEach(function (arg, i) {
-            if (obj && obj.hasOwnProperty(arg)) {
-                v = obj[arg];
-            } else if (opt.hasOwnProperty(arg))  {
-                obj = opt[arg];
-                v = obj;
+        database;
+        options;
+        container;
+        selector;
+        instance = {};
+        fetch;
+
+        /**
+         * @param  {string|HTMLelement}  [selector=".twzipcode"]  TWzipcode Element
+         * @param  {Object}  [options]  TWzipcode options
+         * @return {TWzipcode}
+         */
+        constructor (selector = '.twzipcode', options = {}) {
+
+            // Default options
+            this.options = Helper.deepExtend(true, {
+                county: {
+                    tag: 'select',
+                    name: 'county',
+                    css: '',
+                    label: '縣市', //(string)預設選項文字
+                    value: '', //(string)預設值
+                    hidden: false, //(bool|string|array)要隱藏的縣市
+                    onChange: null //function
+                },
+                district: {
+                    tag: 'select',
+                    name: 'district',
+                    css: '',
+                    label: '鄉鎮市區', //(string)預設選項文字
+                    value: '', //(string)預設值
+                    hidden: false, //(bool|string|array) 要隱藏的鄉鎮市區
+                    onChange: null //function
+                },
+                zipcode: {
+                    tag: 'input',
+                    type: 'hidden',
+                    name: 'zipcode',
+                    css: '',
+                    value: '', //預設值
+                    onKeyup: null //function
+                },
+                address: {
+                    tag: 'input',
+                    type: 'text',
+                    name: 'address',
+                    css: '',
+                    value: '', //預設值
+                    onKeyup: null //function
+                },
+                combine: true, //(bool)是否將 zipcode 與鄉鎮市區清單整合
+                islands_key: ['綠島鄉', '蘭嶼鄉', '金門縣', '連江縣', '澎湖縣', '琉球鄉'], //(bool|array)離島範圍，可以是縣市名稱或郵遞區號
+                islands_hidden: false, //(bool)是否隱藏離島
+            }, options);
+
+            this.database = database;
+
+            if (Helper.isString(selector)) { //參數1=字串
+                this.container = document.querySelectorAll(selector);
+            } else if (Helper.isDOM(selector)) { //參數1=DOM
+                this.container = [selector];
+            } else if (selector instanceof NodeList || Object.prototype.isPrototypeOf.call(NodeList.prototype, selector)) {
+                this.container = selector;
+            } else if (Helper.isObject(selector)) { //參數1=選項
+                this.container = document.querySelectorAll('.twzipcode');
+                this.options = Helper.deepExtend(true, this.options, selector);
             } else {
-                v = obj;
-                return;
+                throw '錯誤：無法初始化 Selector 元素。'
             }
-        });
-        return v;
-    };
 
-    // 建立 select dropdown list
-    TWzipcode.prototype.createDropdownList = function (el, id, role, opt) {
-
-        var self     = this,
-            opts     = deepExtend(true, opt, data.get(el)),
-            dom      = document.createElement('select'),
-            label    = opts.hasOwnProperty('label') ? opts.label : opt.label,
-            defItem  = ['<option value="">' + label + '</option>'],
-            html     = [],
-            hide     = [],
-            event    = 'change',
-            nv       = transfer(opts.value),
-            selected,
-            o,
-            c;
-
-        if (false === self.getOpt('island')) {
-            hide = hide.concat(self.islands);
+            this.init();
+            this.bindEvents();
+            this.trigger();
+            return this;
         }
 
-        if (opts.hidden) {
-            if (Array.isArray(opts.hidden)) {
-                hide.concat(opts.hidden);
-            } else if ('string' === typeof opts.hidden) {
-                hide.concat(opts.hidden.toString().split(','));
-            }
-            hide = hide.map(function (item) {
-                return transfer(item.trim());
-            });
-        }
+        /**
+         * 初始化: 產生 option
+         */
+        init () {
 
-        html.push(defItem.join(''));
+            const islandsKey = this.options.islands_key,
+                  islandsHidden = Boolean(this.options.islands_hidden),
+                  hideCounty = this.options.county.hidden;
 
-        // if (opts.hasOwnProperty('value') && opts.value) {
-        //     nv = opts.value;
-        // }
+            // County
+            this.container.forEach((elem) => {
 
-        if ('county' === role) {
-            for (c in self.database) {
-                if ('undefined' !== typeof self.database[c]) {
-                    if (-1 === hide.indexOf(c)) {
-                        selected = nv === c ? ' selected="selected"' : '';
-                        html.push(['<option value="', c, '" ', selected, '>', c, '</option>'].join(''));
+                let {c, d, z, a} = this.createEmelents(elem);
+                let id = Math.random().toString(36).substring(2, 10), h = [];
+
+                elem.dataset.id = id;
+
+                if (Helper.isDOM(c, d)) {
+
+                    if (Helper.isDOM(a)) {
+                        a.dataset.id = `address-${id}`;
                     }
-                }
-            }
-        }
 
-        dom.setAttribute('name', opts.name);
-        dom.setAttribute('id', [role, '-', id].join(''));
-        dom.className += [opts.css].join('');
-        dom.innerHTML = html.join('');
+                    let defaultDistrictOption = `<option value="">${'label' in d.dataset ? d.dataset.label : this.options.district.label}</option>`;
 
-        data.set(dom, 'default', defItem.join(''));
+                    // push to instance
+                    this.instance[id] = {
+                        'parent': elem,
+                        'county': c,
+                        'district': d,
+                        'zipcode': z,
+                        'address': a
+                    };
 
-        dom.removeAttribute('data-role');
+                    let label = 'label' in c.dataset ? c.dataset.label : this.options.county.label;
+                    const had = c.dataset.hasOwnProperty('loaded') && Boolean(c.dataset.loaded);
 
-        if (opts.required) {
-            dom.setAttribute('required', true);
-        }
-
-        // County onchange
-        function onCountyChange (evt) {
-
-            var district = self.getEl(id, 'district'),
-                zipcode  = self.getEl(id, 'zipcode'),
-                //value    = transfer(this.value),
-                value    = transfer(this.options[this.selectedIndex].value),
-                sv       = data.get(district, 'value'),
-                hide     = [],
-                sub      = [],
-                combine  = '',
-                selected,
-                cn;
-
-            district.innerHTML = data.get(district, 'default');
-
-            if (zipcode && opts.hasOwnProperty('onSelect') && 'function' === typeof opts.onSelect) {
-                opts.onSelect.call(this, evt);
-            }
-
-            if (false === self.getOpt('island')) {
-                hide = hide.concat(self.islands);
-            }
-
-            if (opts.hasOwnProperty('hidden')) {
-                if ('string' === typeof opts.hidden) {
-                    hide.concat(opts.hidden.split(','));
-                } else if (Array.isArray(opts.hidden)) {
-                    hide.concat(opts.hidden);
-                }
-
-                hide = hide.map(function (item) {
-                    return transfer(item.trim());
-                });
-            }
-
-            if (district.length) {
-                if (self.database.hasOwnProperty(value)) {
-                    for (cn in self.database[value]) {
-                        if (Array.isArray(hide) && (!hide.length) || (hide.length && -1 === hide.indexOf(cn))) {
-                            selected = cn === nv || cn === sv ? ' selected="selected"' : '';
-                            combine  = self.getOpt('combine') ? (self.database[value][cn] + ' ') : '';
-                            sub.push([
-                                '<option value="', cn, '"', selected, '>', (combine + cn), '</option>'
-                            ].join(''));
+                    h.push(`<option value="">${label}</option>`);
+                    Object.keys(this.database).forEach((county) => {
+                        const c1 = islandsHidden && islandsKey.includes(county); //隱藏離島且 屬於離島字串
+                        const c2 = (Helper.isString(hideCounty) || Helper.isArray(hideCounty)) && hideCounty.includes(county); //有指定隱藏的縣市
+                        if (!(c1 || c2)) {
+                            h.push(`<option value="${county}">${county}</option>`);
                         }
-                    }
-                    district.innerHTML = sub.join('');
-                    trigger(district, event);
-                } else {
-                    if ('value' in zipcode) {
-                        zipcode.value = '';
-                    }
-                }
-            }
-        }
-
-        // District onchange
-        function onDistrictChange (evt) {
-
-            var elCounty   = self.getEl(id, 'county'),
-                elDistrict = self.getEl(id, 'district'),
-                elZipcode  = self.getEl(id, 'zipcode');
-
-            if (elCounty && elDistrict && elZipcode) {
-                if (self.database.hasOwnProperty(elCounty.value) &&
-                    self.database[elCounty.value].hasOwnProperty(elDistrict.value)
-                ) {
-                    elZipcode.value = self.database[elCounty.value][elDistrict.value];
-                    if (opts.hasOwnProperty('onSelect') && 'function' === typeof opts.onSelect) {
-                        opts.onSelect.call(this, evt, this.value);
-                    }
-                }
-            }
-        }
-
-        switch (role) {
-            case 'county':
-                on(dom, event, onCountyChange);
-                el.appendChild(dom);
-                break;
-            case 'district':
-                on(dom, event, onDistrictChange);
-                el.appendChild(dom);
-                break;
-        }
-
-        if ('string' === typeof nv && nv) {
-
-
-            setTimeout(function () {
-                o = dom.querySelector('[value="' + nv + '"]');
-                if (o) {
-                    o.setAttribute('selected', true);
-                    trigger(dom, event);
-                }
-            }, 0);
-        }
-
-        return dom;
-    };
-
-    // 建立 input element
-    TWzipcode.prototype.createInput = function (el, id, role, opt) {
-
-        var self       = this,
-            opts       = deepExtend(true, opt, data.get(el)),
-            dom        = document.createElement('input'),
-            c;
-
-        dom.setAttribute('type', opts.type);
-        dom.setAttribute('name', opts.name);
-        dom.setAttribute('id', [role, '-', id].join(''));
-        dom.setAttribute('placeholder', opts.placeholder);
-        dom.setAttribute('pattern', opts.pattern);
-        dom.className += [opts.css].join(' ');
-        dom.value = opts.value;
-
-        switch (opts.type) {
-            case 'number':
-                dom.setAttribute('min', parseInt(opts.min, 10));
-                dom.setAttribute('max', parseInt(opts.max, 10));
-                dom.setAttribute('step', parseInt(opts.step, 10));
-                break;
-            default:
-                dom.setAttribute('maxLength', parseInt(opts.maxlength, 10));
-        }
-
-        dom.removeAttribute('data-role');
-
-        if (opts.required) {
-            //dom.attr('required', true);
-            dom.setAttribute('required', true);
-        }
-
-        if (opts.readonly) {
-            //dom.attr('readonly', true);
-            dom.setAttribute('readonly', true);
-        }
-
-        // 佚代尋找郵遞區號
-        function findCode (zipcode) {
-            var n, o, p;
-            for (n in self.database) {
-                if (self.database[n]) {
-                    for (o in self.database[n]) {
-                        if (zipcode === self.database[n][o]) {
-                            return {
-                                'county'   : n,
-                                'district' : o
-                            };
-                        }
-                    }
-                }
-            }
-        }
-
-        // Events binding
-        on(dom, 'keyup', function (evt) {
-
-            var elCounty   = self.getEl(id, 'county'),
-                elDistrict = self.getEl(id, 'district'),
-                county     = elCounty ? elCounty.value : {},
-                district   = elDistrict ? elDistrict.value : {},
-                code       = findCode(this.value),
-                c,
-                d;
-
-            if (code && code.hasOwnProperty('county') && code.hasOwnProperty('district')) {
-                elCounty.value = code.county
-                trigger(elCounty, 'change');
-                elDistrict.value = code.district;
-                trigger(elDistrict, 'change');
-                c = code.county;
-                d = code.district;
-            }
-
-            if ('function' === typeof opts.onKeyup) {
-                opts.onKeyup.call(this, evt, c, d);
-            }
-        });
-
-        if ('function' === typeof opts.onBlur) {
-            on(dom, 'blur', opts.onBlur);
-        }
-
-        if ('function' === typeof opts.onFocus) {
-            on(dom, 'focus', opts.onFocus);
-        }
-
-        if (opts.value) {
-            trigger(dom, 'keyup');
-        }
-        return el.appendChild(dom);
-    };
-
-    /**
-     * 偵測郵遞區號
-     * Powered by Google Maps API
-     */
-    TWzipcode.prototype.geolocation = function () {
-
-        var self        = this,
-            container   = self.container,
-            geolocation = navigator.geolocation,
-            options     = {
-                'maximumAge'         : 600000,
-                'timeout'            : 3000,
-                'enableHighAccuracy' : false
-            },
-            opts     = self.options,
-            callback = opts.detect;
-
-        if (!geolocation || !callback) {
-            return;
-        }
-
-        // onSuccess
-        function success (loc) {
-
-            var latLng  = [],
-                params  = {
-                    'key'    : self.getOpt('GMAP_KEY'),
-                    'sensor' : false,
-                };
-
-            if (('coords' in loc) && ('latitude' in loc.coords) && ('longitude' in loc.coords)) {
-
-                params.latlng = [loc.coords.latitude, loc.coords.longitude].join(',');
-
-                getJSON('https://maps.googleapis.com/maps/api/geocode/json', params, function (resp) {
-
-                    var postal  = '';
-
-                    if (resp &&
-                        'undefined' !== typeof resp.results &&
-                        'undefined' !== typeof resp.results[0].address_components &&
-                        'undefined' !== typeof resp.results[0].address_components[0]
-                    ) {
-                        postal = resp.results[0]
-                                     .address_components[resp.results[0].address_components.length - 1]
-                                     .long_name;
-
-                        if (postal) {
-                            Array.prototype.forEach.call(container, function (el) {
-                                var zipcode = el.querySelector('input');
-                                if (zipcode) {
-                                    zipcode.value = postal.toString();
-                                    trigger(zipcode, 'keyup');
-                                }
-                            });
-                        }
-                    }
-                    if ('function' === typeof callback) {
-                        callback.call(self, loc);
-                    }
-                });
-            }
-        }
-
-        // onError
-        function error (error) {
-            console.error(error);
-        }
-        // Binding
-        geolocation.watchPosition(success, error, options);
-    };
-
-    /**
-     * Get element by id
-     *
-     * @param  {string} id   Element Id
-     * @param  {string} type Element type
-     * @return {Object}
-     */
-    TWzipcode.prototype.getEl = function (id, type) {
-        return document.querySelector(['#', type, '-', id].join(''));
-    };
-
-    /**
-     * 建立所需的 DOM
-     */
-    TWzipcode.prototype.createElements = function () {
-
-        var self         = this,
-            container    = self.container,
-            opts         = self.options,
-            optCounty    = self.getOpt('county'),
-            optDistrict  = self.getOpt('district'),
-            optZipcode   = self.getOpt('zipcode'),
-            dom;
-
-        Array.prototype.forEach.call(container, function (el) {
-
-            var id = Math.random().toString(36).substr(2, 10);
-
-            Array.prototype.forEach.call(el.querySelectorAll('[data-role]'), function (child) {
-
-                var role  = child.getAttribute('data-role').toLowerCase();
-
-                switch (role) {
-                    case 'county':
-                        dom = self.createDropdownList(child, id, role, optCounty);
-                        break;
-                    case 'district':
-                        dom = self.createDropdownList(child, id, role, optDistrict);
-                        break;
-                    case 'zipcode':
-                        dom = self.createInput(child, id, role, optZipcode);
-                        // 如果 combine = true 則隱藏 input
-                        if (opts.combine) {
-                            dom.removeAttribute('required');
-                            dom.style.display = 'none';
-                        }
-                        break;
-                }
-            });
-
-            // Elements created callback @v2.0.5
-            if (opts.hasOwnProperty('created') && 'function' === typeof opts.created) {
-                opts.created.call(self);
-            }
-        });
-    };
-
-    /**
-     * 設值
-     */
-    TWzipcode.prototype.set = function (input) {
-
-        var self   = this,
-            result = [];
-
-        Array.prototype.forEach.call(self.container, function (el) {
-
-            var county   = el.querySelector('[id^="county-"]'),
-                district = el.querySelector('[id^="district-"]'),
-                zipcode  = el.querySelector('[id^="zipcode-"]');
-
-            if (input.substring || input.toFixed) {
-                zipcode.value = input;
-                trigger(zipcode, 'keyup');
-            } else {
-
-                if ('object' === typeof input) {
-                    if (input.hasOwnProperty('county')) {
-                        county.value = transfer(input.county);
-                        trigger(county, 'change');
-                    }
-                    if (input.hasOwnProperty('district')) {
-                        setTimeout(function () {
-                            district.value = transfer(input.district);
-                            trigger(district, 'change');
-                        }, 5);
-                    }
-                    if (input.hasOwnProperty('zipcode')) {
-                        setTimeout(function () {
-                            zipcode.value = parseInt(input.zipcode);
-                            trigger(zipcode, 'keyup');
-                        }, 10);
-                    }
-                }
-            }
-        });
-        return result;
-    };
-
-    /**
-     * 取值
-     */
-    TWzipcode.prototype.get = function (callback) {
-
-        var self   = this,
-            pp     = [],
-            result = [];
-
-        Array.prototype.forEach.call(self.container, function (el) {
-            var county   = el.querySelector('[id^="county-"]'),
-                district = el.querySelector('[id^="district-"]'),
-                zipcode  = el.querySelector('[id^="zipcode-"]');
-            result.push({
-                'id'      : county.getAttribute('id').replace(/county\-/g, ''),
-                'county'  : county.value,
-                'district': district.value,
-                'zipcode' : zipcode.value,
-            });
-        });
-        if ('function' === typeof callback) {
-            callback.call(self, result);
-        } else if ('string' === typeof callback) {
-            switch (callback.toLowerCase()) {
-                case 'county':
-                case 'district':
-                case 'zipcode':
-                    result.forEach(function (item) {
-                        pp.push(item[callback]);
                     });
-                    return pp;
+
+                    c.dataset.id = `county-${id}`;
+
+                    if (!had) {
+                        c.innerHTML = h.join('');
+                        c.dataset.loaded = true;
+                        d.dataset.id = `district-${id}`;
+                        d.innerHTML = defaultDistrictOption;
+                    }
+
+                }
+            });
+            return this;
+        }
+        /**
+         * @param  {HTMLElement}  elem  Container
+         * @return {Object}
+         */
+        createEmelents (elem) {
+
+            const query = () => {
+                return {
+                    "c": elem.querySelector('[data-role="county"]'),
+                    "d": elem.querySelector('[data-role="district"]'),
+                    "z": elem.querySelector('[data-role="zipcode"]'),
+                    "a": elem.querySelector('[data-role="address"]')
+                };
+            };
+            let childs = query();
+
+            if (Helper.isDOM(childs.c, childs.d, childs.z)) {
+                return childs;
+            }
+
+            for (let na in this.options) {
+                let opt = this.options[na];
+                if (false !== opt) {
+                    let el = document.createElement(opt.tag);
+                    el.dataset.role = na;
+                    el.setAttribute('name', opt.name);
+                    el.setAttribute('class', opt.css);
+                    switch (opt.tag) {
+                        case 'input':
+                            el.setAttribute('type', this.options.combine ? 'hidden' : 'text');
+                            break;
+                        default:
+                            el.setAttribute('label', this.options.label);
+                    }
+                    elem.appendChild(el);
+                }
+            }
+            return query();
+        }
+
+        /**
+         * 綁定事件
+         */
+        bindEvents () {
+
+            const parent         = this,
+                  isCombine      = Boolean(this.options.combine),
+                  islandsKey     = this.options.islands_key,
+                  islandsHidden  = Boolean(this.options.islands_hidden),
+                  districtLabel  = this.options.district.label,
+                  hideDistrict   = this.options.district.hidden,
+                  countyChange   = this.options.county.onChange,
+                  districtChange = this.options.district.onChange,
+                  database       = this.database;
+
+            //
+            const onCountyChange = function (e) {
+                const self = e.target;
+                const db = Helper.findObject(database, self.value);
+                let __id, matched = self.dataset.id.match(/.*\-(.*)/);
+                let h = [];
+
+                if (Helper.isset(matched[1])) {
+                    __id = matched[1];
+                }
+
+                self.dataset.listener = true;
+
+                if (db) {
+                    for (let district in db) {
+                        const c1 = islandsHidden && islandsKey.includes(district); //隱藏離島且 屬於離島字串
+                        const c2 = (Helper.isString(hideDistrict) || Helper.isArray(hideDistrict)) && hideDistrict.includes(district); //有指定隱藏的縣市
+                        if (!(c1 || c2)) {
+                            let v = isCombine ? `${db[district]} ${district}` : district;
+                            //let v = district;
+                            h.push(`<option value="${district}">${v}</option>`);
+                        }
+                    };
+                    this.district.innerHTML = h.join('');
+                } else {
+                    let label = 'label' in this.district.dataset ? this.district.dataset.label : districtLabel;
+                    this.district.innerHTML = `<option value="">${label}</option>`;
+                }
+
+                if (Helper.isFunction(countyChange)) {
+                    countyChange.call(parent, __id, self, e);
+                }
+                trigger(this.district, 'change');
+            };
+
+            // district change
+            const onDistrictChange = function (e) {
+                const self = e.target;
+                let __id, matched = self.dataset.id.match(/.*\-(.*)/);
+                if (Helper.isset(matched[1])) {
+                    __id = matched[1];
+                }
+
+                self.dataset.listener = true;
+
+                if (database.hasOwnProperty(this.county.value) &&
+                    database[this.county.value].hasOwnProperty(self.value)
+                ) {
+                    const zip = database[this.county.value][self.value];
+                    if (Helper.isDOM(this.zipcode)) {
+                        this.zipcode.value = zip.toString();
+                    }
+                    if (Helper.isFunction(districtChange)) {
+                        districtChange.call(parent, __id, self, e);
+                    }
+                } else {
+                    if (this.zipcode) {
+                        this.zipcode.value = '';
+                    }
+                    self.innerHTML = `<option value="">${districtLabel}</option>`;
+                }
+            };
+
+            // Find county,district by zipcode
+            const onZipcodeKeyup = function (e) {
+                const self = e.target;
+                let find;
+
+                self.dataset.listener = true;
+
+                loop1:
+                    for (let county in database) {
+                loop2:
+                        for (let district in database[county]) {
+                            if (database[county].hasOwnProperty(district) && self.value == database[county][district]) {
+                                find = {
+                                    'county': county,
+                                    'district': district,
+                                    'zipcode': self.value
+                                };
+                                break loop1;
+                            }
+                        }
+                    }
+
+                let interval;
+
+                if (Helper.isObject(find) && 'county' in find && 'district' in find && 'zipcode' in find) {
+                    const wait = function (ms = 10) {
+                        return new Promise((resolve, reject) => {
+                            window.setTimeout(resolve, ms);
+                        });
+                    };
+                    wait().then(() => {
+                        this.county.value = find.county;
+                        trigger(this.county, 'change');
+                        return wait();
+                    });
+                    wait().then(() => {
+                        this.district.value = find.district;
+                        trigger(this.district, 'change');
+                        return wait();
+                    });
+
+                }
+                return find;
+            };
+
+            // Address blur
+            const onAddressBlur = (e) => {
+                let v = Helper.transfer(e.target.value);
+                let parse = this.parseAddress(v);
+                if (Helper.isObject(parse)) {
+                    v = v.replace(parse.zipcode, '')
+                         .replace(parse.county, '')
+                         .replace(parse.district, '');
+                }
+                e.target.value = v.trim();
+            };
+            //
+            Object.values(this.instance).forEach((obj) => {
+                if (Helper.isDOM(obj.county, obj.district)) {
+                    const hadCounty = obj.county.dataset.hasOwnProperty('listener') && Boolean(obj.county.dataset.listener);
+                    const hadDistrict = obj.district.dataset.hasOwnProperty('listener') && Boolean(obj.district.dataset.listener);
+                    if (!hadCounty) {
+                        obj.county.addEventListener('change', onCountyChange.bind(obj));
+                    }
+                    if (!hadDistrict) {
+                        obj.district.addEventListener('change', onDistrictChange.bind(obj));
+                    }
+                }
+                if (Helper.isDOM(obj.zipcode)) {
+                    const hadZipcode = obj.zipcode.dataset.hasOwnProperty('listener') && Boolean(obj.zipcode.dataset.listener);
+                    if (!hadZipcode) {
+                        obj.zipcode.addEventListener('keyup', onZipcodeKeyup.bind(obj));
+                    }
+                }
+                if (Helper.isDOM(obj.address)) {
+                    const hadAddress = obj.address.dataset.hasOwnProperty('listener') && Boolean(obj.address.dataset.listener);
+                    if (!hadAddress) {
+                        obj.address.addEventListener('blur', onAddressBlur);
+                    }
+                }
+            });
+        }
+        /**
+         *
+         */
+        trigger () {
+            for (let obj of Object.values(this.instance)) {
+                if (Helper.isDOM(obj.zipcode)) {
+                    if ('value' in obj.zipcode.dataset) {
+                        this.zipcode(obj.zipcode.dataset.value);
+                        break;
+                    }
+                }
+                if (Helper.isDOM(obj.county, obj.district)) {
+                    if ('value' in obj.county.dataset) {
+                        this.county(obj.county.dataset.value);
+                    }
+                    if ('value' in obj.district.dataset) {
+                        this.district(obj.district.dataset.value);
+                    }
+                }
             }
         }
-        return result;
-    };
 
-    /**
-     * 輸出序列化字串
-     */
-    TWzipcode.prototype.serialize = function () {
-        var result     = [];
-        Array.prototype.forEach.call(this.container, function (el) {
-            var county   = el.querySelector('[id^="county-"]'),
-                district = el.querySelector('[id^="district-"]'),
-                zipcode  = el.querySelector('[id^="zipcode-"]');
-            result.push(elCounty.getAttribute('name')   + '=' + elCounty.value);
-            result.push(elDistrict.getAttribute('name') + '=' + elDistrict.value);
-            result.push(elZipcode.getAttribute('name')  + '=' + elZipcode.value);
-        });
-        return resulresult;
-    };
+        /**
+         * @param  {string|number}  id  Group ID or index (0=1st)
+         * @return {TWzipcode}
+         */
+        nth (id) {
 
-    /**
-     * 移除 Plugin
-     */
-    TWzipcode.prototype.destroy = function () {
-        try {
-            Array.prototype.forEach.call(this.container, function (el) {
-                var county   = el.querySelector('[id^="county-"]'),
-                    district = el.querySelector('[id^="district-"]'),
-                    zipcode  = el.querySelector('[id^="zipcode-"]');
-                county.parentNode.removeChild(county);
-                district.parentNode.removeChild(district);
-                zipcode.parentNode.removeChild(zipcode);
-                el.removeAttribute('id');
-                el.removeAttribute('data-twzipcode');
+            const instance = this.instance;
+            let obj;
 
+            if (Helper.isNumeric(id)) {
+                let find = Object.values(instance).filter((o, i) => i === id);
+                if (find.length) {
+                    obj = [find[0]];
+                }
+            } else if (Helper.isString(id) && instance.hasOwnProperty(id)) {
+                obj = [instance[id]];
+            } else {
+                obj = instance;
+            }
+            this.fetch = obj;
+            return this;
+        }
+        /**
+         * 取值
+         * @param  {string|Array}  key
+         * @return  {Object}
+         */
+        get (field) {
+
+            const instance = Helper.isset(this.fetch) ? this.fetch : this.instance;
+            const length   = Object.keys(instance).length;
+
+            let keys = ['county', 'district', 'zipcode'];
+            let result = [];
+
+            if (Helper.isArray(field)) {
+                keys = field;
+            } else if (Helper.isString(field) && keys.includes(field)) {
+                keys = [field];
+            }
+
+            Object.values(instance).forEach((m) => {
+                let p = {};
+                for (let f of keys) {
+                    if (m.hasOwnProperty(f) && Helper.isset(m[f])) {
+                        p[f] = m[f].value;
+                    }
+                }
+                result.push(p);
             });
-        } catch (ignore) {
-            console.warn(ignore);
+
+            if (length === 1) {
+                if (Helper.isString(field) && field in result[0]) {
+                    return result[0][field];
+                } else {
+                    return result[0];
+                }
+            }
+            return result;
+        }
+        /**
+         * 給值
+         * .set({'county': 'COUNTY', 'district': 'DISTRICT', 'zipcode': 'ZIPCODE'})
+         * .set(830) //
+         * @param  {Object|string}  data  給定值
+         * @param  {string}  [data.county]  縣市
+         * @param  {string}  [data.district]  鄉鎮市區
+         * @param  {string}  [data.zipcode]  郵遞區號
+         * @return {TWzipcode}
+         */
+         set (data) {
+
+            const instance = Helper.isset(this.fetch) ? this.fetch : this.instance;
+
+            let props = {
+                county: null,
+                district: null,
+                zipcode: null
+            };
+
+            /**
+             * @param  {number}  [ms=10]  MillionSeconds
+             * @return {Promise}
+             */
+            const wait = function (ms = 10) {
+                return new Promise((resolve, reject) => {
+                    window.setTimeout(resolve, ms);
+                });
+            };
+
+            if (Helper.isObject(data)) {
+                props = data;
+            } else if (Helper.isNumeric(data)) {
+                props.zipcode = data;
+            }
+
+            Object.values(instance).forEach((m) => {
+                if ('county' in props && Helper.isString(props.county)) {
+                    wait().then(() => {
+                        m.county.value = Helper.transfer(props.county);
+                        trigger(m.county, 'change');
+                        return wait();
+                    });
+                }
+                if ('district' in props && Helper.isString(props.district)) {
+                    wait().then(() => {
+                        m.district.value = Helper.transfer(props.district);
+                        trigger(m.district, 'change');
+                        return wait();
+                    });
+                }
+                if ('zipcode' in props && Helper.isNumeric(props.zipcode)) {
+                    wait().then(() => {
+                        m.zipcode.value = props.zipcode;
+                        trigger(m.zipcode, 'keyup');
+                        return wait();
+                    });
+                }
+            });
+            return this;
+        }
+        /**
+         * @param  {string|undefined} setting  Set value
+         * @return {string|bool}
+         */
+        county (setting) {
+            if (Helper.isString(setting)) {
+                this.set({'county': setting});
+                return this;
+            }
+            return this.get('county');
+        }
+        /**
+         * @param  {string|undefined} setting  Set value
+         * @return {string|bool}
+         */
+        district (setting) {
+            if (Helper.isString(setting)) {
+                this.set({'district': setting});
+                return this;
+            }
+            return this.get('district');
+        }
+        /**
+         * @param  {string|undefined} setting  Set value
+         * @return {string|bool}
+         */
+        zipcode (setting) {
+            if (Helper.isString(setting)) {
+                this.set({'zipcode': setting});
+                return this;
+            }
+            return this.get('zipcode');
+        }
+        /**
+         * @param  {string|Array}  [cond]  Islands Conditions (county/district name, zipcode)
+         * @return {Object|boolean}
+         */
+        isIslands (cond) {
+
+            const instance = Helper.isset(this.fetch) ? this.fetch : this.instance;
+            const length   = Object.keys(instance).length;
+            let i  = (Helper.isString(cond) || Helper.isArray(cond)) ? cond : this.options.islands_key;
+            let r  = {};
+
+            Object.keys(instance).forEach((k) => {
+                const o = this.instance[k];
+                let s  = false;
+                if (o.county.value.length) {
+                    s = s || i.includes(o.county.value);
+                }
+                if (o.district.value.length) {
+                    s = s || i.includes(o.district.value);
+                }
+                if (o.zipcode.value.length) {
+                    s = s || i.includes(o.zipcode.value);
+                }
+                r[k] = s;
+            });
+
+            if (length === 1) {
+                const f = Object.values(r).filter((o, i) => i === 0);
+                if (f.length) {
+                    return f[0];
+                }
+            }
+            return r;
+        }
+
+        /**
+         * 解析臺灣地址
+         * @param  {string}  addr  Input address
+         * @return {Object|undefined}
+         */
+        parseAddress (addr) {
+            addr = Helper.transfer(addr);
+            const re = /(?<zipcode>\d+)?(?<county>\D+[縣市])(?<district>\D+?(市區|鎮區|鎮市|[鄉鎮市區]))(?<village>\D+?[村里])?(?<neighbor>\d+[鄰])?(?<road>\D+?(村路|[路街道段]))?(?<section>.+?段)?(?<lane>.+?巷)?(?<alley>\d+弄)?(?<num>.+號)?(?<others>.+)?/gi;
+            const parse = re.exec(addr);
+            if (Helper.isset(parse)) {
+                if (Helper.isset(parse['groups'])) {
+                    return parse['groups'];
+                }
+            }
+        }
+        /**
+         * 刪除 HTML Node
+         */
+        destroy () {
+
+            if (Helper.isset(this.fetch)) {
+                Object.keys(this.fetch).forEach(m => {
+                    const o = this.fetch[m];
+                    if (o.hasOwnProperty('parent') && 'id' in o.parent.dataset) {
+                        const id = o.parent.dataset.id;
+                        if (Helper.isset(this.instance[id])) {
+                            o.parent.innerHTML = '';
+                            this.fetch.splice(m, 1);
+                        }
+                    }
+                });
+            } else {
+                Object.keys(this.instance).forEach(m => {
+                    const o = this.instance[m];
+                    if (o.hasOwnProperty('parent') && 'id' in o.parent.dataset) {
+                        o.parent.innerHTML = '';
+                    }
+                });
+            }
+        }
+
+        /**
+         * @return {string}
+         */
+        serialize () {
+            const result = [];
+            Object.values(this.instance).forEach((k) => {
+                const d = {};
+                if (k.hasOwnProperty('county')) {
+                    d[k.county.name] = k.county.value;
+                }
+                if (k.hasOwnProperty('district')) {
+                    d[k.district.name] = k.district.value;
+                }
+                if (k.hasOwnProperty('zipcode')) {
+                    d[k.zipcode.name] = k.zipcode.value;
+                }
+                result.push(new URLSearchParams(d).toString());
+            });
+            return result.join('&');
         }
     };
-
-    /**
-     * 初始化
-     */
-    TWzipcode.prototype.init = function () {
-        this.createElements();
-        this.geolocation();
-    };
-
-    // Create instance
-    TWzipcode.create = function (el, options) {
-         return new TWzipcode(el, options);
-    };
-
-    /**
-     * Version
-     * @constructor
-     */
-    TWzipcode.VERSION = '2.0.5';
-    return TWzipcode;
-
 }));
 //#EOF

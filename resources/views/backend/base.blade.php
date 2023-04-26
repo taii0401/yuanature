@@ -88,8 +88,7 @@
 <script src="{{ mix('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="{{ mix('js/bootstrap-datepicker.zh-TW.min.js') }}"></script>
 <!-- 郵遞區號 -->
-<script src="{{ mix('js/jquery.twzipcode.js') }}"></script>
-<script src="{{ mix('js/jquery.twzipcode.min.js') }}"></script>
 <script src="{{ mix('js/twzipcode.js') }}"></script>
+<script src="{{ mix('js/twzipcode.min.js') }}"></script>
 @yield('script')
 </html>
