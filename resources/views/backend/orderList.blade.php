@@ -36,9 +36,6 @@
                         @endforeach
                     @endif
                 </div>
-                <div class="col-md-2 col-sm-12 text-right">
-                    <button type="button" class="btn btn-danger check_btn btn_submit" style="display:none" onclick="adminSubmit('user');">刪除</button>
-                </div>
             </div>
             <div class="tm-table-mt tm-table-actions-row">
                 <div class="tm-table-actions-col-left">
@@ -52,12 +49,6 @@
                 <table class="table table-hover table-striped tm-table-striped-even mt-3"  style="vertical-align: middle;">
                     <thead>
                         <tr class="tm-bg-gray">
-                            <th scope="col" class="text-center" style="width:1%;">
-                                <div class="custom-control custom-checkbox">
-                                    <input id="check_all" type="checkbox" value="all" onclick="checkAll()">
-                                    <label for="check_all"></label>
-                                </div>
-                            </th>
                             <th scope="col" class="text-center" style="width:15%;" height="50px">訂單編號</th>
                             <th scope="col" class="text-center">訂購日期</th>
                             <th scope="col" class="text-center" style="width:12%;">訂單狀態</th>
@@ -71,12 +62,6 @@
                         @if(isset($datas["list_data"]) && !empty($datas["list_data"]))
                             @foreach($datas["list_data"] as $data) 
                             <tr>
-                                <td scope="row">
-                                    <div class="custom-control custom-checkbox">
-                                        <input id="checkbox_{{ @$data["uuid"] }}" type="checkbox" value="{{ @$data["uuid"] }}" name="check_list[]" onclick="checkId('{{ @$data["uuid"] }}')" class="check_list">
-                                        <label for="checkbox_{{ @$data["uuid"] }}"></label>
-                                    </div>
-                                </td>
                                 <td class="text-center" height="50px">
                                     <a href="#" onclick="changeForm('/admin/orders/detail?orders_uuid={{ @$data["uuid"] }}');">{{ @$data["serial"] }}</a>
                                 </td>
