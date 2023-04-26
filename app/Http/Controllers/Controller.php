@@ -303,7 +303,7 @@ class Controller extends BaseController
         
         //通知會員
         if($isSendUser && $email != "") {
-            /*Mail::send($email_tpl,$mail_data,
+            Mail::send($email_tpl,$mail_data,
             function($mail) use ($email,$subject) {
                 //收件人
                 $mail->to($email);
@@ -311,20 +311,20 @@ class Controller extends BaseController
                 $mail->from(env("MAIL_FROM_ADDRESS")); 
                 //郵信件主旨
                 $mail->subject($subject);
-            });*/
+            });
         }
 
         //通知管理者
         if($isSendAdmin) { 
             $mail_data["btn_url"] = $btn_link."admin/".$btn_url;
-            /*Mail::send($email_tpl,$mail_data,function($mail) use ($email,$subject) {
+            Mail::send($email_tpl,$mail_data,function($mail) use ($email,$subject) {
                 //收件人
                 $mail->to(env("MAIL_FROM_ADDRESS"));
                 //寄件人
                 $mail->from(env("MAIL_FROM_ADDRESS")); 
                 //郵信件主旨
                 $mail->subject($subject);
-            });*/
+            });
         }
     }
 
