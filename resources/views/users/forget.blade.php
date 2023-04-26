@@ -22,8 +22,8 @@
                         </div>
                         <div class="row mt-3">
                             <div class="col-12 tm-btn-center">
-                                <button type="button" class="btn btn-small btn-primary d-inline-block mx-auto" onclick="userForget();">送出</button>
-                                <button type="button" class="btn btn-small btn-danger d-inline-block mx-auto" onclick="changeForm('/users')">取消</button>
+                                <button type="button" class="btn btn-small btn-danger d-inline-block mx-auto" onclick="userForget();">送出</button>
+                                <button type="button" class="btn btn-small btn-primary d-inline-block mx-auto" onclick="changeForm('/users')">取消</button>
                             </div>
                         </div>
                     </form>

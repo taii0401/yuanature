@@ -160,8 +160,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn_submit" onclick="adminSubmit('admin');">送出</button>
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger btn_submit" onclick="adminSubmit('admin');">送出</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">取消</button>
                 </div>
             </div>
             
