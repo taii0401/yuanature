@@ -533,6 +533,8 @@ class AjaxController extends Controller
                             "uuid" => $uuid
                         ];
                         $this->sendMail("orders_add",$mail_data);
+                        //LINE通知
+                        $this->lineNotify("新訂單通知-訂單編號：".$serial);
                         $this->message = $uuid;
                     } catch(QueryException $e) {
                         $this->message = "刪除購物車錯誤！";
@@ -567,6 +569,8 @@ class AjaxController extends Controller
                             "source" => "user",
                         ];
                         $this->sendMail("orders_cancel",$mail_data);
+                        //LINE通知
+                        $this->lineNotify("取消訂單通知-訂單編號：".$serial);
                         $this->message = "取消成功！";
                     } catch(QueryException $e) {
                         $this->message = "取消失敗！";

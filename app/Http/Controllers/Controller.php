@@ -328,6 +328,35 @@ class Controller extends BaseController
         }
     }
 
+    //使用line notify發通知
+    public function lineNotify($message)
+    {
+        //創建一個新cURL資源 
+        $curl = curl_init();
+
+        //設置URL和相應的選項
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => "https://notify-api.line.me/api/notify",
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 0,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "POST",
+          CURLOPT_POSTFIELDS => array("message" => $message),
+          CURLOPT_HTTPHEADER => array(
+            "Authorization: Bearer ".env("LINE_NOTIFY_TOKEN")
+          ),
+        ));
+
+        //抓取URL並把它傳遞給瀏覽器
+        $response = curl_exec($curl);
+
+        //關閉cURL資源，並且釋放系統資源
+        curl_close($curl);
+    }
+
     /**
      * 取得購物車資料
      * @param  is_total：是否計算合計
