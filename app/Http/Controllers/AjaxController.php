@@ -271,6 +271,8 @@ class AjaxController extends Controller
             return response()->json($this->returnResult());
         }
 
+        DB::beginTransaction();
+
         if($action_type == "add") {
             $input["email"] = $input["account"];
         }
@@ -281,6 +283,9 @@ class AjaxController extends Controller
             $add_data["sex"] = $input["sex"]??0;
             $add_data["birthday"] = $input["birthday"]??"1999-01-01";
             $add_data["phone"] = trim($input["phone"])??NULL;
+            $add_data["address_zip"] = $input["address_zip"]??NULL;
+            $add_data["address_county"] = $input["address_county"]??NULL;
+            $add_data["address_district"] = $input["address_district"]??NULL;
             $add_data["address"] = $input["address"]??NULL;
         }
 
@@ -356,6 +361,8 @@ class AjaxController extends Controller
                 }
             }
         }
+
+        DB::commit();
 
         return response()->json($this->returnResult());
     }
@@ -466,6 +473,9 @@ class AjaxController extends Controller
                 $add_data["email"] = $input["email"]??NULL;
                 //配送方式選擇宅配配送才紀錄地址
                 if($input["delivery"] == "home" && isset($input["address"]) && $input["address"] != "") {
+                    $add_data["address_zip"] = $input["address_zip"]??NULL;
+                    $add_data["address_county"] = $input["address_county"]??NULL;
+                    $add_data["address_district"] = $input["address_district"]??NULL;
                     $add_data["address"] = $input["address"];
                 }
                 $add_data["payment"] = $input["payment"]??NULL;

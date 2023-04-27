@@ -59,9 +59,20 @@
                                     @endif
                                     </div>                  
                                 </div>
-                                <div id="div_address" class="col-xl-4 col-lg-4 col-md-6 col-sm-12" style="display:none;">
-                                    <label><span class="star">* </span>收件人地址</label>
-                                    <input type="text" id="address" name="address" class="form-control" value="{{ @$datas["assign_data"]["address"] }}">
+                                <div id="div_address" class="row input-group twzipcode" style="display:none;margin-top:10px;">
+                                    <input type="hidden" data-role="zipcode" id="address_zip" name="address_zip" class="form-control" value="{{ @$datas["assign_data"]["address_zip"] }}">
+                                    <div class="col-xl-2 col-lg-2 col-md-3 col-sm-12">
+                                        <label>地址</label>
+                                        <select class="custom-select " data-role="county" id="county" name="address_county"></select>
+                                    </div>
+                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+                                        <label><br/></label>
+                                        <select class="custom-select" data-role="district" id="district" name="address_district"></select>
+                                    </div>
+                                    <div class="col-xl-7 col-lg-7 col-md-6 col-sm-12">
+                                        <label><br/></label>
+                                        <input type="text" id="address" name="address" class="form-control" placeholder="民族路20巷32號" value="{{ @$datas["assign_data"]["address"] }}">
+                                    </div>
                                 </div>
                             </div>
                             <div class="row" style="margin-top:20px;">
@@ -88,6 +99,10 @@
 
 @section('script')
 <script>
+    //縣市、鄉鎮市區、郵遞區號
+    const twzipcode = new TWzipcode();
+    twzipcode.set("{{ @$datas["assign_data"]["address_zip"] }}");
+
     $(function () {
         //配送方式-宅配配送顯示收件人地址
         changeDataDisplay('checked','delivery','address','home',true);

@@ -106,9 +106,20 @@
                                 <label>收件人信箱</label>
                                 <input type="text" id="input_modal_email" name="email" class="form-control " value="{{ @$datas["assign_data"]["email"] }}">                  
                             </div>
-                            <div id="div_input_modal_address" class="col-12" style="display:none;">
-                                <label>收件人地址</label>
-                                <input type="text" id="input_modal_address" name="address" class="form-control" value="{{ @$datas["assign_data"]["address"] }}">
+                            <div id="div_input_modal_address" class="row input-group twzipcode" style="display:none;margin-top:10px;">
+                                <input type="hidden" data-role="zipcode" id="input_modal_address_zip" name="address_zip" class="form-control" value="{{ @$datas["assign_data"]["address_zip"] }}">
+                                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+                                    <label>地址</label>
+                                    <select class="custom-select " data-role="county" id="input_modal_county" name="address_county"></select>
+                                </div>
+                                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+                                    <label><br/></label>
+                                    <select class="custom-select" data-role="district" id="input_modal_district" name="address_district"></select>
+                                </div>
+                                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                    <label><br/></label>
+                                    <input type="text" id="input_modal_address" name="address" class="form-control" placeholder="民族路20巷32號" value="{{ @$datas["assign_data"]["address"] }}">
+                                </div>
                             </div>
                             <div class="col-12">
                                 <label>出貨備註：</label>
@@ -131,8 +142,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">取消</button>
                     <button type="button" class="btn btn-danger btn_submit" onclick="adminSubmit('orders');">送出</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">取消</button>
                 </div>
             </div>
             
@@ -143,6 +154,10 @@
 
 @section('script')
 <script>
+    //縣市、鄉鎮市區、郵遞區號
+    const twzipcode = new TWzipcode();
+    twzipcode.set("{{ @$datas["assign_data"]["address_zip"] }}");
+
     $(function () {
         //訂單狀態-已取消顯示取消原因
         changeDataDisplay('checked','status','input_modal_cancel','cancel',true);

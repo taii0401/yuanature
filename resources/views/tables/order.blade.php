@@ -23,7 +23,9 @@
         @if(@$datas["assign_data"]["delivery"] == "home" && @$datas["assign_data"]["address"] != "")
             <tr>
                 <th class="text-center tm-bg-gray" height="50px">收件人地址：</th>
-                <th>{{ @$datas["assign_data"]["address"] }}</th>
+                <th>
+                {{ @$datas["assign_data"]["address_zip"] }} {{ @$datas["assign_data"]["address_county"] }}{{ @$datas["assign_data"]["address_district"] }}{{ @$datas["assign_data"]["address"] }}
+                </th>
             </tr>
         @endif
         <tr>

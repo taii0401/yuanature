@@ -378,6 +378,27 @@ function setModalInput(modal_values, input_modal_keys, select_modal_keys) {
     }
 }
 
+//取得地址文字
+function getAddressZip(isShowCode,zipcode) {
+    const twzipcode = new TWzipcode();
+    twzipcode.set(zipcode);
+    //console.log(zipcode);
+
+    var address_zip_str = '';
+    let get = twzipcode.get();
+    //console.log(get);
+
+    //顯示郵遞區號
+    if(isShowCode) {
+        address_zip_str = get['zipcode'];
+    }
+    //縣市、鄉鎮市區
+    address_zip_str += get['county']+get['district'];
+    //console.log(address_zip_str);
+
+    return address_zip_str;
+}
+
 //檢查帳號是否存在
 function userExist(account) {
     //取得csrf_token
@@ -692,6 +713,8 @@ function orderSubmit(action_type) {
 //送出-管理員資料、會員資料、訂單資料
 function adminSubmit(type) {
     $('.btn_submit').attr('disabled', true);
+    var action_type = $('#input_modal_action_type').val();
+
 
     if (type == 'admin') {
         change_url = '/admin/list';
@@ -699,10 +722,12 @@ function adminSubmit(type) {
         change_url = '/admin/user/';
     } else if (type == 'orders') {
         change_url = '/admin/orders/';
+        if(action_type == 'edit') {
+            change_url += 'detail?orders_uuid='+$('#input_modal_uuid').val();
+        }
     }
 
-    var action_type = $('#input_modal_action_type').val();
-
+    
     var form_name = 'form_data';
     if(action_type == 'cancel' && type == 'orders') {
         form_name = 'form_data_cancel';

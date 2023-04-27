@@ -36,7 +36,7 @@
                             @csrf
                             <input type="hidden" id="action_type" name="action_type" value="{{ @$action_type }}">
                             <input type="hidden" id="uuid" name="uuid" value="{{ @$uuid }}">
-                            <div class="row" style="display:{{ $edit_pass_none}};">
+                            <div class="row input-group" style="display:{{ $edit_pass_none}};">
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                     <label><span class="star">* </span>登入帳號(電子郵件)</label>
                                     <input type="email" id="account" name="account" class="form-control {{ $pass_require }}" value="{{ @$account }}" {{ $disabled }}>
@@ -50,7 +50,7 @@
                                     <input type="password" id="confirm_password" name="confirm_password" class="form-control {{ $pass_require }}" value="" placeholder="請輸入相同的登入密碼">
                                 </div>
                             </div>
-                            <div class="row" style="display:{{ $edit_data_none}};">
+                            <div class="row input-group" style="display:{{ $edit_data_none}};">
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                     <label><span class="star">* </span>姓名</label>
                                     <input type="text" id="name" name="name" class="form-control {{ $require }}" value="{{ @$name }}">
@@ -62,11 +62,26 @@
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                                     <label>生日</label>
                                     <div class="input-group date" id="input_datetimepicker" data-target-input="nearest">
-                                        <input type="text" id="birthday" name="birthday" class="form-control datetimepicker" data-target="#input_datetimepicker"  value="{{ @$birthday }}" />
+                                        <input type="text" id="birthday" name="birthday" class="form-control datetimepicker" data-target="#input_datetimepicker" value="{{ @$birthday }}" />
                                         <div class="input-group-append" data-target="#input_datetimepicker" data-toggle="datetimepicker">
                                             <div class="input-group-text"><i class="fa fa-calendar" aria-hidden="true"></i></div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row input-group twzipcode" style="display:{{ $edit_data_none}};margin-top:10px;">
+                                <input type="hidden" data-role="zipcode" id="address_zip" name="address_zip" class="form-control" value="{{ @$address_zip }}">
+                                <div class="col-xl-2 col-lg-2 col-md-3 col-sm-12">
+                                    <label>地址</label>
+                                    <select class="custom-select " data-role="county" id="county" name="address_county"></select>
+                                </div>
+                                <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
+                                    <label><br/></label>
+                                    <select class="custom-select" data-role="district" id="district" name="address_district"></select>
+                                </div>
+                                <div class="col-xl-7 col-lg-7 col-md-6 col-sm-12">
+                                    <label><br/></label>
+                                    <input type="text" id="address" name="address" class="form-control" placeholder="民族路20巷32號" value="{{ @$address }}">
                                 </div>
                             </div>
                             <div class="row" style="display:{{ $add_none}};">
@@ -75,11 +90,10 @@
                                     <input type="text" id="email" name="email" class="form-control {{ $edit_require }}" value="{{ @$email }}">
                                 </div>
                             </div>
-                            <div class="row mt-3">
+                            <div class="row input-group mt-3">
                                 <div class="col-12 tm-btn-center">
+                                    <button type="button" class="btn btn-danger btn_submit" onclick="userSubmit('{{ @$action_type }}');">送出</button>    
                                     <button type="button" class="btn btn-primary" onclick="changeForm('/users/edit')">取消</button>
-                                    <button type="button" class="btn btn-danger btn_submit" onclick="userSubmit('{{ @$action_type }}');">送出</button>
-                                    
                                 </div>
                             </div>
                         </form>
@@ -93,6 +107,10 @@
 
 @section('script')
 <script>
+    //縣市、鄉鎮市區、郵遞區號
+    const twzipcode = new TWzipcode();
+    twzipcode.set("{{ @$address_zip }}");
+
     $(function () {
         $('.datetimepicker').datepicker({
             language: 'zh-TW', //中文化

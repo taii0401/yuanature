@@ -23,7 +23,9 @@ class CreateOrderTable extends Migration
             $table->string('name',30)->nullable()->comment('收件人姓名');
             $table->string('phone',10)->nullable()->comment('收件人手機');
             $table->string('email')->nullable()->comment('收件人信箱');
-            $table->string('address_zip',5)->nullable()->comment('收件人區號');
+            $table->string('address_zip',5)->nullable()->comment('收件人郵遞區號');
+            $table->string('address_county',10)->nullable()->comment('收件人縣市');
+            $table->string('address_district',10)->nullable()->comment('收件人鄉鎮市區');
             $table->string('address')->nullable()->comment('收件人地址');
             $table->integer('total')->default(0)->comment('總價');
             $table->string('payment',10)->nullable()->comment('付款方式：config.orders_payment');

@@ -312,6 +312,9 @@ class AjaxController extends Controller
                     $data->email = $input["email"]??NULL;
                     //配送方式選擇宅配配送才紀錄地址
                     if($input["delivery"] == "home" && isset($input["address"]) && $input["address"] != "") {
+                        $data->address_zip = $input["address_zip"]??NULL;
+                        $data->address_county = $input["address_county"]??NULL;
+                        $data->address_district = $input["address_district"]??NULL;
                         $data->address = $input["address"];
                     }
                     $data->delivery = $input["delivery"];
