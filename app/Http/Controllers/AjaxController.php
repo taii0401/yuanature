@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Validator,DB,Mail;
 use Illuminate\Http\Request;
+//LOG
+use Illuminate\Support\Facades\Log;
 //字串-UUID
 use Illuminate\Support\Str;
 //例外處理
@@ -94,10 +96,12 @@ class AjaxController extends Controller
                     if(Storage::exists($file_path)) {
                         Storage::delete($file_path);
                     }
-                    $this->message = "新增檔案錯誤！";
+                    $this->message = "新增檔案失敗！";
                 }
             } catch(QueryException $e) {
-                $this->message = "新增檔案錯誤！";
+                Log::Info("前台新增檔案失敗：路徑 - ".$path);
+                Log::error($e);
+                $this->message = "新增檔案失敗！";
             }
         } else {
             $this->message = "沒有權限上傳檔案！";
@@ -124,7 +128,7 @@ class AjaxController extends Controller
         if($delete) {
             $this->error = false;
         } else {
-            $this->message = "刪除檔案錯誤！";
+            $this->message = "刪除檔案失敗！";
         }
 
         return response()->json($this->returnResult());
@@ -217,6 +221,8 @@ class AjaxController extends Controller
                 $this->message = "請至信箱收取新密碼重新登入後，再至修改密碼更新！";
             }
         } catch(QueryException $e) {
+            Log::Info("前台會員忘記密碼失敗：帳號 - ".$input["account"]);
+            Log::error($e);
             $this->message = "請確認帳號！";
         }
 
@@ -317,10 +323,10 @@ class AjaxController extends Controller
                 } else {
                     //刪除會員
                     User::destroy($user_id);
-                    $this->message = "註冊會員錯誤！";
+                    $this->message = "註冊會員失敗！";
                 }
             } else {
-                $this->message = "註冊會員錯誤！";
+                $this->message = "註冊會員失敗！";
             }
         } else {
             $uuid = $input["uuid"]??"";
@@ -331,7 +337,9 @@ class AjaxController extends Controller
                         WebUser::where(["uuid" => $uuid])->update($add_data);
                         $this->error = false;
                     } catch(QueryException $e) {
-                        $this->message = "修改會員資料錯誤！";
+                        Log::Info("前台修改會員資料失敗：UUID - ".$uuid);
+                        Log::error($e);
+                        $this->message = "修改會員資料失敗！";
                     }
                 } else if($action_type == "edit_password") { //編輯會員密碼
                     //取得會員資料
@@ -347,7 +355,9 @@ class AjaxController extends Controller
                             $user->update($data);
                             $this->error = false;
                         } catch(QueryException $e) {
-                            $this->message = "修改會員密碼錯誤！";
+                            Log::Info("前台修改會員密碼失敗：UUID - ".$uuid);
+                            Log::error($e);
+                            $this->message = "修改會員密碼失敗！";
                         }
                     }
                 } else if($action_type == "delete") { //刪除會員
@@ -356,7 +366,9 @@ class AjaxController extends Controller
                         //User::destroy($user_id);
                         $this->error = false;
                     } catch(QueryException $e) {
-                        $this->message = "刪除會員錯誤！";
+                        Log::Info("前台刪除會員失敗：UUID - ".$uuid);
+                        Log::error($e);
+                        $this->message = "刪除會員失敗！";
                     }
                 }
             }
@@ -400,7 +412,7 @@ class AjaxController extends Controller
             }
             $this->error = false;
         } else {
-            $this->message = "操作錯誤";
+            $this->message = "操作失敗";
         }
         
         return response()->json($this->returnResult());
@@ -492,7 +504,9 @@ class AjaxController extends Controller
                     $orders_data = Orders::create($add_data);
                     $isSuccess = true;
                 } catch(QueryException $e) {
-                    $this->message = "建立訂單錯誤！";
+                    Log::Info("前台建立訂單失敗：會員ID - ".$user_id);
+                    Log::error($e);
+                    $this->message = "建立訂單失敗！";
                 }
 
                 //新增成功
@@ -515,6 +529,8 @@ class AjaxController extends Controller
                                 try {
                                     OrdersDetail::create($detail_data);
                                 } catch(QueryException $e) {
+                                    Log::Info("前台建立訂單項目失敗：會員ID - ".$user_id);
+                                    Log::error($e);
                                     $isSuccess = false;
                                 }
                             }
@@ -537,7 +553,9 @@ class AjaxController extends Controller
                         $this->lineNotify("新訂單通知-訂單編號：".$serial);
                         $this->message = $uuid;
                     } catch(QueryException $e) {
-                        $this->message = "刪除購物車錯誤！";
+                        Log::Info("前台刪除購物車失敗：會員ID - ".$user_id);
+                        Log::error($e);
+                        $this->message = "刪除購物車失敗！";
                     }
                 }
             } else if($action_type == "cancel") { //取消
@@ -573,13 +591,15 @@ class AjaxController extends Controller
                         $this->lineNotify("取消訂單通知-訂單編號：".$serial);
                         $this->message = "取消成功！";
                     } catch(QueryException $e) {
+                        Log::Info("前台取消訂單失敗：訂單UUID - ".$uuid);
+                        Log::error($e);
                         $this->message = "取消失敗！";
                     }
                 } else {
                     $this->message = "取消失敗！";
                 }
             } else {
-                $this->message = "操作錯誤！";
+                $this->message = "操作失敗！";
             }
         } else {
             $this->message = "請先登入！";

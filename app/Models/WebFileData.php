@@ -125,7 +125,7 @@ class WebFileData extends Model
                             $message = "刪除檔案失敗！";
                         }
                     } catch(QueryException $e) {
-                        $message = "刪除檔案錯誤！";
+                        $message = "刪除檔案失敗！";
                     }
                 }
 
@@ -173,10 +173,10 @@ class WebFileData extends Model
                 if($delete) {
                     $error = false;
                 } else {
-                    $message = "刪除檔案錯誤！";
+                    $message = "刪除檔案失敗！";
                 }
             } catch(QueryException $e) {
-                $message = "刪除錯誤！";
+                $message = "刪除失敗！";
             }
         }
 

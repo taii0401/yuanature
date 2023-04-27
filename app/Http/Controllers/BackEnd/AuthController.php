@@ -5,7 +5,8 @@ namespace App\Http\Controllers\BackEnd;
 use Validator,DB,Mail;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+//LOG
+use Illuminate\Support\Facades\Log;
 //管理者權限
 use App\Libraries\AdminAuth;
 

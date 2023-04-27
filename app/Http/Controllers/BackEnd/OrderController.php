@@ -4,7 +4,8 @@ namespace App\Http\Controllers\BackEnd;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+//LOG
+use Illuminate\Support\Facades\Log;
 //Model
 use App\Models\Orders;
 use App\Models\OrdersDetail;

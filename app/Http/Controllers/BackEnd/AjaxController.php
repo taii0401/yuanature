@@ -5,6 +5,8 @@ namespace App\Http\Controllers\BackEnd;
 use Validator,DB,Mail;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+//LOG
+use Illuminate\Support\Facades\Log;
 //字串-UUID
 use Illuminate\Support\Str;
 //例外處理
@@ -116,11 +118,10 @@ class AjaxController extends Controller
 
                 $log_msg .= "-管理員帳號：".$input["account"]; 
             } else {
-                $this->message = "新增錯誤！";
+                $this->message = "新增失敗！";
             }
         } else if($action_type == "edit") { //編輯
             $uuid = $input["uuid"]??"";
-
             if($uuid != "") {
                 try {
                     $add_data["updated_id"] = $admin_id;
@@ -132,23 +133,32 @@ class AjaxController extends Controller
 
                     $log_msg .= "-管理員UUID：".$uuid;
                 } catch(QueryException $e) {
-                    $this->message = "修改錯誤！";
+                    Log::Info("後台管理員修改失敗：UUID - ".$uuid);
+                    Log::error($e);
+                    $this->message = "修改失敗！";
                 }
             } else {
-                $this->message = "修改錯誤！";
+                $this->message = "修改失敗！";
             }
         } else if($action_type == "delete") { //刪除
-            try {
-                $check_list = $input["check_list"]??[];
-                $uuids = explode(",",$check_list);
-                $data = Administrator::whereIn("uuid",$uuids);
-                $data->update(["deleted_id" => $admin_id]);
-                $data->delete();
-                $this->error = false;
+            $check_list = $input["check_list"]??[];
+            $uuids = explode(",",$check_list);
+            if(!empty($uuids)) {
+                try {
+                
+                    $data = Administrator::whereIn("uuid",$uuids);
+                    $data->update(["deleted_id" => $admin_id]);
+                    $data->delete();
+                    $this->error = false;
 
-                $log_msg .= "-管理員UUID：".implode(",",$uuids);
-            } catch(QueryException $e) {
-                $this->message = "刪除錯誤！";
+                    $log_msg .= "-管理員UUID：".implode(",",$uuids);
+                } catch(QueryException $e) {
+                    Log::Info("後台管理員刪除失敗：UUID - ".implode(",",$uuids));
+                    Log::error($e);
+                    $this->message = "刪除失敗！";
+                }
+            } else {
+                $this->message = "刪除失敗！";
             }
         }
 
@@ -230,23 +240,33 @@ class AjaxController extends Controller
 
                     $log_msg .= "-會員UUID：".$uuid;
                 } catch(QueryException $e) {
-                    $this->message = "修改錯誤！";
+                    Log::Info("後台會員修改失敗：UUID - ".$uuid);
+                    Log::error($e);
+                    $this->message = "修改失敗！";
                 }
             } else {
-                $this->message = "修改錯誤！";
+                $this->message = "修改失敗！";
             }
         } else if($action_type == "delete") { //刪除
-            try {
-                $check_list = $input["check_list"]??[];
-                $uuids = explode(",",$check_list);
-                $data = WebUser::whereIn("uuid",$uuids);
-                $data->update(["deleted_id" => $admin_id]);
-                $data->delete();
-                $this->error = false;
+            $check_list = $input["check_list"]??[];
+            $uuids = explode(",",$check_list);
+            if(!empty($uuids)) {
+                try {
+                    $check_list = $input["check_list"]??[];
+                    $uuids = explode(",",$check_list);
+                    $data = WebUser::whereIn("uuid",$uuids);
+                    $data->update(["deleted_id" => $admin_id]);
+                    $data->delete();
+                    $this->error = false;
 
-                $log_msg .= "-會員UUID：".implode(",",$uuids);
-            } catch(QueryException $e) {
-                $this->message = "刪除錯誤！";
+                    $log_msg .= "-會員UUID：".implode(",",$uuids);
+                } catch(QueryException $e) {
+                    Log::Info("後台會員刪除失敗：UUID - ".implode(",",$uuids));
+                    Log::error($e);
+                    $this->message = "刪除失敗！";
+                }
+            } else {
+                $this->message = "刪除失敗！";
             }
         }
 
@@ -347,6 +367,8 @@ class AjaxController extends Controller
 
                     $log_msg .= "-訂單UUID：".$uuid;
                 } catch(QueryException $e) {
+                    Log::Info("後台訂單修改失敗：UUID - ".$uuid);
+                    Log::error($e);
                     $this->message = "修改失敗！";
                 }
             } else {
@@ -383,13 +405,15 @@ class AjaxController extends Controller
 
                     $log_msg .= "-訂單UUID：".$uuid;
                 } catch(QueryException $e) {
+                    Log::Info("後台訂單取消失敗：UUID - ".$uuid);
+                    Log::error($e);
                     $this->message = "取消失敗！";
                 }
             } else {
                 $this->message = "取消失敗！";
             }
         } else {
-            $this->message = "操作錯誤！";
+            $this->message = "操作失敗！";
         }
 
         $this->createLogRecord("admin",$action_type,"訂單管理",$log_msg);

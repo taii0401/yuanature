@@ -7,7 +7,9 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 
-use Mail,Log;
+use Mail;
+//LOG
+use Illuminate\Support\Facades\Log;
 //URL
 use Illuminate\Support\Facades\URL;
 //字串-隨機產生亂碼
@@ -57,7 +59,7 @@ class Controller extends BaseController
             $logRecordModel->record = $record;
             $logRecordModel->save();
         } else {
-            Log::Info("新增操作紀錄錯誤：動作 - ".$action."、標題 - ".$title."、紀錄 - ".$record);
+            Log::Info("新增操作紀錄失敗：動作 - ".$action."、標題 - ".$title."、紀錄 - ".$record);
         }
     }
 
@@ -303,28 +305,37 @@ class Controller extends BaseController
         
         //通知會員
         if($isSendUser && $email != "") {
-            Mail::send($email_tpl,$mail_data,
-            function($mail) use ($email,$subject) {
-                //收件人
-                $mail->to($email);
-                //寄件人
-                $mail->from(env("MAIL_FROM_ADDRESS")); 
-                //郵信件主旨
-                $mail->subject($subject);
-            });
+            try {
+                Mail::send($email_tpl,$mail_data,
+                function($mail) use ($email,$subject) {
+                    //收件人
+                    $mail->to($email);
+                    //寄件人
+                    $mail->from(env("MAIL_FROM_ADDRESS")); 
+                    //郵信件主旨
+                    $mail->subject($subject);
+                });
+            } catch(QueryException $e) {
+                Log::error($e);
+            }
+            
         }
 
         //通知管理者
         if($isSendAdmin) { 
             $mail_data["btn_url"] = $btn_link."admin/".$btn_url;
-            Mail::send($email_tpl,$mail_data,function($mail) use ($email,$subject) {
-                //收件人
-                $mail->to(env("MAIL_FROM_ADDRESS"));
-                //寄件人
-                $mail->from(env("MAIL_FROM_ADDRESS")); 
-                //郵信件主旨
-                $mail->subject($subject);
-            });
+            try {
+                Mail::send($email_tpl,$mail_data,function($mail) use ($email,$subject) {
+                    //收件人
+                    $mail->to(env("MAIL_FROM_ADDRESS"));
+                    //寄件人
+                    $mail->from(env("MAIL_FROM_ADDRESS")); 
+                    //郵信件主旨
+                    $mail->subject($subject);
+                });
+            } catch(QueryException $e) {
+                Log::error($e);
+            }
         }
     }
 

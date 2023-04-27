@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use Validator,DB,Mail;
 use Illuminate\Http\Request;
 use App\Services\LineService;
-
+//LOG
+use Illuminate\Support\Facades\Log;
 //字串-UUID
 use Illuminate\Support\Str;
 //使用者權限
 use App\Libraries\UserAuth;
-
+//Model
 use App\Models\User; 
 use App\Models\WebUser; 
 

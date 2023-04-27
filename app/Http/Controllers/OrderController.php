@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Validator,DB;
 use Illuminate\Http\Request;
-
+//LOG
+use Illuminate\Support\Facades\Log;
 //使用者權限
 use App\Libraries\UserAuth;
 //Model

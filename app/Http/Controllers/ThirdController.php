@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use DB,Exception,Socialite;
 use Illuminate\Http\Request;
-//字串-UUID
-use Illuminate\Support\Str;
 //LOG
 use Illuminate\Support\Facades\Log;
+//字串-UUID
+use Illuminate\Support\Str;
 //LINE
 use App\Services\LineService;
 //使用者權限
@@ -84,7 +84,7 @@ class ThirdController extends Controller
             }
             
             if(!$login) {
-                return back()->withErrors("LINE登入錯誤！");
+                return back()->withErrors("LINE登入失敗！");
             } else { 
                 return redirect(config("yuanature.login_url"));
             }
@@ -180,7 +180,7 @@ class ThirdController extends Controller
             }
             
             if(!$login) {
-                return back()->withErrors("FACEBOOK登入錯誤！");
+                return back()->withErrors("FACEBOOK登入失敗！");
             } else { 
                 return redirect(config("yuanature.login_url"));
             }
