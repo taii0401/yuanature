@@ -81,6 +81,23 @@ class Orders extends Model
             //出貨備註
             $data["delivery_remark_format"] = nl2br($data["delivery_remark"]);
         }
+        
+        return $data;
+    }
+
+    /**
+     * 依訂單編號取得資料
+     * @param  uuid
+     * @return array
+     */
+    public static function getDataBySerial($serial)
+    {
+        $data = [];
+        $get_data = self::where("serial",$serial)->first();
+        if(isset($get_data) && !empty($get_data)) {
+            $data = $get_data->toArray();
+        }
+        
         return $data;
     }
 
