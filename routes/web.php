@@ -78,8 +78,22 @@ Route::group([
     });
 });
 
-//購物車、訂單
-Route::get("orders/cart",[OrderController::class,"cart"]);
+//訂單
+Route::group([
+    "prefix" => "orders"
+], function($router) {    
+    Route::controller(OrderController::class)->group(function() { 
+        //購物車、訂單
+        Route::get("/cart","cart");
+        //購物車結帳-串接金流
+        //串接金流-回傳是否成功
+        Route::post("/pay_mpg_return","payMpgReturn");
+        //串接金流-按鈕觸發是否付款
+        Route::post("/pay_notify","payNotify");
+        //串接金流-待客戶付款
+        Route::post("/pay_customer","payCustomer");
+    });
+});
 Route::group([
     "middleware" => ["auth.user"],
     "prefix" => "orders"
@@ -93,6 +107,8 @@ Route::group([
         Route::get("/pay_user","payUser");
         //購物車結帳
         Route::get("/pay_check","payCheck");
+        //購物車結帳-結果
+        Route::get("/pay_result","payResult");
     });
 });
 
