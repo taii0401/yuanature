@@ -16,7 +16,7 @@ class CreateOrderStoreTable extends Migration
         Schema::create('orders_store', function (Blueprint $table) {
             $table->id();
             $table->integer('orders_id')->comment('orders.id');
-            $table->string('store_type',10)->comment('超商：config.orders_store_type');
+            $table->string('store',10)->comment('超商：config.orders_store');
             $table->string('store_code')->nullable()->comment('超商代碼');
             $table->string('store_name')->nullable()->comment('超商店名');
             $table->string('store_address')->nullable()->comment('超商地址');
@@ -39,6 +39,6 @@ class CreateOrderStoreTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('orders_detail');
+        Schema::dropIfExists('orders_store');
     }
 }

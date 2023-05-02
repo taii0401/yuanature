@@ -37,23 +37,31 @@ return [
         "complete" => ["name" => "已完成","color" => "#008A8A"]
     ],
 
-    //付款狀態
+    //付款方式
     "orders_payment" => [
         "card" => ["name" => "信用卡","color" => "#B87800"],
         "atm" => ["name" => "ATM","color" => "#696969"],
         "linepay" => ["name" => "LINE PAY","color" => "#008F00"]
     ],
 
-    //配送狀態
+    //配送方式
     "orders_delivery" => [
         "store" => ["name" => "超商取貨","color" => "#B87800"],
         "home" => ["name" => "宅配配送","color" => "#696969"]
     ],
 
-    //取消狀態
+    //取消原因
     "orders_cancel" => [
         "wrong" => ["name" => "下錯訂單","color" => "#E00000"],
         "rebuy" => ["name" => "重新購買","color" => "#B87800"],
         "other" => ["name" => "其他","color" => "#00B800"]
+    ],
+
+    //超商
+    "orders_store" => [
+        "seven" => ["name" => "7-11","color" => "#B87800"],
+        "family" => ["name" => "全家","color" => "#8100E0"],
+        "ok" => ["name" => "OK","color" => "#696969"],
+        "hilife" => ["name" => "萊爾富","color" => "#E00000"]
     ],
 ];
