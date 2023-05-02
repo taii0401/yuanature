@@ -106,7 +106,7 @@
     $('.dataModalBtnOrderCancel').click(function () {
         var input_modal_keys = ['uuid','serial'];
         var select_modal_keys = [];
-        setModalInput($(this).data('id'),input_modal_keys,select_modal_keys);
+        setModalInput($(this).data('id'),input_modal_keys,[],[]);
 
         $('#serial_text').text($('#input_modal_serial').val());
         $('#input_modal_source').val('admin');

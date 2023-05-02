@@ -346,7 +346,7 @@ function showMsg(div_msg, message, isShowMsg) {
 }
 
 //Modal-設定輸入值
-function setModalInput(modal_values, input_modal_keys, select_modal_keys) {
+function setModalInput(modal_values, input_modal_keys, select_modal_keys, radio_modal_keys) {
     if (input_modal_keys.length > 0) {
         for (var i = 0; i < input_modal_keys.length; i++) {
             var input_modal_key = input_modal_keys[i];
@@ -359,6 +359,8 @@ function setModalInput(modal_values, input_modal_keys, select_modal_keys) {
                     $('#input_modal_' + input_modal_key).prop('checked', false);
                 }
                 changeSwitch('input_modal_' + input_modal_key);
+            } else if (radio_modal_keys.length > 0 && radio_modal_keys.includes(input_modal_key)) {
+                $('#input_modal_' + input_modal_key + '_' + value).prop('checked', true);
             } else {
                 $('#input_modal_' + input_modal_key).val(value);
             }

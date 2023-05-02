@@ -166,9 +166,7 @@
     });
 
     $('.dataModalBtn').click(function () {
-        var input_modal_keys = [];
-        var select_modal_keys = [];
-        setModalInput($(this).data('id'),input_modal_keys,select_modal_keys);
+        setModalInput($(this).data('id'),[],[],[]);
     });
 </script>
 @endsection
