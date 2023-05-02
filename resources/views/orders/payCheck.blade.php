@@ -4,7 +4,7 @@
 <div class="content">
     <div class="row tm-mt-big">
         <div class="col-xl-8 col-lg-8 col-md-10 col-sm-10 content-bg">
-            <h4 class="mb-4" style="margin-left:40%">網頁跳傳中...</h4>
+            <h4 class="mb-4" style="margin-left:40%">網頁跳轉中...</h4>
         </div>
     </div>
 </div>

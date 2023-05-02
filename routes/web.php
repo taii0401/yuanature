@@ -107,8 +107,6 @@ Route::group([
         Route::get("/pay_user","payUser");
         //購物車結帳
         Route::get("/pay_check","payCheck");
-        //購物車結帳-結果
-        Route::get("/pay_result","payResult");
     });
 });
 

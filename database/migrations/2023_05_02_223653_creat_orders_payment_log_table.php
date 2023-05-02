@@ -15,9 +15,8 @@ class CreatOrdersPaymentLogTable extends Migration
     {
         Schema::create('orders_payment_log', function (Blueprint $table) {
             $table->id();
-            $table->integer('orders_serial')->comment('orders.serial');
-            $table->string('orders_payment')->comment('付款方式：config.orders_payment');
             $table->integer('status')->default(0)->comment('狀態：0 失敗、1 成功');
+            $table->text('json_data')->comment('orders.serial');
             $table->timestamps();
         });
     }

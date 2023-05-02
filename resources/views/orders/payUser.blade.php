@@ -28,7 +28,7 @@
                                     <input type="text" id="phone" name="phone" class="form-control require" value="{{ @$datas["assign_data"]["phone"] }}">                  
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                    <label>收件人信箱<span style="color:red;font-size:x-small">(建議填寫，才可寄發通知)</span></label>
+                                    <label>收件人信箱<span style="color:red;font-size:x-small"> (建議填寫，才可寄發通知)</span></label>
                                     <input type="text" id="email" name="email" class="form-control" value="{{ @$datas["assign_data"]["email"] }}">
                                 </div>
                             </div> 
@@ -47,12 +47,12 @@
                                     </div>                  
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                    <label><span class="star">* </span>配送方式</label>
+                                    <label><span class="star">* </span>配送方式<span style="color:red;font-size:x-small"> (2萬元以上只可選擇宅配)</span></label>
                                     <div class="col-12">
                                     @if(isset($datas["option_data"]["delivery"]) && !empty($datas["option_data"]["delivery"]))    
                                         @foreach($datas["option_data"]["delivery"] as $key => $val) 
                                             <div class="form-check form-check-inline">
-                                                <input class="form-check-input" type="radio" name="delivery" id="delivery_{{ @$key }}" value="{{ @$key }}" @if($key == $datas["assign_data"]["delivery"]) checked @endif onclick="changeDataDisplay('checked','delivery','address','home',true);">
+                                                <input class="form-check-input" type="radio" name="delivery" id="delivery_{{ @$key }}" value="{{ @$key }}" {{ @$datas["assign_data"]["delivery_disabled"] }} @if($key == $datas["assign_data"]["delivery"]) checked @endif onclick="changeDataDisplay('checked','delivery','address','home',true);">
                                                 <label class="form-check-label">{{ @$val }}</label>
                                             </div>
                                         @endforeach
