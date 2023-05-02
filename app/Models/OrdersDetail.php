@@ -58,7 +58,7 @@ class OrdersDetail extends Model
         $all_datas = $conds = $conds_in = [];
         
         //條件欄位
-		$cols = ["id","order_id","product_id"];
+		$cols = ["id","orders_id","product_id"];
 		foreach($cols as $col) {
 			if(isset($cond[$col])) {
                 if(is_array($cond[$col])) {
