@@ -419,7 +419,7 @@ class AjaxController extends Controller
     }
 
     
-    //訂單-新增、取消
+    //訂單-新增、取消、付款
     public function orders_data(Request $request)
     {
         $this->resetResult();
@@ -597,6 +597,33 @@ class AjaxController extends Controller
                     }
                 } else {
                     $this->message = "取消失敗！";
+                }
+            }  else if($action_type == "pay") { //付款
+                $uuid = $input["uuid"]??"";
+                $data = Orders::where("uuid",$uuid)->where("status","nopaid")->first();
+                if(isset($data) && !empty($data)) {
+                    try {
+                        //配送方式選擇宅配配送才紀錄地址
+                        if($input["delivery"] == "home" && isset($input["address"]) && $input["address"] != "") {
+                            $add_data["address_zip"] = $input["address_zip"]??NULL;
+                            $add_data["address_county"] = $input["address_county"]??NULL;
+                            $add_data["address_district"] = $input["address_district"]??NULL;
+                            $add_data["address"] = $input["address"];
+                        }
+                        $data->payment = $input["payment"];
+                        $data->delivery = $input["delivery"];
+                        $data->updated_id = $user_id;
+                        $data->save();
+                        
+                        $this->error = false;
+                        $this->message = $uuid;
+                    } catch(QueryException $e) {
+                        Log::Info("前台訂單付款失敗：訂單UUID - ".$uuid);
+                        Log::error($e);
+                        $this->message = "付款失敗！";
+                    }
+                } else {
+                    $this->message = "付款失敗！";
                 }
             } else {
                 $this->message = "操作失敗！";

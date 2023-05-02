@@ -62,7 +62,7 @@
                                 <div id="div_address" class="row input-group twzipcode" style="display:none;margin-top:10px;">
                                     <input type="hidden" data-role="zipcode" id="address_zip" name="address_zip" class="form-control" value="{{ @$datas["assign_data"]["address_zip"] }}">
                                     <div class="col-xl-2 col-lg-2 col-md-3 col-sm-12">
-                                        <label>地址</label>
+                                        <label><span class="star">* </span>地址</label>
                                         <select class="custom-select " data-role="county" id="county" name="address_county"></select>
                                     </div>
                                     <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">

@@ -53,7 +53,7 @@
                                 <th scope="col" class="text-center" style="width:12%;">配送方式</th>
                                 <th scope="col" class="text-center" style="width:12%;">付款方式</th>
                                 <th scope="col" class="text-center" style="width:12%;">訂購金額</th>
-                                <th scope="col" style="width:8%;"></th>
+                                <th scope="col" style="width:15%;"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -71,6 +71,10 @@
                                     <td>
                                         <div class="col-12">
                                             @if($data["status"] == "nopaid")
+                                                <div class="btn-action">
+                                                    <i class="fas fa-edit tm-edit-icon dataModalOrderPayBtn" data-bs-toggle="modal" data-bs-target="#dataModalOrderPay" data-id="{{ @$data["uuid"] }},{{ @$data["serial"] }},{{ @$data["payment"] }},{{ @$data["delivery"] }},{{ @$data["address_zip"] }},{{ @$data["address"] }}">
+                                                    </i>
+                                                </div>
                                                 <div class="btn-action">
                                                     <i class="fas fa-trash-alt tm-trash-icon dataModalOrderCancelBtn" data-bs-toggle="modal" data-bs-target="#dataModalOrderCancel" data-id="{{ @$data["uuid"] }},{{ @$data["serial"] }}">
                                                     </i>
@@ -99,13 +103,30 @@
 @endsection
 
 @include('forms.orderCancel')
+@include('forms.orderPay')
 
 @section('script')
 <script>
+    //訂單付款
+    $('.dataModalOrderPayBtn').click(function () {
+        var input_modal_keys = ['pay_uuid','pay_serial','payment','delivery','address_zip','address'];
+        var radio_modal_keys = ['payment','delivery'];
+        setModalInput($(this).data('id'),input_modal_keys,[],radio_modal_keys);
+
+        $('#pay_serial_text').text($('#input_modal_pay_serial').val());
+        $('#input_modal_pay_source').val('user');
+
+        //配送方式-宅配配送顯示收件人地址
+        changeDataDisplay('checked','delivery','input_modal_address','home',true);
+        //縣市、鄉鎮市區、郵遞區號
+        const twzipcode = new TWzipcode();
+        twzipcode.set($('#input_modal_address_zip').val());
+    });
+
+    //取消訂單
     $('.dataModalOrderCancelBtn').click(function () {
         var input_modal_keys = ['uuid','serial'];
-        var select_modal_keys = [];
-        setModalInput($(this).data('id'),input_modal_keys,select_modal_keys);
+        setModalInput($(this).data('id'),input_modal_keys,[],[]);
 
         $('#serial_text').text($('#input_modal_serial').val());
         $('#input_modal_source').val('user');

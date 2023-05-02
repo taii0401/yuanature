@@ -639,16 +639,17 @@ function cartChangeTotal(id) {
     $('#total').html(total);
 }
 
-//訂單-新增、編輯、刪除、取消
+//訂單-新增、取消、付款
 function orderSubmit(action_type) {
     $('.btn_submit').attr('disabled', true);
 
+    //檢查必填
+    if (checkRequiredClass('require', true) == false) {
+        returnFalseAction();
+        return false;
+    }
+
     if (action_type == 'add') { //新增
-        //檢查必填
-        if (checkRequiredClass('require', true) == false) {
-            returnFalseAction();
-            return false;
-        }
         //檢查手機號碼
         if ($('#phone').val() != '') {
             if (checkFormat('phone', $('#phone').val(), 0, true) == false) {
@@ -668,6 +669,8 @@ function orderSubmit(action_type) {
     var form_name = 'form_data';
     if(action_type == 'cancel') {
         form_name = 'form_data_cancel';
+    } else if(action_type == 'pay') {
+        form_name = 'form_data_pay';
     }
 
     $('.form-control').attr('disabled', false);
@@ -687,7 +690,7 @@ function orderSubmit(action_type) {
         success: function(response) {
             //console.log(response);
             if (response.error == false) {
-                if (action_type == 'add') { //新增
+                if (action_type == 'add' || action_type == 'pay') { //新增、付款
                     uuid = response.message;
                     changeForm('/orders/pay_check?orders_uuid=' + uuid);
 
