@@ -20,14 +20,6 @@
             <th class="text-center tm-bg-gray" height="50px">收件人信箱：</th>
             <th>{{ @$datas["assign_data"]["email"] }}</th>
         </tr>
-        @if(@$datas["assign_data"]["delivery"] == "home" && @$datas["assign_data"]["address"] != "")
-            <tr>
-                <th class="text-center tm-bg-gray" height="50px">收件人地址：</th>
-                <th>
-                {{ @$datas["assign_data"]["address_zip"] }} {{ @$datas["assign_data"]["address_county"] }}{{ @$datas["assign_data"]["address_district"] }}{{ @$datas["assign_data"]["address"] }}
-                </th>
-            </tr>
-        @endif
         <tr>
             <th class="text-center tm-bg-gray" height="50px">訂單狀態：</th>
             <th style="color:{{ @$datas["assign_data"]["status_color"] }}">{{ @$datas["assign_data"]["status_name"] }}</th>
@@ -45,7 +37,7 @@
                     {{ @$datas["assign_data"]["delivery_name"] }}
                 </span>
                 <br>
-                {{ @$datas["assign_data"]["address_format"] }}
+                {!! @$datas["assign_data"]["address_format"] !!}
             </th>
         </tr>
         <tr>

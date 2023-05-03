@@ -28,8 +28,8 @@
                                     <input type="text" id="phone" name="phone" class="form-control require" value="{{ @$datas["assign_data"]["phone"] }}">                  
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                    <label>收件人信箱<span style="color:red;font-size:x-small"> (建議填寫，才可寄發通知)</span></label>
-                                    <input type="text" id="email" name="email" class="form-control" value="{{ @$datas["assign_data"]["email"] }}">
+                                    <label><span class="star">* </span>收件人信箱</label>
+                                    <input type="text" id="email" name="email" class="form-control require" value="{{ @$datas["assign_data"]["email"] }}">
                                 </div>
                             </div> 
                             <div class="row">

@@ -40,7 +40,7 @@
                             <tr>
                                 <td align="center" >
                                     <h1 style="color:#333333;font-size:18px;font-weight:bold;font-family:'PingFang TC','微軟正黑體','Microsoft JhengHei','Helvetica Neue',Helvetica,Arial,sans-serif;padding:0;margin:0;line-height:1.4">
-                                        {{ $text }}
+                                        {!! $text !!}
                                     </h1>
                                 </td>
                             </tr>

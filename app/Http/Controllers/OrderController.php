@@ -345,7 +345,7 @@ class OrderController extends Controller
                 "EZPAY" => env("MPG_EZPAY",""), //簡單付電子錢包
                 "EZPWECHAT" => env("MPG_EZPWECHAT",""), //簡單付微信支付
                 "EZPALIPAY" => env("MPG_EZPALIPAY",""), //簡單付支付寶
-                "LgsType" => env("MPG_LgsType",""), //物流型態     
+                "LgsType" => env("MPG_LgsType",""), //物流型態
             ];
 
             //交易資料經AES 加密後取得tradeInfo

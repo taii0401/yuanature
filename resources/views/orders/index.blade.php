@@ -53,7 +53,7 @@
                                 <th scope="col" class="text-center" style="width:12%;">配送方式</th>
                                 <th scope="col" class="text-center" style="width:12%;">付款方式</th>
                                 <th scope="col" class="text-center" style="width:12%;">訂購金額</th>
-                                <th scope="col" style="width:6%;"></th>
+                                <th scope="col" style="width:8%;"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -71,10 +71,10 @@
                                     <td>
                                         <div class="col-12">
                                             @if($data["status"] == "nopaid")
-                                                <div class="btn-action">
+                                                <!--<div class="btn-action">
                                                     <i class="fas fa-edit tm-edit-icon dataModalOrderPayBtn" data-bs-toggle="modal" data-bs-target="#dataModalOrderPay" data-id="{{ @$data["uuid"] }},{{ @$data["serial"] }},{{ @$data["payment"] }},{{ @$data["delivery"] }},{{ @$data["address_zip"] }},{{ @$data["address"] }}">
                                                     </i>
-                                                </div>
+                                                </div>-->
                                                 <div class="btn-action">
                                                     <i class="fas fa-trash-alt tm-trash-icon dataModalOrderCancelBtn" data-bs-toggle="modal" data-bs-target="#dataModalOrderCancel" data-id="{{ @$data["uuid"] }},{{ @$data["serial"] }}">
                                                     </i>

@@ -542,15 +542,23 @@ class AjaxController extends Controller
                     try {
                         session()->forget("cart");
                         $this->error = false;
+
+                        //若選擇ATM轉帳，則顯示轉帳提示文字
+                        $isPayAtm = false;
+                        if($add_data["payment"] == "atm") {
+                            $isPayAtm = true;
+                        }
+
                         //寄送通知信
                         $mail_data = [
                             "email" => $input["email"]??"",
                             "serial" => $serial,
-                            "uuid" => $uuid
+                            "uuid" => $uuid,
+                            "isPayAtm" => $isPayAtm
                         ];
                         $this->sendMail("orders_add",$mail_data);
                         //LINE通知
-                        $this->lineNotify("新訂單通知-訂單編號：".$serial);
+                        $this->lineNotify("新訂單通知-訂單編號：".$serial."，總金額：".$add_data["total"]);
                         $this->message = $uuid;
                     } catch(QueryException $e) {
                         Log::Info("前台刪除購物車失敗：會員ID - ".$user_id);

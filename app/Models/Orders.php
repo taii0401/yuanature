@@ -87,13 +87,15 @@ class Orders extends Model
 
             $addr = "";
             if($data["delivery"] == "home") {
-                $addr .= $data["address_zip"]." ".$data["address_county"].$data["address_district"].$data["address"];
+                $addr .= "地址：".$data["address_zip"]." ".$data["address_county"].$data["address_district"].$data["address"];
             } else if($data["delivery"] == "store") {
                 //取得超商出貨資料
                 $store_data = OrdersStore::getDataByOrderid($data["id"]);
                 if(!empty($store_data)) {
-                    $addr .= $orders_store_datas[$store_data["store"]]["name"]." ".$store_data["store_name"]."店";
-                    $addr .= " (".$store_data["store_address"].")";
+                    $addr .= $orders_store_datas[$store_data["store"]]["name"]." ".$store_data["store_name"]."店<br>";
+                    $addr .= " (".$store_data["store_address"].")<br>";
+                    $addr .= "取貨人姓名：".$store_data["name"]."<br>";
+                    $addr .= "取貨人手機：".$store_data["phone"];
                 }
             }
             $data["address_format"] = $addr;

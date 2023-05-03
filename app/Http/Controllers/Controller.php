@@ -284,6 +284,11 @@ class Controller extends BaseController
                 if($type == "orders_add") {
                     $isSendUser = $isSendAdmin = true;
                     $subject .= "訂單通知!";
+
+                    //若選擇ATM轉帳，則顯示轉帳提示文字
+                    if(isset($data["isPayAtm"]) && $data["isPayAtm"]) {
+                        $text .= "<br>轉帳成功後，請發信至客服信箱，並附上您的訂單編號及匯款帳號後五碼，以利我們確認您的付款資訊。";
+                    }
                 } else if($type == "orders_cancel") {
                     $subject .= "取消訂單通知!";
                     $text .= " 已取消";
@@ -322,7 +327,7 @@ class Controller extends BaseController
         }
 
         //通知管理者
-        if($isSendAdmin) { 
+        /*if($isSendAdmin) { 
             $mail_data["btn_url"] = $btn_link."admin/".$btn_url;
             try {
                 Mail::send($email_tpl,$mail_data,function($mail) use ($email,$subject) {
@@ -336,7 +341,7 @@ class Controller extends BaseController
             } catch(QueryException $e) {
                 Log::error($e);
             }
-        }
+        }*/
     }
 
     //使用line notify發通知
