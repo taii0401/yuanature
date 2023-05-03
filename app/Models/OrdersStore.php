@@ -25,12 +25,12 @@ class OrdersStore extends Model
      */
     public static function getDataByOrderid($orders_id)
     {
-        $datas = [];
-        $get_data = self::where("orders_id",$orders_id)->get();
+        $data = [];
+        $get_data = self::where("orders_id",$orders_id)->first();
         if(isset($get_data) && !empty($get_data)) {
-            $datas = $get_data->toArray();
+            $data = $get_data->toArray();
         }
-        return $datas;
+        return $data;
     }
 
     /**

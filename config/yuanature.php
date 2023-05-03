@@ -48,7 +48,7 @@ return [
     //配送方式
     "orders_delivery" => [
         "store" => ["name" => "超商取貨","color" => "#B87800"],
-        "home" => ["name" => "宅配配送","color" => "#696969"]
+        "home" => ["name" => "宅配配送","color" => "#008A8A"]
     ],
 
     //取消原因

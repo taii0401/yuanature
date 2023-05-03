@@ -40,7 +40,13 @@
         @endif
         <tr>
             <th class="text-center tm-bg-gray" height="50px">配送方式：</th>
-            <th style="color:{{ @$datas["assign_data"]["delivery_color"] }}">{{ @$datas["assign_data"]["delivery_name"] }}</th>
+            <th>
+                <span style="color:{{ @$datas["assign_data"]["delivery_color"] }}">
+                    {{ @$datas["assign_data"]["delivery_name"] }}
+                </span>
+                <br>
+                {{ @$datas["assign_data"]["address_format"] }}
+            </th>
         </tr>
         <tr>
             <th class="text-center tm-bg-gray" height="50px">付款方式：</th>

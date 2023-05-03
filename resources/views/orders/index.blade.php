@@ -53,7 +53,7 @@
                                 <th scope="col" class="text-center" style="width:12%;">配送方式</th>
                                 <th scope="col" class="text-center" style="width:12%;">付款方式</th>
                                 <th scope="col" class="text-center" style="width:12%;">訂購金額</th>
-                                <th scope="col" style="width:15%;"></th>
+                                <th scope="col" style="width:6%;"></th>
                             </tr>
                         </thead>
                         <tbody>

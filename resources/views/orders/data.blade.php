@@ -29,7 +29,7 @@
                                 <th scope="col" class="text-center" style="width:15%;">數量</th>
                                 <th scope="col" class="text-center" style="width:15%;">售價</th>
                                 <th scope="col" class="text-center" style="width:100px;">小計</th>
-                                <th scope="col" class="text-center" style="width:20px; display:{{ @$datas["assign_data"]["order_none"] }};">刪除</th>
+                                <th scope="col" class="text-center" style="width:8%; display:{{ @$datas["assign_data"]["order_none"] }};">刪除</th>
                             </tr>
                         </thead>
                         <tbody>

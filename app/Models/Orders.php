@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Models\OrdersStore;
+
 class Orders extends Model
 {
     use HasFactory,SoftDeletes;
@@ -49,6 +51,8 @@ class Orders extends Model
         $orders_delivery_datas = config("yuanature.orders_delivery");
         //取消原因
         $orders_cancel_datas = config("yuanature.orders_cancel");
+        //超商
+        $orders_store_datas = config("yuanature.orders_store");
 
         $data = [];
         $get_data = self::where("uuid",$uuid);
@@ -80,6 +84,19 @@ class Orders extends Model
             $data["order_remark_format"] = nl2br($data["order_remark"]);
             //出貨備註
             $data["delivery_remark_format"] = nl2br($data["delivery_remark"]);
+
+            $addr = "";
+            if($data["delivery"] == "home") {
+                $addr .= $data["address_zip"]." ".$data["address_county"].$data["address_district"].$data["address"];
+            } else if($data["delivery"] == "store") {
+                //取得超商出貨資料
+                $store_data = OrdersStore::getDataByOrderid($data["id"]);
+                if(!empty($store_data)) {
+                    $addr .= $orders_store_datas[$store_data["store"]]["name"]." ".$store_data["store_name"]."店";
+                    $addr .= " (".$store_data["store_address"].")";
+                }
+            }
+            $data["address_format"] = $addr;
         }
         
         return $data;
