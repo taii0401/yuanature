@@ -755,7 +755,7 @@ function adminSubmit(type) {
     }
 
     $('.form-control').attr('disabled', false);
-    $('.form-check-input').attr('disabled', false); 
+    $('.form-check-input').attr('disabled', false);
 
     $.ajax({
         type: 'POST',
