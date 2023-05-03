@@ -32,8 +32,9 @@ return [
         "nopaid" => ["name" => "未付款","color" => "#B87800"],
         "paid" => ["name" => "已付款","color" => "#8100E0"],
         "failpaid" => ["name" => "付款失敗","color" => "#E00000"],
+        "refund" => ["name" => "已退款","color" => "#FF2626"],
         "handle" => ["name" => "處理中","color" => "#696969"],
-        "cancel" => ["name" => "已取消","color" => "#FF2626"],
+        "cancel" => ["name" => "已取消","color" => "#E00000"],
         "delivery" => ["name" => "已出貨","color" => "#008F00"],
         "complete" => ["name" => "已完成","color" => "#008A8A"]
     ],
