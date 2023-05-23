@@ -25,7 +25,7 @@ use App\Http\Controllers\BackEnd\OrderController as BackEndOrderController;
 |
 */
 
-//首頁、關於我們、商品頁(廣志足白浴露)、購物指南、常見問題
+//
 Route::controller(FrontController::class)->group(function() { 
     //首頁
     Route::get("/","index");
@@ -33,14 +33,22 @@ Route::controller(FrontController::class)->group(function() {
     Route::get("product","product");
     //關於我們
     Route::get("about","about");
-    //購物指南
-    Route::get("cart_info","cartInfo");
-    //常見問題
-    Route::get("question","question");
+    //購物須知
+    Route::get("shopping","shopping");
+    //運送政策
+    Route::get("shipment","shipment");
+    //退換貨政策
+    Route::get("refunds","refunds");
     //隱私權政策
     Route::get("privacy","privacy");
-    //服務條款
-    Route::get("terms","terms");
+    //購物問題
+    Route::get("qa_shopping","qa_shopping");
+    //產品問題
+    Route::get("qa_product","qa_product");
+    //會員問題
+    Route::get("qa_member","qa_member");
+    //聯絡我們
+    Route::get("contact","contact");
 });
 
 //共用

@@ -27,31 +27,59 @@ class FrontController extends Controller
         return view("fronts.about",$data);
     }
 
-    //購物指南
-    public function cartInfo(Request $request)
+    //購物須知
+    public function shopping(Request $request)
     {
-        $data["title_txt"] = "購物指南";
-        return view("fronts.cartInfo",$data);
+        $data["title_txt"] = "購物須知";
+        return view("fronts.shopping",$data);
     }
 
-    //常見問題
-    public function question(Request $request)
+    //運送政策
+    public function shipment(Request $request)
     {
-        $data["title_txt"] = "常見問題";
-        return view("fronts.question",$data);
+        $data["title_txt"] = "運送政策";
+        return view("fronts.shipment",$data);
     }
 
-    //隱私權政策
+    //退換貨政策
     public function privacy(Request $request)
     {
-        $data["title_txt"] = "隱私權政策";
+        $data["title_txt"] = "退換貨政策";
         return view("fronts.privacy",$data);
     }
 
-    //服務條款
-    public function terms(Request $request)
+    //隱私權政策
+    public function refunds(Request $request)
     {
-        $data["title_txt"] = "服務條款";
-        return view("fronts.terms",$data);
+        $data["title_txt"] = "隱私權政策";
+        return view("fronts.refunds",$data);
+    }
+
+    //購物問題
+    public function qa_shopping(Request $request)
+    {
+        $data["title_txt"] = "購物問題";
+        return view("fronts.qa_shopping",$data);
+    }
+
+    //產品問題
+    public function qa_product(Request $request)
+    {
+        $data["title_txt"] = "產品問題";
+        return view("fronts.qa_product",$data);
+    }
+
+    //會員問題
+    public function qa_member(Request $request)
+    {
+        $data["title_txt"] = "會員問題";
+        return view("fronts.qa_member",$data);
+    }
+
+    //聯絡我們
+    public function contact(Request $request)
+    {
+        $data["title_txt"] = "聯絡我們";
+        return view("fronts.contact",$data);
     }
 }
