@@ -33,11 +33,21 @@
 </head>
 
 <body>
-    <div class="container">
-        @include('layouts.frontHeader')
-        @yield('content')
-        @include('layouts.footer')
+    @include('layouts.frontHeader')
+    <div class="content">
+        <div id="banner_menu" style="margin-left: 13%;padding-top:10px;">
+            <a href="/">
+                <img src="{{ asset('img/icons/home.png') }}" height="30px">
+            </a>
+            &nbsp;>&nbsp;
+            @yield('banner_menu_txt')
+        </div>
+        <hr>
+        <div style="margin-top:-0.5rem;">
+            @yield('content')
+        </div>
     </div>
+    @include('layouts.footer')
 </body>
 <script src="{{ mix('js/jquery-3.6.0.min.js') }}"></script>
 <script src="{{ mix('js/popper.min.js') }}"></script>

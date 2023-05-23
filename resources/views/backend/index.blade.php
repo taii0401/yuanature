@@ -3,7 +3,7 @@
 @section('content')
 <div class="content">
     <div class="row tm-mt-big">
-        <div class="col-12 mx-auto tm-login-col">
+        <div class="col-12 mx-auto tm-login-col" style="max-width:500px;">
             <div class="bg-white tm-block">
                 <div class="row">
                     <div class="col-12 text-center">

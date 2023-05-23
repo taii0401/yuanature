@@ -24,31 +24,47 @@
         <div class="clearfix"> </div>
     </div>
 </div>
-<div class="row" style="background-color: #bed0c0;">
+<div class="div_navbar">
+    <div class="col-12">
+        <div style="width:100px;margin:0 auto">
+            <a class="nav-link" href="/">
+                <img src="{{ asset('img/icons/logo.png') }}" height="80px">
+            </a>
+        </div>
+    </div>
     <div class="col-12">
         <nav class="navbar navbar-expand-sm navbar-light" style="margin-top:0px;">
             <button class="navbar-toggler ml-auto mr-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent" style="background-color: #bed0c0;">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">
-                            <img src="{{ asset('img/icons/logo.jpg') }}" height="80px">
-                        </a>
-                    </li>
-                    <li class="nav-item" style="margin-top:22px">
                         <a class="nav-link" href="/about">關於我們</a>
                     </li>
-                    <li class="nav-item" style="margin-top:22px">
-                        <a class="nav-link" href="/product">廣志足白浴露</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/product">購買商品</a>
                     </li>
-                    <li class="nav-item" style="margin-top:22px">
-                        <a class="nav-link" href="/cart_info">購物指南</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">購物指南</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/shopping">購物須知</a>
+                            <a class="dropdown-item" href="/shipment">運送政策</a>
+                            <a class="dropdown-item" href="/refunds">退換貨政策</a>
+                            <a class="dropdown-item" href="/privacy">隱私權政策</a>
+                        </div>
                     </li>
-                    <li class="nav-item" style="margin-top:22px">
-                        <a class="nav-link" href="/question">常見問題</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">常見問題</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/qa_shopping">購物問題</a>
+                            <a class="dropdown-item" href="/qa_product">產品問題</a>
+                            <a class="dropdown-item" href="/qa_member">會員問題</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">聯絡我們</a>
                     </li>
                 </ul>
             </div>

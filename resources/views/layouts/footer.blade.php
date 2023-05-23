@@ -1,26 +1,53 @@
-<footer class="row tm-mt-big" style="background-color: #bed0c0;min-height:100px;margin-top:0px;margin-bottom:0px;font-weight:500;color:#fff;">
-    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-        <div class="row" style="margin: 15px 15% 0px 15%;">
-            <div class="col-xl-5 col-lg-4 col-md-4 col-sm-12">
-                <p>白羊作坊</p>
-                <p>統編：91941522</p>
-                <p>客服專線：07-9721992</p>
+<footer class="row" style="min-height:100px;">
+    <div class="col-12">
+        <div class="row" style="margin: 15px 5% 0px 5%;">
+            <div class="footer_menu col-xl-2 col-lg-2 col-md-2 col-sm-2">
+                <span class="footer_title">購物指南</span>
+                <ul>
+                    <li>購物須知</li>
+                    <li>運送政策</li>
+                    <li>退換貨政策</li>
+                    <li>隱私權政策</li>
+                </ul>
             </div>
-            <div class="col-xl-5 col-lg-5 col-md-5 col-sm-12">
-                <p>&nbsp;</p>
-                <p>服務時段：周一至周五 09:00 ~ 18:00</p>
-                <p>客服信箱：Service@yuanature.tw</p>   
+            <div class="footer_menu col-xl-2 col-lg-2 col-md-2 col-sm-2">
+                <span class="footer_title">常見問題</span>
+                <ul>
+                    <li>購物問題</li>
+                    <li>產品問題</li>
+                    <li>會員問題</li>
+                </ul>
             </div>
-            <div class="col-xl-2 col-lg-3 col-md-3 col-sm-12">
-                <p>&nbsp;</p>
-                <p>
-                    <a href="https://www.facebook.com/yuanature.tw" target="_blank">
-                        <img src="{{ asset('img/icons/fb_grey.png') }}" height="30px">
-                    </a>
-                    <a href="https://www.instagram.com/yuanature" target="_blank">
-                        <img src="{{ asset('img/icons/ig_grey.png') }}" height="30px">
-                    </a>
-                </p>
+            <div class="footer_menu col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                <span class="footer_title">聯絡我們</span>
+                <ul>
+                    <li>客服專線：07-9721992</li>
+                    <li>客服信箱：Service@yuanture.tw</li>
+                    <li>服務時段：周一至周五 9:00 ~ 18:00</li>
+                </ul>
+            </div>
+            <div class="footer_menu col-xl-2 col-lg-2 col-md-2 col-sm-3">
+                <span class="footer_title">社群追蹤</span>
+                <ul>
+                    <li>Facebook
+                        <a href="https://www.facebook.com/yuanature.tw" target="_blank">
+                            <img src="{{ asset('img/icons/fb_grey.png') }}" height="30px">
+                        </a>
+                    </li>
+                    <li>Instagram
+                        <a href="https://www.instagram.com/yuanature" target="_blank">
+                            <img src="{{ asset('img/icons/ig_grey.png') }}" height="30px">
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="footer_menu col-xl-3 col-lg-3 col-md-3 col-sm-3">
+                <span class="footer_title">使用者回饋</span>
+                <ul>
+                    <li>TERMS OF SERVICE</li>
+                    <li>Copyright © 原生學. All rights reserved.</li>
+                    <li>白羊作坊 | 統編 91941522</li>
+                </ul>
             </div>
         </div>
     </div>

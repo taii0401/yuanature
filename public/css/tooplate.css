@@ -28,10 +28,9 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
-    background-color: #fff;
     padding-left: 0px;
     padding-right: 0px;
-    color: #666;
+    color: #656565;
 }
 
 a {
@@ -51,6 +50,15 @@ p {
     margin-block-end: 1em;
     margin-inline-start: 0px;
     margin-inline-end: 0px;
+}
+
+.content {
+    background-color: #e4eee5;
+}
+
+.div_navbar {
+    background-color: #fff;
+    border:1px solid #b5b5b5;
 }
 
 .star {
@@ -88,7 +96,7 @@ p {
 /* header start */
 
 .header-outs {
-    background-color: #052814;
+    background-color: #e4eee5;
     background-repeat: no-repeat;
     background-position: center;
     -webkit-background-size: cover;
@@ -100,10 +108,10 @@ p {
 
 .head-wl {
     height: 40px;
-    background-color: #052814;
+    background-color: #e4eee5;
     text-align: center;
     margin: 0 auto;
-    color: #fff;
+    color: #666;
 }
 
 .head-wl h1 a {
@@ -116,15 +124,15 @@ p {
     float: right;
     /*display:inline-block;*/
     width: 30%;
-    color: #FFF;
+    color: #666;
 }
 
 .search-w3ls a {
-    color: #FFF;
+    color: #666;
 }
 
 .search-w3ls a:hover {
-    color: #FFF;
+    color: #666;
 }
 
 .search-w3ls img {
@@ -169,8 +177,8 @@ p {
     padding-left: 20px;
     padding-right: 20px;
     margin-top: 0px;
-    min-height: 110px;
-    background-color: #bed0c0;
+    min-height: 50px;
+    background-color: #FFF;
 }
 
 .tm-logout-icon {
@@ -190,13 +198,14 @@ p {
 }
 
 .tm-block {
+    margin: 10px 0px;
     padding: 15px 10px;
 }
 
 .tm-block-title {
     font-size: 1.4rem;
     color: #333;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
 
 .navbar-light .navbar-nav .nav-link {
@@ -213,11 +222,12 @@ p {
 .navbar-light .navbar-nav .nav-link.show,
 .navbar-light .navbar-nav .show>.nav-link,
 .navbar-light .navbar-nav a:hover {
-    color: #fff;
+    color: #97bb9b;
 }
 
 .nav-item {
-    margin-right: 30px;
+    margin-left: 15px;
+    margin-right: 15px;
 }
 
 .nav-item:last-child {
@@ -298,10 +308,10 @@ ol {
 }
 
 .form-control {
-    margin-bottom: 23px;
-    padding: 19px 18px;
+    margin-bottom: 10px;
+    padding: 10px 18px;
     border-radius: 0;
-    height: 50px;
+    height: 35px;
 }
 
 label {
@@ -575,11 +585,31 @@ input[type="checkbox"]:focus {
 }
 
 footer {
-    margin-bottom: 35px;
+    background-color: #FFF;
+    margin-bottom: 0px;
+    border:1px solid #b5b5b5;
+}
+
+.footer_title {
+    color:#656565;
+    font-size:medium;
+    font-weight: 500;
+}
+
+.footer_menu ul {
+    list-style: none;
+    color:#818181;
+    font-size: smaller;
+    text-align: left;
+    margin-left: -40px;
+}
+
+.footer_menu ul li {
+    margin-top: 5px;
 }
 
 .custom-select {
-    height: 50px;
+    height: 35px;
     border-radius: 0;
 }
 
@@ -748,8 +778,9 @@ footer {
 }
 
 .content-bg-about,
-.content-bg-list {
-    padding: 30px;
+.content-bg-list,
+.content-info {
+    padding: 10px;
     margin: 15px auto;
     text-align: justify;
 }
@@ -769,6 +800,19 @@ footer {
 .content-bg-list p {
     font-size: medium;
     color: #343635;
+}
+
+.content-info ul {
+    list-style:disc;
+}
+
+.content-info ul li {
+    margin-top:10px;
+}
+
+.content-info ul li.primary {
+    list-style-type:'   *   ';
+    color: red;
 }
 
 
@@ -803,9 +847,9 @@ footer {
 }
 
 @media (max-width: 1275px) and (min-width: 1200px) {
-    .nav-item {
+    /*.nav-item {
         margin-right: 15px;
-    }
+    }*/
 }
 
 @media (max-width: 1350px) and (min-width: 1200px) {
@@ -818,9 +862,9 @@ footer {
 }
 
 @media (max-width: 1350px) {
-    .nav-item {
+    /*.nav-item {
         margin-right: 1px;
-    }
+    }*/
 }
 
 @media (max-width: 1199px) {
@@ -876,12 +920,24 @@ footer {
 }
 
 @media (max-width: 768px) {
+    .navbar {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .nav-item {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
     .search-w3ls {
         /*width: 40%;*/
     }
 }
 
 @media (max-width: 633px) {
+    .nav-item {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
     .pagination {
         flex-wrap: wrap;
     }
@@ -901,6 +957,10 @@ footer {
 }
 
 @media (max-width: 574px) {
+    .navbar {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
     .navbar-collapse {
         top: 70px;
     }
@@ -909,7 +969,6 @@ footer {
         margin-top: 20px;
     }
     .navbar {
-        margin-top: 30px;
         height: auto;
     }
     body {
@@ -937,9 +996,6 @@ footer {
 }
 
 @media (max-width: 424px) {
-    .navbar-collapse {
-        /*top: 107px;*/
-    }
     .search-w3ls {
         width: 100%;
     }
