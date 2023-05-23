@@ -42,17 +42,17 @@ class FrontController extends Controller
     }
 
     //退換貨政策
-    public function privacy(Request $request)
+    public function refunds(Request $request)
     {
         $data["title_txt"] = "退換貨政策";
-        return view("fronts.privacy",$data);
+        return view("fronts.refunds",$data);
     }
 
     //隱私權政策
-    public function refunds(Request $request)
+    public function privacy(Request $request)
     {
         $data["title_txt"] = "隱私權政策";
-        return view("fronts.refunds",$data);
+        return view("fronts.privacy",$data);
     }
 
     //購物問題
