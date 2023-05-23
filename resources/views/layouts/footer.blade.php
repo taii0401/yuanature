@@ -19,7 +19,9 @@
                 </ul>
             </div>
             <div class="footer_menu col-xl-3 col-lg-3 col-md-3 col-sm-3">
-                <span class="footer_title">聯絡我們</span>
+                <span class="footer_title">
+                    <a href="/contact">聯絡我們</a>
+                </span>
                 <ul>
                     <li>客服專線：07-9721992</li>
                     <li>客服信箱：Service@yuanture.tw</li>
@@ -42,7 +44,9 @@
                 </ul>
             </div>
             <div class="footer_menu col-xl-3 col-lg-3 col-md-3 col-sm-3">
-                <span class="footer_title">使用者回饋</span>
+                <span class="footer_title">
+                    <a href="/feedback">使用者回饋</a>
+                </span>
                 <ul>
                     <li>TERMS OF SERVICE</li>
                     <li>Copyright © 原生學. All rights reserved.</li>

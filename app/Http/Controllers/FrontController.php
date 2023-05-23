@@ -76,10 +76,24 @@ class FrontController extends Controller
         return view("fronts.qa_member",$data);
     }
 
+    //使用者回饋
+    public function feedback(Request $request)
+    {
+        $data["title_txt"] = "使用者回饋";
+        return view("fronts.feedback",$data);
+    }
+
     //聯絡我們
     public function contact(Request $request)
     {
         $data["title_txt"] = "聯絡我們";
         return view("fronts.contact",$data);
+    }
+
+    //服務條款
+    public function terms(Request $request)
+    {
+        $data["title_txt"] = "服務條款";
+        return view("fronts.terms",$data);
     }
 }

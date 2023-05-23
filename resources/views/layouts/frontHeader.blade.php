@@ -64,7 +64,7 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/contact">聯絡我們</a>
+                        <a class="nav-link" href="/feedback">使用者回饋</a>
                     </li>
                 </ul>
             </div>
