@@ -608,7 +608,7 @@ footer {
     margin-top: 5px;
 }
 
-.footer_menu ul li a {
+.footer_menu a {
     color:#818181;
 }
 
@@ -789,7 +789,8 @@ footer {
     text-align: justify;
 }
 
-.content-bg-about h4 {
+.content-bg-about h4 
+.content-info h4 {
     color: #4c514c;
 }
 
@@ -797,13 +798,13 @@ footer {
     color: #8c918c
 }
 
-.content-bg-list h5 {
-    color: #00500d;
+.content-info h5 {
+    font-weight: 500;
+    color: #850606;
 }
 
-.content-bg-list p {
+.content-info p {
     font-size: medium;
-    color: #343635;
 }
 
 .content-info ul {
