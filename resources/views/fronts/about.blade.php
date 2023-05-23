@@ -1,7 +1,8 @@
 @extends('layouts.frontBase')
 @section('title') {{ @$title_txt }} @endsection
+@section('banner_menu_txt') {{ @$title_txt }} @endsection
 @section('content')
-<div class="content" style="margin-top:0;background-image:url({{ asset('img/about_bg.jpg') }});background-size: auto;">
+<div style="background-image:url({{ asset('img/about_bg.jpg') }});background-size: auto;">
     <div class="row">
         <div class="col-xl-8 col-lg-8 col-md-10 col-sm-10 content-bg-about">
             <h4 class="mb-4">關於｜原生學</h4>

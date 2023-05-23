@@ -608,6 +608,10 @@ footer {
     margin-top: 5px;
 }
 
+.footer_menu ul li a {
+    color:#818181;
+}
+
 .custom-select {
     height: 35px;
     border-radius: 0;
@@ -780,7 +784,7 @@ footer {
 .content-bg-about,
 .content-bg-list,
 .content-info {
-    padding: 20px;
+    padding: 10px;
     margin: 15px auto;
     text-align: justify;
 }
@@ -808,6 +812,11 @@ footer {
 
 .content-info ul li {
     margin-top:10px;
+}
+
+.content-info ul li.primary {
+    list-style-type:'   *   ';
+    color: red;
 }
 
 
