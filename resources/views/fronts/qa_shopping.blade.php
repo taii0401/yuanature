@@ -4,7 +4,7 @@
 @section('content')
 <div class="row">
     <div class="content-info col-xl-7 col-lg-7 col-md-10 col-sm-10">
-        <h4 class="mb-4">｜購買問題｜</h4>
+        <h4 class="mb-4">｜購物問題｜</h4>
         <div class="qa">
             <p class="mb-4">
                 <span class="qa-q">Q：無法正常下單怎麼辦？</span><br/>
