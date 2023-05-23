@@ -4,18 +4,18 @@
             <div class="footer_menu col-xl-2 col-lg-2 col-md-2 col-sm-2">
                 <span class="footer_title">購物指南</span>
                 <ul>
-                    <li>購物須知</li>
-                    <li>運送政策</li>
-                    <li>退換貨政策</li>
-                    <li>隱私權政策</li>
+                    <li><a href="/shopping">購物須知</a></li>
+                    <li><a href="/shipment">運送政策</a></li>
+                    <li><a href="/refunds">退換貨政策</a></li>
+                    <li><a href="/privacy">隱私權政策</a></li>
                 </ul>
             </div>
             <div class="footer_menu col-xl-2 col-lg-2 col-md-2 col-sm-2">
                 <span class="footer_title">常見問題</span>
                 <ul>
-                    <li>購物問題</li>
-                    <li>產品問題</li>
-                    <li>會員問題</li>
+                    <li><a href="/qa_shopping">購物問題</a></li>
+                    <li><a href="/qa_product">產品問題</a></li>
+                    <li><a href="/qa_member">會員問題</a></li>
                 </ul>
             </div>
             <div class="footer_menu col-xl-3 col-lg-3 col-md-3 col-sm-3">
