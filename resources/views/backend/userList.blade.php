@@ -1,9 +1,9 @@
 @extends('backend.base')
 @section('title') {{ @$datas["assign_data"]["title_txt"] }} @endsection
 @section('content')
-<div class="row tm-content-row tm-mt-big">
+<div class="row">
     <div class="col-xl-12 col-lg-12 tm-md-12 tm-sm-12 tm-col">
-        <div class="bg-white tm-block h-100">
+        <div class="bg-white tm-block">
             <div class="row">
                 <div class="form-group col-md-4 col-sm-12">
                     <div class="input-group">

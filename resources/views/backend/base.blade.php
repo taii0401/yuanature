@@ -39,42 +39,46 @@
             <div class="clearfix"> </div>
         </div>
     </div>
-    <div class="row" style="background-color: #fff;">
-        <div class="col-12">
-            <nav class="navbar navbar-expand-sm navbar-light" style="margin-top:0px;min-height:80px;">
-                <a class="navbar-brand" href="/admin">
-                    <img src="{{ asset('img/icons/logo.png') }}" height="80px">
-                    <h6 class="tm-site-title mb-0">後台
-                        @if(@$datas["assign_data"] != "")
-                            - {{ @$datas["assign_data"]["title_txt"] }}
-                        @endif
-                    </h6>
-                </a>    
-                <button class="navbar-toggler ml-auto mr-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent" style="background-color: #fff;">
-                    <ul class="navbar-nav mx-auto">
-                    @if(AdminAuth::isLoggedIn())
-                        @if(AdminAuth::admindata()->admin_group_id == 1)
+    <div class="div_navbar">
+        <div class="row">
+            <div class="col-12">
+                <nav class="navbar navbar-expand-sm navbar-light" style="margin-top:0px;min-height:80px;">
+                    <a class="navbar-brand" href="/admin">
+                        <img src="{{ asset('img/icons/logo.png') }}" height="80px">
+                        <h6 class="tm-site-title mb-0">後台
+                            @if(@$datas["assign_data"] != "")
+                                - {{ @$datas["assign_data"]["title_txt"] }}
+                            @endif
+                        </h6>
+                    </a>    
+                    <button class="navbar-toggler ml-auto mr-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mx-auto">
+                        @if(AdminAuth::isLoggedIn())
+                            @if(AdminAuth::admindata()->admin_group_id == 1)
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/admin/list">管理員管理</a>
+                                </li>
+                            @endif
                             <li class="nav-item">
-                                <a class="nav-link" href="/admin/list">管理員管理</a>
+                                <a class="nav-link" href="/admin/user">會員管理</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/admin/orders">訂單管理</a>
                             </li>
                         @endif
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin/user">會員管理</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/admin/orders">訂單管理</a>
-                        </li>
-                    @endif
-                    </ul>
-                </div>
-            </nav>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
         </div>
     </div>
-    @yield('content')
+    <div class="content">
+        @yield('content')
+    </div>
     @include('layouts.footer')
 </body>
 <script src="{{ mix('js/jquery-3.6.0.min.js') }}"></script>
