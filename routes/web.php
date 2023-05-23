@@ -47,8 +47,13 @@ Route::controller(FrontController::class)->group(function() {
     Route::get("qa_product","qa_product");
     //會員問題
     Route::get("qa_member","qa_member");
+    //使用者回饋
+    Route::get("feedback","feedback");
     //聯絡我們
     Route::get("contact","contact");
+
+    //服務條款
+    Route::get("terms","terms");
 });
 
 //共用
