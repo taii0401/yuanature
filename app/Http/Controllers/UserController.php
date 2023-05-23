@@ -136,13 +136,14 @@ class UserController extends Controller
         $data["add_none"] = $data["edit_none"] = $data["edit_data_none"] = $data["edit_pass_none"] = "none";
         
         if($action_type == "add") { //新增會員
-            $data["title_txt"] = "註冊帳號";
+            $data["title_txt"] = "會員註冊";
             $data["require"] = $data["pass_require"] = "require";
             $data["edit_none"] = $data["edit_data_none"] = $data["edit_pass_none"] = "";
         } else if($action_type == "edit" || $action_type == "edit_password") { //編輯會員、修改密碼
+            $data["banner_menu_txt"] = "會員中心 > ";
             $data["disabled"] = "disabled";
             if($action_type == "edit") {
-                $data["title_txt"] = "修改會員資料";
+                $data["title_txt"] = "會員資料";
                 $data["require"] = $data["edit_require"] = "require";
                 $data["add_none"] = $data["edit_data_none"] = "";
             } else {
@@ -185,8 +186,8 @@ class UserController extends Controller
     public function verify($type="add",$user_uuid)
     {
         if($user_uuid != "") {
-            $title_txt = "申請會員";
-            $text = "申請會員成功，請在10分鐘內至信箱點選驗證，若未收到驗證信，請點選重發驗證信，謝謝。";
+            $title_txt = "會員註冊";
+            $text = "會員註冊成功，請在10分鐘內至信箱點選驗證，若未收到驗證信，請點選重發驗證信，謝謝。";
             $button_txt = "重發驗證信";
             $button_url = "/users/resend/".$user_uuid;
             $btn_none = "";

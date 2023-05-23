@@ -66,21 +66,20 @@ p {
 }
 
 .user_menu {
-    background: rgb(255, 255, 255);
-    padding: 30px;
-    box-shadow: rgba(42, 46, 49, 0.27) 3px 3px 3px 3px;
-    margin: 15px auto;
+    padding: 15px;
+    margin: 0px auto;
 }
 
 .user_menu ul {
     list-style: none;
     margin-top: 5px;
-    margin-left: -50px;
-    text-align: center;
+    margin-left: -35px;
 }
 
 .user_menu ul li {
     margin-top: 15px;
+    padding-top: 10px;
+    border-bottom:1px solid #cfcfcf ;
 }
 
 .user_menu ul li a {
@@ -91,7 +90,6 @@ p {
 .user_menu ul li a:hover {
     color: #0266c4;
 }
-
 
 /* header start */
 
@@ -320,7 +318,7 @@ label {
 
 .btn {
     /*border-radius: 0;*/
-    padding: 12px 24px;
+    padding: 8px 12px;
     transition: all 0.2s ease;
     max-width: 100%;
 }
@@ -443,7 +441,7 @@ label {
 }
 
 .tm-table-mt {
-    margin-top: 20px;
+    margin-top: 5px;
 }
 
 .page-item:first-child .page-link {
@@ -629,7 +627,7 @@ footer {
 }
 
 .tm-login-col {
-    max-width: 600px;
+    max-width: 500px;
 }
 
 

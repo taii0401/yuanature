@@ -99,11 +99,13 @@ class UserAuth
 
             if($user_data["email_verified_at"] != "") {
                 $login_type = "email";
+                $user_data["password"] = User::where(["id" => $user_id])->first()->password;
             } else if($user_data["facebook_id"] != "") {
                 $login_type = "facebook";
             } else if($user_data["line_id"] != "") {
                 $login_type = "line";
             }
+            //dd($user_data);
 
             UserAuth::logIn($user_data,$login_type);
         }
@@ -123,7 +125,7 @@ class UserAuth
             $db = $db->where("line_id",$post_data["line_id"]);
         }
         $user = $db->first();
-
+        
         //檢查密碼是否符合
         if(!empty($user)) {
             if($login_type == "email") {

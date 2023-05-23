@@ -1,7 +1,8 @@
 @extends('layouts.frontBase')
 @section('title') {{ @$title_txt }} @endsection
+@section('banner_menu_txt') {{ @$title_txt }} @endsection
 @section('content')
-<div class="content">
+<div class="row tm-mt-big">
     <div class="col-12 mx-auto tm-login-col">
         <div class="bg-white tm-block">
             <div class="row">

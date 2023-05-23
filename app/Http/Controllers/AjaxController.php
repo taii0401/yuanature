@@ -201,7 +201,7 @@ class AjaxController extends Controller
             }
         }
         try {
-            $user = User::where(["email" => $input["account"]])->first()->toArray();
+            $user = User::where(["email" => $input["account"]])->whereNull(["facebook_id","line_id"])->first();
             if(!empty($user)) {
                 $email = $input["account"];
                 //隨機產生亂碼
@@ -219,6 +219,8 @@ class AjaxController extends Controller
                 $this->sendMail("user_forget",$mail_data);
                 $this->error = false;
                 $this->message = "請至信箱收取新密碼重新登入後，再至修改密碼更新！";
+            } else {
+                $this->message = "此信箱尚未註冊！";
             }
         } catch(QueryException $e) {
             Log::Info("前台會員忘記密碼失敗：帳號 - ".$input["account"]);

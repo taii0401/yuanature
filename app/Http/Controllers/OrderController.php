@@ -163,7 +163,9 @@ class OrderController extends Controller
         }
         $assign_data = $order_data;
         //標題
+        $assign_data["action_type"] = "detail";
         $assign_data["title_txt"] = "訂單明細";
+        $assign_data["banner_menu_txt"] = "會員中心 > 訂單查詢 > ";
         //顯示欄位
         $assign_data["danger_none"] = $assign_data["success_none"] = "none"; //顯示訊息
         $assign_data["order_none"] = "none";
@@ -213,13 +215,13 @@ class OrderController extends Controller
     public function payUser(Request $request)
     {
         $datas = $assign_data = $option_data = [];
-        $assign_data["title_txt"] = "收件人資料";
 
         //取得會員資料
         $user_data = UserAuth::userdata();
         if(!empty($user_data)) {
             $assign_data = $user_data->toArray();
         }
+        $assign_data["title_txt"] = "收件人資料";
 
         //取得付款方式、配送方式
         $option_data["payment"] = $this->getConfigOptions("orders_payment",false);
