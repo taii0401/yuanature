@@ -3,7 +3,7 @@
 @section('banner_menu_txt') 購物指南 > {{ @$title_txt }} @endsection
 @section('content')
 <div class="row">
-    <div class="content-info col-xl-7 col-lg-7 col-md-10 col-sm-10">
+    <div class="content-info col-xl-7 col-lg-7 col-md-12 col-sm-12">
         <h4 class="mb-4">｜出貨說明｜</h4>
         <ul>
             <li>官網適用宅配 (限台灣本島 / 離島)、<span class="star">超商取貨不付款</span> (7-11 / 全家)。</li>

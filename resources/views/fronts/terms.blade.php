@@ -3,7 +3,7 @@
 @section('banner_menu_txt') {{ @$title_txt }} @endsection
 @section('content')
 <div class="row">
-    <div class="content-info col-xl-7 col-lg-7 col-md-10 col-sm-10">
+    <div class="content-info col-xl-7 col-lg-7 col-md-12 col-sm-12">
         <h5 class="mb-4">免責聲明</h5>
         <p>當您成為本網站的會員時，即表示您已詳細閱讀、明確瞭解並同意接受本「免責聲明」之所有內容，下列情況發生時本網站毋須負擔任何責任：</p>
         <ul>

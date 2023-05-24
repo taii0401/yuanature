@@ -13,10 +13,10 @@ class FrontController extends Controller
         return view("fronts.index",$data);
     }
 
-    //商品頁
+    //購買商品
     public function product(Request $request)
     {
-        $data["title_txt"] = "廣志足白浴露";
+        $data["title_txt"] = "購買商品";
         return view("fronts.product",$data);
     }
 

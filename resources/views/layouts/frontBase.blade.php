@@ -35,7 +35,7 @@
 <body>
     @include('layouts.frontHeader')
     <div class="content">
-        <div id="banner_menu" style="margin-left: 13%;padding-top:10px;">
+        <div class="banner_menu">
             <a href="/">
                 <img src="{{ asset('img/icons/home.png') }}" height="30px">
             </a>

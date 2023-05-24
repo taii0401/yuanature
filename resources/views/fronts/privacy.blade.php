@@ -3,7 +3,7 @@
 @section('banner_menu_txt') 購物指南 > {{ @$title_txt }} @endsection
 @section('content')
 <div class="row">
-    <div class="content-info col-xl-7 col-lg-7 col-md-10 col-sm-10">
+    <div class="content-info col-xl-7 col-lg-7 col-md-12 col-sm-12">
         <p>非常歡迎您光臨「原生學」（以下簡稱本網站），為了讓您能夠安心的使用本網站的各項服務與資訊，特此向您說明本網站的隱私權保護政策，以保障您的權益，請您詳閱下列內容：</p>
         <h5 class="mb-4">隱私權保護政策</h5>
         <p>本網站為 白羊作坊 所經營相關網站，包括但不限於：「原生學」（https://www.yuanature.tw），本公司十分重視您的隱私權保護，將依個人資料保護法及本隱私權政策蒐集、處理及利用您的個人資料， 並提供您對個人資料權利之行使與保護。</p>

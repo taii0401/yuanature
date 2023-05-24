@@ -3,7 +3,7 @@
 @section('banner_menu_txt') 常見問題 > {{ @$title_txt }} @endsection
 @section('content')
 <div class="row">
-    <div class="content-info col-xl-7 col-lg-7 col-md-10 col-sm-10">
+    <div class="content-info col-xl-7 col-lg-7 col-md-12 col-sm-12">
         <h4 class="mb-4">｜購物問題｜</h4>
         <div class="qa">
             <p class="mb-4">

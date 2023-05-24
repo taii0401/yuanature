@@ -3,7 +3,7 @@
 @section('banner_menu_txt') 購物指南 > {{ @$title_txt }} @endsection
 @section('content')
 <div class="row">
-    <div class="content-info col-xl-7 col-lg-7 col-md-10 col-sm-10">
+    <div class="content-info col-xl-7 col-lg-7 col-md-12 col-sm-12">
         <p>猶豫期非試用期：根據消費者保護法第19條之規定，您享有商品到貨後起算7天鑑賞期（含國定例假日）的權益，鑑賞期係供您參考、觀賞、品鑑和比較，您可在7天之內要求退貨退款。</p>
         <p>鑑賞期非試用期，超過鑑賞期者將不受理退貨服務。</p>
         <h5 class="mb-4">屬瑕疵貨品項數量不符之情形</h5>

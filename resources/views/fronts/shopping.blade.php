@@ -3,7 +3,7 @@
 @section('banner_menu_txt') 購物指南 > {{ @$title_txt }} @endsection
 @section('content')
 <div class="row">
-    <div class="content-info col-xl-7 col-lg-7 col-md-10 col-sm-10">
+    <div class="content-info col-xl-7 col-lg-7 col-md-12 col-sm-12">
         <h4 class="mb-4">｜首次購物｜</h4>
         <ul style="list-style:none">
             <li>請先註冊您的專屬會員帳號，支持Facebook或LINE註冊，或使用E-mail註冊即可。</li>
