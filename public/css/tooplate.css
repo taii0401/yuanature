@@ -14,7 +14,7 @@ COLOR CODES
 */
 
 html {
-    font-size: 17px;
+    font-size: 18px;
 }
 
 body {
@@ -186,7 +186,7 @@ p {
     margin-top: 0px;
     min-height: 50px;
     background-color: #FFF;
-    font-size: larger;
+    font-size: 20px;
 }
 
 .tm-logout-icon {
@@ -319,7 +319,7 @@ ol {
     margin-bottom: 10px;
     padding: 10px 18px;
     border-radius: 0;
-    height: 35px;
+    height: 38px;
 }
 
 label {
@@ -630,7 +630,7 @@ footer {
 }
 
 .custom-select {
-    height: 35px;
+    height: 38px;
     border-radius: 0;
 }
 
@@ -820,7 +820,7 @@ footer {
 }
 
 .content-info p {
-    font-size: medium;
+    font-size: 18px;
 }
 
 .content-info ul {
@@ -842,13 +842,17 @@ footer {
 
 /*常見問題 START*/
 
-.qa {}
+.qa {
+    font-size: 18px;
+}
 
 .qa-q {
+    font-size: 18px;
     color: #3e3f3f;
 }
 
 .qa-a {
+    font-size: 18px;
     color: #9f1321;
 }
 

@@ -12,6 +12,7 @@ class FrontController extends Controller
     //首頁
     public function index(Request $request)
     {
+        $data = [];
         $data["title_txt"] = "廣志足白浴露";
         return view("fronts.index",$data);
     }
@@ -28,6 +29,7 @@ class FrontController extends Controller
     //關於我們
     public function about(Request $request)
     {
+        $data = [];
         $data["title_txt"] = "關於我們";
         return view("fronts.about",$data);
     }
@@ -35,6 +37,7 @@ class FrontController extends Controller
     //購物須知
     public function shopping(Request $request)
     {
+        $data = [];
         $data["title_txt"] = "購物須知";
         return view("fronts.shopping",$data);
     }
@@ -42,6 +45,7 @@ class FrontController extends Controller
     //運送政策
     public function shipment(Request $request)
     {
+        $data = [];
         $data["title_txt"] = "運送政策";
         return view("fronts.shipment",$data);
     }
@@ -49,6 +53,7 @@ class FrontController extends Controller
     //退換貨政策
     public function refunds(Request $request)
     {
+        $data = [];
         $data["title_txt"] = "退換貨政策";
         return view("fronts.refunds",$data);
     }
@@ -56,6 +61,7 @@ class FrontController extends Controller
     //隱私權政策
     public function privacy(Request $request)
     {
+        $data = [];
         $data["title_txt"] = "隱私權政策";
         return view("fronts.privacy",$data);
     }
@@ -63,6 +69,7 @@ class FrontController extends Controller
     //購物問題
     public function qa_shopping(Request $request)
     {
+        $data = [];
         $data["title_txt"] = "購物問題";
         return view("fronts.qa_shopping",$data);
     }
@@ -70,6 +77,7 @@ class FrontController extends Controller
     //產品問題
     public function qa_product(Request $request)
     {
+        $data = [];
         $data["title_txt"] = "產品問題";
         return view("fronts.qa_product",$data);
     }
@@ -77,6 +85,7 @@ class FrontController extends Controller
     //會員問題
     public function qa_member(Request $request)
     {
+        $data = [];
         $data["title_txt"] = "會員問題";
         return view("fronts.qa_member",$data);
     }
@@ -84,6 +93,7 @@ class FrontController extends Controller
     //使用者回饋
     public function feedback(Request $request)
     {
+        $data = [];
         $data["title_txt"] = "使用者回饋";
         return view("fronts.feedback",$data);
     }
@@ -91,13 +101,17 @@ class FrontController extends Controller
     //聯絡我們
     public function contact(Request $request)
     {
+        $data = [];
         $data["title_txt"] = "聯絡我們";
+        //選項-聯絡我們類型
+        $data["contact_type"] = $this->getConfigOptions("contact_type",false);
         return view("fronts.contact",$data);
     }
 
     //服務條款
     public function terms(Request $request)
     {
+        $data = [];
         $data["title_txt"] = "服務條款";
         return view("fronts.terms",$data);
     }
