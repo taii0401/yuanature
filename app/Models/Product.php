@@ -99,4 +99,21 @@ class Product extends Model
 
         return $all_datas;
     }
+
+    /**
+     * 依訂單UUID取得資料
+     * @param  uuid
+     * @return array
+     */
+    public static function getDataByUuid($uuid)
+    {
+        $data = [];
+        $get_data = self::where("uuid",$uuid);
+        $get_data = $get_data->first();
+        if(isset($get_data) && !empty($get_data)) {
+            $data = $get_data->toArray();
+        }
+        
+        return $data;
+    }
 }

@@ -72,17 +72,21 @@ p {
 
 .user_menu {
     padding: 15px;
-    margin: 0px auto;
+    margin: 10px auto;
+    border:1px solid #cfcfcf ;
 }
 
 .user_menu ul {
     list-style: none;
-    margin-top: 5px;
-    margin-left: -35px;
+    padding: 0px;
+    margin: 0px 15px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
 }
 
 .user_menu ul li {
-    margin-top: 15px;
+    margin-top: 10px;
     padding-top: 10px;
     border-bottom:1px solid #cfcfcf ;
 }
@@ -360,6 +364,18 @@ label {
     border-color: #9f1321;
 }
 
+.btn-cart {
+    background-color: #006935;
+    color: white;
+    border-color: #006935;
+}
+
+.btn-cart:hover {
+    color: black;
+    background-color: #cdd4da;
+    border-color: #006935;
+}
+
 .btn-close {
     position: absolute;
     top: 0;
@@ -557,9 +573,7 @@ input[type="checkbox"]:focus {
 }
 
 .table-detail {
-    border-width: 3px;
-    border-style: double;
-    border-color: #3aabd0;
+    color: #850606;
 }
 
 .table-detail td,
@@ -570,13 +584,12 @@ input[type="checkbox"]:focus {
 }
 
 .detail-title {
-    color: #3aabd0;
-    font-size: 1.0rem;
+    color: #5a4a4a;
+    font-weight: 600;
 }
 
 .detail-text {
-    font-size: 1.0rem;
-    font-weight: 500;
+    color: #5a4a4a;
 }
 
 .detail-content-div {
@@ -841,8 +854,10 @@ footer {
 
 /*常見問題 END*/
 
+/*商品圖片 START*/
+
 .pdt_img_area {
-    padding: 5px;
+    padding: 0px;
     margin: 0px auto;
 }
 
@@ -852,12 +867,14 @@ footer {
 
 .pdt_img_area ul {
     list-style: none;
+    padding: 0px;
     margin: 0px auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .pdt_img_area ul li {
-    margin-top: 10px;
-    padding: 5px;
     display:inline;
 }
 
@@ -869,6 +886,40 @@ footer {
 .pdt_img_area ul li a:hover {
     color: #0266c4;
 }
+
+/*商品圖片 END*/
+
+
+/*商品頁籤 START*/
+
+.tab-title {
+    display: flex; 
+    align-items: center;
+    justify-content:space-around;
+    color: #9c9999;
+    flex-wrap: wrap;
+    background-color: #f1f1f1;
+    border:1px solid #cfcfcf;
+}
+
+.tab-title li {
+    list-style: none;
+    padding: 5px;
+}
+
+.tab-title li a {
+    display: block;
+    color: #9c9999;
+    text-decoration: none;
+}
+
+.tab-title li.active a {
+    color: #5a4a4a;
+    font-weight: 600;
+}
+
+/*商品頁籤 END*/
+  
 
 @media (min-width: 992px) {
     .navbar-expand-lg .navbar-nav .nav-link {
@@ -895,12 +946,6 @@ footer {
     .tm-table-actions-col-right {
         margin-top: 30px;
     }
-    .pdt_img_area img {
-        height: 85px;
-    }
-    .pdt_img_area ul li {
-        padding: 4px;
-    }
 }
 
 @media (max-width: 1350px) {
@@ -918,10 +963,7 @@ footer {
         width: 40%;
     }
     .pdt_img_area img {
-        height: 80px;
-    }
-    .pdt_img_area ul li {
-        padding: 2px;
+        height: 85px;
     }
     /*.navbar-collapse {
         background: white;
@@ -942,15 +984,9 @@ footer {
     }*/
 }
 
-@media (max-width: 1100px) {
-    .pdt_img_area img {
-        height: 75px;
-    }
-}
-
 @media (max-width: 1055px) {
     .pdt_img_area img {
-        height: 70px;
+        height: 80px;
     }
 }
 
@@ -978,10 +1014,7 @@ footer {
         width: 50%;
     }
     .pdt_img_area img {
-        height: 90px;
-    }
-    .pdt_img_area ul li {
-        padding: 5px;
+        height: 85px;
     }
 }
 
@@ -996,9 +1029,6 @@ footer {
     }
     .search-w3ls {
         /*width: 40%;*/
-    }
-    .pdt_img_area img {
-        height: 85px;
     }
 }
 
@@ -1022,18 +1052,6 @@ footer {
     }
     .search-w3ls {
         width: 60%;
-    }
-    .pdt_img_area img {
-        height: 80px;
-    }
-}
-
-@media (max-width: 598px) {
-    .pdt_img_area img {
-        height: 75px;
-    }
-    .pdt_img_area ul li {
-        padding: 4px;
     }
 }
 
@@ -1069,22 +1087,13 @@ footer {
         margin-left: 0%;
     }
     .pdt_img_area img {
-        height: 75px;
-    }
-    .pdt_img_area ul li {
-        padding: 3px;
+        height: 80px;
     }
 }
 
-@media (max-width: 560px) {
+@media (max-width: 598px) {
     .pdt_img_area img {
         height: 70px;
-    }
-}
-
-@media (max-width: 500px) {
-    .pdt_img_area img {
-        height: 60px;
     }
 }
 
@@ -1096,10 +1105,7 @@ footer {
         width: 80%;
     }
     .pdt_img_area img {
-        height: 50px;
-    }
-    .pdt_img_area ul li {
-        padding: 2px;
+        height: 65px;
     }
 }
 
@@ -1108,6 +1114,6 @@ footer {
         width: 100%;
     }
     .pdt_img_area img {
-        height: 45px;
+        height: 50px;
     }
 }

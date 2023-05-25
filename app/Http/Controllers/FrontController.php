@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+//Model
+use App\Models\Product;
+
 class FrontController extends Controller
 {
     //首頁
@@ -16,6 +19,8 @@ class FrontController extends Controller
     //購買商品
     public function product(Request $request)
     {
+        $data = [];
+        $data = Product::getDataByUuid("8c8f7d49-2131-4a50-a02d-619f3e1f9fb9");
         $data["title_txt"] = "購買商品";
         return view("fronts.product",$data);
     }
