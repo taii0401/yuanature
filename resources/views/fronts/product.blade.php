@@ -79,12 +79,12 @@
                             <!-- tab內容 -->
                             <div class="tab-inner-wrap">
                                 <div id="one" class="tab-inner">
-                                    <!-- tab1的內容 -->
-                                    內容1 內容1 內容1 內容1
+                                    @for($i = 1;$i <= 13;$i++)
+                                    <img src="../../img/product/product_detail_{{ $i }}.jpg" width="100%">
+                                    @endfor
                                 </div>
                                 <div id="two" class="tab-inner">
-                                    <!-- tab2的內容 -->
-                                    內容2
+                                    <img src="{{ asset('img/product/product_detail_use.jpg') }}" width="100%">
                                 </div>
                             </div>
                         </div>    
