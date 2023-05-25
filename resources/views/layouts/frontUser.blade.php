@@ -5,7 +5,7 @@
                 
             </div>
             <div class="col-xl-9 col-lg-12 col-md-12 col-sm-12 user_menu">
-                <h4>會員中心</h4>
+                <h5 style="text-align: center;">會員中心</h5>
                 <ul>
                     <li><a href="/users/edit">會員資料</a></li>
                     @if(UserAuth::userdata()->register_type == "email")
