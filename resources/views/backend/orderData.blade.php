@@ -122,7 +122,7 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <label>出貨備註：</label>
+                                <label>出貨備註</label>
                                 <textarea id="input_modal_delivery_remark" name="delivery_remark" class="form-control" cols="100" rows="3">{!! @$datas["assign_data"]["delivery_remark"] !!}</textarea>
                             </div>
                             <div id="div_cancel" class="col-xl-6 col-lg-6 col-md-12 col-sm-12" style="display:none;">

@@ -77,7 +77,7 @@
                         </div>
                         <div class="row" style="margin-top:20px;">
                             <div class="col-12">
-                                <label>備註：</label>
+                                <label>備註</label>
                                 <textarea id="order_remark" name="order_remark" class="form-control"></textarea>
                             </div>
                         </div>
