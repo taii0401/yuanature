@@ -27,6 +27,8 @@ class CreateOrderTable extends Migration
             $table->string('address_county',10)->nullable()->comment('收件人縣市');
             $table->string('address_district',10)->nullable()->comment('收件人鄉鎮市區');
             $table->string('address')->nullable()->comment('收件人地址');
+            $table->integer('origin_total')->default(0)->comment('原價');
+            $table->integer('discount')->default(0)->comment('折抵價錢');
             $table->integer('total')->default(0)->comment('總價');
             $table->string('payment',10)->nullable()->comment('付款方式：config.orders_payment');
             $table->string('delivery',10)->nullable()->comment('配送方式：config.orders_delivery');
@@ -49,6 +51,7 @@ class CreateOrderTable extends Migration
             $table->index('payment');
             $table->index('delivery');
             $table->index('status');
+            $table->unique(["serial"], 'serial_unique');
         });
     }
 
