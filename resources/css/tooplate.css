@@ -63,7 +63,8 @@ p {
 
 .banner_menu {
     margin-left: 13%;
-    padding-top: 10px;
+    padding-top: 8px;
+    font-size: smaller;
 }
 
 .star {
@@ -154,7 +155,6 @@ p {
     color: #000;
     border: none;
     border-radius: 0;
-    font-size: 17px;
 }
 
 
@@ -186,6 +186,7 @@ p {
     margin-top: 0px;
     min-height: 50px;
     background-color: #FFF;
+    font-size: larger;
 }
 
 .tm-logout-icon {

@@ -4,7 +4,7 @@
 @section('content')
 <div class="row">
     <div class="content-info col-xl-7 col-lg-7 col-md-12 col-sm-12">
-        <h4 class="mb-4">｜會員問題｜</h4>
+        <h4 class="mb-4">｜{{ @$title_txt }}｜</h4>
         <div class="qa">
             <p class="mb-4">
                 <span class="qa-q">Q：忘記密碼怎麼辦？</span><br/>

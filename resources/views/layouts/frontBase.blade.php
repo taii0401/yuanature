@@ -37,7 +37,7 @@
     <div class="content">
         <div class="banner_menu">
             <a href="/">
-                <img src="{{ asset('img/icons/home.png') }}" height="30px">
+                <img src="{{ asset('img/icons/home.png') }}" height="25px">
             </a>
             &nbsp;>&nbsp;
             @yield('banner_menu_txt')
