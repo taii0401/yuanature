@@ -23,6 +23,8 @@ use App\Models\WebFile;
 use App\Models\WebFileData;
 use App\Models\Orders;
 use App\Models\OrdersDetail;
+use App\Models\Contact;
+use App\Models\UserFeedback;
 
 class AjaxController extends Controller
 {
@@ -640,6 +642,88 @@ class AjaxController extends Controller
             }
         } else {
             $this->message = "請先登入！";
+        }
+
+        DB::commit();
+
+        return response()->json($this->returnResult());
+    }
+
+    //聯絡我們-新增
+    public function contact_data(Request $request)
+    {
+        $contact_type = config("yuanature.contact_type");
+        
+        $this->resetResult();
+
+        $input = $request->all();
+        //去除空白
+        foreach($input as $key => $val) {
+            if(in_array($key,["name","email"])) {
+                $input[$key] = trim($val);
+            }
+        }
+
+        //表單動作類型(新增、編輯、刪除)
+        $action_type = $input["action_type"]??"add";
+
+        //檢查欄位、檢查訊息
+        $validator_data = $validator_message = [];
+        if($action_type == "add") { //新增
+            $validator_data["name"] = "required"; //姓名
+            $validator_data["phone"] = "required"; //聯絡電話
+            $validator_data["email"] = "email"; //電子郵件
+            $validator_message["name.required"] = "請輸入姓名！";
+            $validator_message["phone.required"] = "請輸入聯絡電話！";
+            $validator_message["email.email"] = "電子郵件格式錯誤！";
+        }   
+        
+        $validator = Validator::make($input,$validator_data,$validator_message);
+
+        if($validator->fails()) {
+            foreach($validator->errors()->all() as $message) {
+                $this->message = $message;
+            }
+        }
+
+        if($this->message != "") {
+            return response()->json($this->returnResult());
+        }
+
+        DB::beginTransaction();
+
+        if($action_type == "add") { //新增
+            $uuid = Str::uuid()->toString();
+            $add_data = [];
+            $add_data["uuid"] = $uuid;
+            $add_data["name"] = $input["name"]??NULL;
+            $add_data["email"] = $input["email"]??NULL;
+            $add_data["phone"] = $input["phone"]??NULL;
+            $add_data["type"] = $input["type"]??NULL;
+            $add_data["status"] = "handle";
+            $add_data["content"] = $input["content"]??NULL;
+            $data = Contact::create($add_data);
+            if((int)$data->id > 0) {//新增成功
+                $this->error = false;
+                $type_name = $contact_type[$input["type"]]["name"]??"";
+                //寄送
+                $mail_data = [
+                    "source" => "user",
+                    "email" => $input["email"],
+                    "uuid" => $uuid,
+                    "txt_email" => $input["email"],
+                    "txt_name" => $input["name"],
+                    "txt_phone" => $input["phone"],
+                    "txt_type" => $type_name,
+                    "txt_content" => str_replace("\r\n","<br>",$input["content"]),
+                ];
+                $this->sendMail("contact",$mail_data);
+                //LINE通知
+                $this->lineNotify("聯絡我們通知：請至信箱查閱");
+                $this->message = $uuid;
+            } else {
+                $this->message = "送出失敗！";
+            }
         }
 
         DB::commit();

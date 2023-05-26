@@ -239,13 +239,15 @@ class Controller extends BaseController
         //按鈕連結
         $btn_link = "https://www.yuanature.tw/";
         //信件樣板
-        $email_tpl = "emails.user";
+        $email_tpl = "user";
         //收件人
         $email = $data["email"]??"";
         //來源
         $source = $data["source"]??"admin";
+        //標題
+        $title = "";
         //傳送內容
-        $mail_data = [];
+        $mail_data = $data;
 
         $isSendUser = $isSendAdmin = false;
         switch($type) {
@@ -258,19 +260,19 @@ class Controller extends BaseController
                 $btn_url = "users/verify/email/$uuid";
 
                 if($type == "user_register") {
-                    $subject .= "恭喜註冊成功!";
-                    $text = "恭喜 $name 註冊成功，請在十分鐘內點選驗證後登入。";
+                    $title = "註冊成功";
+                    $mail_data["text"] = "恭喜 $name 註冊成功，請在十分鐘內點選驗證後登入。";
                 } else if($type == "user_resend") {
-                    $subject .= "重寄驗證信!";
-                    $text = "請在十分鐘內點選驗證後登入。";
+                    $title = "重寄驗證信";
+                    $mail_data["text"] = "請在十分鐘內點選驗證後登入。";
                 }                
                 break;
             case "user_forget": //會員忘記密碼
                 $isSendUser = true;
-                $subject .= " 新密碼!";
+                $title = "新密碼通知";
                 $btn_txt = "登入";
                 $btn_url = "users";
-                $text = "您的新密碼為：".$data["ran_str"];
+                $mail_data["text"] = "您的新密碼為：".$data["ran_str"];
                 break;
             case "orders_add": //建立訂單
             case "orders_cancel": //取消訂單
@@ -283,14 +285,14 @@ class Controller extends BaseController
 
                 if($type == "orders_add") {
                     $isSendUser = $isSendAdmin = true;
-                    $subject .= "訂單通知!";
+                    $title = "訂單通知";
 
                     //若選擇ATM轉帳，則顯示轉帳提示文字
                     if(isset($data["isPayAtm"]) && $data["isPayAtm"]) {
                         $text .= "<br>轉帳成功後，請發信至客服信箱，並附上您的訂單編號及匯款帳號後五碼，以利我們確認您的付款資訊。";
                     }
                 } else if($type == "orders_cancel") {
-                    $subject .= "取消訂單通知!";
+                    $title = "取消訂單通知";
                     $text .= " 已取消";
                     if($source == "admin") {
                         $isSendUser = true;
@@ -299,19 +301,34 @@ class Controller extends BaseController
                     }
                 } else if($type == "orders_delivery") {
                     $isSendUser = true;
-                    $subject .= "出貨通知!";
+                    $title .= "出貨通知";
                     $text .= " 已出貨";
-                }                
+                }
+                $mail_data["text"] = $text;           
+                break;
+            case "contact": //聯絡我們
+                //信件樣板
+                $email_tpl = "contact";
+                //通知管理者
+                $isSendAdmin = true;
+                if($email != "") { //有寫電子郵件才寄給使用者
+                    $isSendUser = true;
+                }
+                //標題
+                $title = "聯絡我們成功通知";
                 break;
         }
-        $mail_data["text"] = $text;
+        $subject .= " ".$title;
+        $mail_data["email_tpl"] = $email_tpl;
+        $mail_data["title"] = $title;
         $mail_data["btn_txt"] = $btn_txt;
         $mail_data["btn_url"] = $btn_link.$btn_url;
+        
         
         //通知會員
         if($isSendUser && $email != "") {
             try {
-                Mail::send($email_tpl,$mail_data,
+                Mail::send("emails.common",$mail_data,
                 function($mail) use ($email,$subject) {
                     //收件人
                     $mail->to($email);
@@ -323,14 +340,13 @@ class Controller extends BaseController
             } catch(QueryException $e) {
                 Log::error($e);
             }
-            
         }
 
         //通知管理者
-        /*if($isSendAdmin) { 
+        if($isSendAdmin) { 
             $mail_data["btn_url"] = $btn_link."admin/".$btn_url;
             try {
-                Mail::send($email_tpl,$mail_data,function($mail) use ($email,$subject) {
+                Mail::send("emails.common",$mail_data,function($mail) use ($email,$subject) {
                     //收件人
                     $mail->to(env("MAIL_FROM_ADDRESS"));
                     //寄件人
@@ -341,7 +357,7 @@ class Controller extends BaseController
             } catch(QueryException $e) {
                 Log::error($e);
             }
-        }*/
+        }
     }
 
     //使用line notify發通知
