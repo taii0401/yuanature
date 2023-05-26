@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UserFeedback extends Model
+class Feedback extends Model
 {
     use HasFactory;
 
-    protected $table = "user_feedback"; //指定資料表名稱
+    protected $table = "feedback"; //指定資料表名稱
     protected $primaryKey = "id"; //主鍵，Model會另外自動加入id
     protected $guarded = [];
 

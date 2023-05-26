@@ -69,6 +69,12 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="/admin/orders">訂單管理</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/admin/orders">使用者回饋</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/admin/orders">聯絡我們</a>
+                            </li>
                         @endif
                         </ul>
                     </div>
