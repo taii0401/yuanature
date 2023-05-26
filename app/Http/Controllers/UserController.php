@@ -186,7 +186,7 @@ class UserController extends Controller
     public function verify($type="add",$user_uuid)
     {
         if($user_uuid != "") {
-            $title_txt = "會員註冊";
+            $title_txt = "會員驗證";
             $text = "會員註冊成功，請在10分鐘內至信箱點選驗證，若未收到驗證信，請點選重發驗證信，謝謝。";
             $button_txt = "重發驗證信";
             $button_url = "/users/resend/".$user_uuid;
@@ -244,7 +244,7 @@ class UserController extends Controller
                 $user_id = $web_user->user_id;
                 if($user_id > 0) {
                     $web_user->is_verified = 0; //沒有驗證
-                    $web_user->update_id = $user_id;
+                    $web_user->updated_id = $user_id;
                     $web_user->save();
 
                     //清除驗證時間
