@@ -715,6 +715,66 @@ function orderSubmit(action_type) {
     });
 }
 
+//送出-聯絡我們資料
+function contactSubmit(action_type) {
+    $('.btn_submit').attr('disabled', true);
+    $('#action_type').val(action_type);
+    //檢查必填
+    if (checkRequiredClass('require', true) == false) {
+        returnFalseAction();
+        return false;
+    }
+    if (action_type == 'add') { //新增
+        //檢查登入帳號(電子郵件)
+        if ($('#email').val() != '') {
+            if (checkFormat('email', $('#email').val(), 0, true) == false) {
+                returnFalseAction();
+                return false;
+            }
+        }
+        //檢查手機號碼
+        if ($('#phone').val() != '') {
+            if (checkFormat('phone', $('#phone').val(), 0, true) == false) {
+                returnFalseAction();
+                return false;
+            }
+        }
+    }
+
+    $('.form-control').attr('disabled', false);
+
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/contact_data',
+        dataType: 'json',
+        async: false,
+        data: $('#form_data').serialize(),
+        error: function(xhr) {
+            //console.log(xhr);
+            alert('傳送錯誤！');
+            returnFalseAction();
+            return false;
+        },
+        success: function(response) {
+            //console.log(response);
+            if (response.error == false) {
+                if (action_type == 'add') { //新增
+                    alert("送出成功！");
+                    changeForm('/contact');
+                }
+            } else if (response.error == true) {
+                showMsg('msg_error', response.message, true);
+                returnFalseAction();
+                return false;
+            } else {
+                alert('傳送錯誤！');
+                returnFalseAction();
+                return false;
+            }
+        }
+    });
+}
+
 
 /* =================================後台================================= */
 //送出-管理員資料、會員資料、訂單資料
