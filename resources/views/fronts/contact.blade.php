@@ -40,15 +40,15 @@
                                 <div class="row m-t-10" >
                                     <div class="col-12">
                                         <label>姓名</label>
-                                        <input type="text" id="name" name="name" class="form-control require" value="dilys">
+                                        <input type="text" id="name" name="name" class="form-control require" value="">
                                     </div>
                                     <div class="col-12">
                                         <label>電子郵件</label>
-                                        <input type="text" id="email" name="email" class="form-control" value="dilys0401@gmail.com">
+                                        <input type="text" id="email" name="email" class="form-control" value="">
                                     </div>
                                     <div class="col-12">
                                         <label>聯絡電話</label>
-                                        <input type="text" id="phone" name="phone" class="form-control require" value="0988777888">                  
+                                        <input type="text" id="phone" name="phone" class="form-control require" value="">                  
                                     </div>
                                 </div>
                                 <div class="row m-t-10">
@@ -66,10 +66,7 @@
                                 <div class="row m-t-10" style="margin-top:20px;">
                                     <div class="col-12">
                                         <label>訊息內容</label>
-                                        <textarea id="content" name="content" rows="5" class="form-control require">1324
-                                            sjdfk
-                                            KKDL
-                                        </textarea>
+                                        <textarea id="content" name="content" rows="5" class="form-control require"></textarea>
                                     </div>
                                 </div>
                                 <div class="row input-group mt-3">
