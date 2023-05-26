@@ -13,8 +13,6 @@ use App\Http\Controllers\BackEnd\AdminController as BackEndAdminController;
 use App\Http\Controllers\BackEnd\UserController as BackEndUserController;
 use App\Http\Controllers\BackEnd\AjaxController as BackEndAjaxController;;
 use App\Http\Controllers\BackEnd\OrderController as BackEndOrderController;
-use App\Http\Controllers\BackEnd\FeedbackController as BackEndFeedbackController;
-use App\Http\Controllers\BackEnd\ContactController as BackEndContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -164,32 +162,26 @@ Route::group([
     Route::controller(BackEndAdminController::class)->group(function() {
         //列表
         Route::get("list","list");
+        //折抵劵管理
+        Route::get("discount","discount");
+        //使用者回饋
+        Route::get("feedback","feedback");
+        //聯絡我們
+        Route::get("contact","contact");
     });
 
     //會員管理
     Route::controller(BackEndUserController::class)->group(function() {
         //列表
-        Route::get("user/","list");
+        Route::get("user","list");
     });
 
     //訂單管理
     Route::controller(BackEndOrderController::class)->group(function() {
         //列表
-        Route::get("orders/","list");
+        Route::get("orders","list");
         //訂單明細
         Route::get("orders/detail","detail");
-    });
-
-    //使用者回饋
-    Route::controller(BackEndFeedbackController::class)->group(function() {
-        //列表
-        Route::get("feedback/","list");
-    });
-
-    //聯絡我們
-    Route::controller(BackEndContactController::class)->group(function() {
-        //列表
-        Route::get("contact/","list");
     });
 });
 
