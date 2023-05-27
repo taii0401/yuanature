@@ -1,6 +1,6 @@
 @extends('layouts.frontBase')
 @section('title') {{ @$title_txt }} @endsection
-@section('banner_menu_txt') {{ @$banner_menu_txt }} {{ @$title_txt }} @endsection
+@section('banner_menu_txt') {{ @$title_txt }} @endsection
 @section('content')
 <div class="row ">
     <div class="content-info col-xl-9 col-lg-9 col-md-12 col-sm-12">
