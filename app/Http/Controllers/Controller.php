@@ -245,7 +245,7 @@ class Controller extends BaseController
         //來源
         $source = $data["source"]??"admin";
         //標題
-        $title = "";
+        $title = $btn_txt = $btn_url = "";
         //傳送內容
         $mail_data = $data;
 
