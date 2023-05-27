@@ -3,7 +3,7 @@
 @section('banner_menu_txt') 使用者回饋 > {{ @$title_txt }} @endsection
 @section('content')
 <div class="row ">
-    <div class="content-info col-xl-7 col-lg-7 col-md-12 col-sm-12">
+    <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 mx-auto">
         <div class="row">
             <div class="col-12 mx-auto tm-login">
                 <div class="bg-white tm-block">
@@ -54,17 +54,15 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="custom-file mt-3 mb-3">
-                                            <label>照片上傳&nbsp;&nbsp;</label>
-                                            <input type="file" id="file_id" name="file_id[]" value="" />
-                                        </div>
+                                        <label>照片上傳&nbsp;&nbsp;</label>
+                                        <input type="file" id="file_id" name="file_id[]" value=""/>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row" style="margin-top: 10px;">
                                     <div class="col-12">
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="agree" id="agree" value="1" onclick="$('#btn_feedback').css('display', '');">
-                                            <label class="form-check-label" for="inlineRadio1">本人確認已詳閱下述「個人資料蒐集、處理、利用告知事項」 (請勾選)。</label>
+                                            <input class="form-check-input" type="radio" name="agree" id="agree_1" value="1" onclick="$('#btn_feedback').css('display', '');">
+                                            <label class="form-check-label">本人確認已詳閱下述「個人資料蒐集、處理、利用告知事項」 (請勾選)。</label>
                                         </div>
                                     </div>
                                 </div>

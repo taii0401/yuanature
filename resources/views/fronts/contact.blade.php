@@ -3,10 +3,10 @@
 @section('banner_menu_txt') {{ @$title_txt }} @endsection
 @section('content')
 <div class="row ">
-    <div class="content-info col-xl-9 col-lg-9 col-md-12 col-sm-12">
-        <div class="row ">
+    <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 mx-auto">
+        <div class="row">
             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mx-auto">
-                <p class="mb-4">
+                <p class="mb-2">
                     謝謝您的主動聯絡<br>
                     原生學 將使用您留下的資訊進行回覆<br>
                     請留下具體的問題及聯絡資訊
@@ -16,7 +16,7 @@
                     如企業採購、團購、活動邀約等
                 </p>
                 <p class="mb-4">
-                    營業時間：09:00-18:00 （例假日休）<br>
+                    營業時間：09:00 ~ 18:00（例假日休）<br>
                     如有即時客服需求<br>
                     建議透過LINE聯繫我們<br>
                     Line: @vvb4242s

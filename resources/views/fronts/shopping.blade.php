@@ -9,8 +9,10 @@
             <li>請先註冊您的專屬會員帳號，支持Facebook或LINE註冊，或使用E-mail註冊即可。</li>
             <li class="primary">首次註冊將獲得購物金$100，單筆訂單滿$1,000可使用，期限為1年。</li>
             <li class="primary">部分優惠活動恕不適用會員「購物金」或「優惠券」，請依活動公布之優惠訊息為主。</li>
-            <li><img src="{{ asset('img/shopping.jpg') }}" width="100%"></li>
         </ul>
+        <div class="row">
+            <img src="{{ asset('img/shopping.jpg') }}" width="100%" style="max-width: 500px;margin:0 auto;">
+        </div>
         <ul>
             <li>完成訂購程序後，系統將發送確認信至您的會員信箱，如未收到請查看垃圾郵件。</li>
             <li><span class="star">送出訂單後須於7天內完成付款，逾期訂單將被取消。</span></li>

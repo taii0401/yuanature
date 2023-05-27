@@ -35,7 +35,7 @@
             <li>
                 如需辦理退貨，請於到貨7日內透過下列方式聯繫我們：
                 <ul style="list-style:decimal;">
-                    <li>聯繫客服信箱 service@yuanature.tw</li>
+                    <li>客服信箱 service@yuanature.tw</li>
                     <li>LINE官方帳號</li>
                 </ul>
             </li>
