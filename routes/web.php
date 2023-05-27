@@ -49,6 +49,7 @@ Route::controller(FrontController::class)->group(function() {
     Route::get("qa_member","qa_member");
     //使用者回饋
     Route::get("feedback","feedback");
+    Route::get("feedback_detail","feedback_detail");
     //聯絡我們
     Route::get("contact","contact");
 

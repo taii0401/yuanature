@@ -98,6 +98,14 @@ class FrontController extends Controller
         return view("fronts.feedback",$data);
     }
 
+    //使用者回饋-填寫資料
+    public function feedback_detail(Request $request)
+    {
+        $data = [];
+        $data["title_txt"] = "留言";
+        return view("fronts.feedback_detail",$data);
+    }
+
     //聯絡我們
     public function contact(Request $request)
     {

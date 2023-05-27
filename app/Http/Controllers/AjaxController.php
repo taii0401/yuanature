@@ -24,7 +24,7 @@ use App\Models\WebFileData;
 use App\Models\Orders;
 use App\Models\OrdersDetail;
 use App\Models\Contact;
-use App\Models\UserFeedback;
+use App\Models\Feedback;
 
 class AjaxController extends Controller
 {
@@ -720,6 +720,74 @@ class AjaxController extends Controller
                 $this->sendMail("contact",$mail_data);
                 //LINE通知
                 $this->lineNotify("聯絡我們通知：請至信箱查閱");
+                $this->message = $uuid;
+            } else {
+                $this->message = "送出失敗！";
+            }
+        }
+
+        DB::commit();
+
+        return response()->json($this->returnResult());
+    }
+
+    //使用者回饋-新增
+    public function feedback_data(Request $request)
+    {
+        $this->resetResult();
+
+        $input = $request->all();
+        //去除空白
+        foreach($input as $key => $val) {
+            if(in_array($key,["name"])) {
+                $input[$key] = trim($val);
+            }
+        }
+
+        //表單動作類型(新增、編輯、刪除)
+        $action_type = $input["action_type"]??"add";
+
+        //檢查欄位、檢查訊息
+        $validator_data = $validator_message = [];
+        if($action_type == "add") { //新增
+            $validator_data["name"] = "required"; //名稱
+            $validator_data["address_zip"] = "required"; //居住地
+            $validator_message["name.required"] = "請輸入名稱！";
+            $validator_message["address_zip.required"] = "請輸入居住地！";
+        }   
+        
+        $validator = Validator::make($input,$validator_data,$validator_message);
+
+        if($validator->fails()) {
+            foreach($validator->errors()->all() as $message) {
+                $this->message = $message;
+            }
+        }
+
+        if(!isset($input["agree"]) || (isset($input["agree"]) && $input["agree"] != 1)) {
+            $this->message = "請先勾選同意！";
+        }
+
+        if($this->message != "") {
+            return response()->json($this->returnResult());
+        }
+
+        DB::beginTransaction();
+
+        if($action_type == "add") { //新增
+            $uuid = Str::uuid()->toString();
+            $add_data = [];
+            $add_data["uuid"] = $uuid;
+            $add_data["name"] = $input["name"]??NULL;
+            $add_data["age"] = $input["age"]??NULL;
+            $add_data["agree"] = $input["agree"]??0;
+            $add_data["address_zip"] = $input["address_zip"]??NULL;
+            $add_data["address_county"] = $input["address_county"]??NULL;
+            $add_data["address_district"] = $input["address_district"]??NULL;
+            $add_data["content"] = $input["content"]??NULL;
+            $data = Feedback::create($add_data);
+            if((int)$data->id > 0) {//新增成功
+                $this->error = false;
                 $this->message = $uuid;
             } else {
                 $this->message = "送出失敗！";

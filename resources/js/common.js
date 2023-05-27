@@ -110,7 +110,7 @@ function removeArray(arr) {
 }
 
 //上傳檔案
-function uploadFile() {
+function uploadFile(min_count,max_count) {
     $('#drag-and-drop-zone').dmUploader({
         url: '/ajax/upload_file',
         maxFileSize: 3000000, //檔案限制大小-3Megs
@@ -126,7 +126,7 @@ function uploadFile() {
             ui_multi_update_file_progress(id, 0, 'warning', false);
         },
         onUploadSuccess: function(id, file, data) { //完成
-            if (checkFileCount() != false) { //檢查上傳數量
+            if (checkFileCount(min_count,max_count) != false) { //檢查上傳數量
                 jsdata = JSON.stringify(data);
                 jsdata = JSON.parse(jsdata);
 
@@ -213,14 +213,14 @@ function deleteFile(id, type) {
 }
 
 //上傳-限制筆數
-function checkFileCount() {
+function checkFileCount(min_count,max_count) {
     count = 0;
     $("input[name='file_id[]']").each(function() {
         count++;
     });
 
-    if (count >= 6) {
-        alert('上傳不可超過6張圖片！');
+    if (count < min_count || count > max_count) {
+        alert('上傳圖片需在限制張數內！');
         returnFalseAction();
         return false;
     }
@@ -773,6 +773,55 @@ function contactSubmit(action_type) {
             }
         }
     });
+}
+
+//送出-使用者回饋資料
+function feedbackSubmit(action_type) {
+    if($('#agree').prop('checked') !== true) {
+        alert('請先勾選同意！');
+        return false;
+    } else {
+        $('.btn_submit').attr('disabled', true);
+        $('#action_type').val(action_type);
+        //檢查必填
+        if (checkRequiredClass('require', true) == false) {
+            returnFalseAction();
+            return false;
+        }
+
+        $('.form-control').attr('disabled', false);
+
+        $.ajax({
+            type: 'POST',
+            url: '/ajax/feedback_data',
+            dataType: 'json',
+            async: false,
+            data: $('#form_data').serialize(),
+            error: function(xhr) {
+                //console.log(xhr);
+                alert('傳送錯誤！');
+                returnFalseAction();
+                return false;
+            },
+            success: function(response) {
+                //console.log(response);
+                if (response.error == false) {
+                    if (action_type == 'add') { //新增
+                        alert("送出成功！");
+                        changeForm('/feedback');
+                    }
+                } else if (response.error == true) {
+                    showMsg('msg_error', response.message, true);
+                    returnFalseAction();
+                    return false;
+                } else {
+                    alert('傳送錯誤！');
+                    returnFalseAction();
+                    return false;
+                }
+            }
+        });
+    }
 }
 
 
