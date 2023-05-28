@@ -75,7 +75,7 @@
                         </li>
                     </ul>
                     <!-- tab內容 -->
-                    <div class="tab-inner-wrap">
+                    <div class="tab-inner-wrap" style="margin-top:-18px;">
                         <div id="one" class="tab-inner">
                             @for($i = 1;$i <= 13;$i++)
                             <img src="../../img/product/product_detail_{{ $i }}.jpg" width="100%">
