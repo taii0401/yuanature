@@ -4,14 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Feedback extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $table = "feedback"; //指定資料表名稱
-    protected $primaryKey = "id"; //主鍵，Model會另外自動加入id
     protected $guarded = [];
+    protected $casts = [
+        "created_at" => "datetime:Y-m-d H:i:s",
+        "updated_at" => "datetime:Y-m-d H:i:s",
+        "deleted_at" => "datetime:Y-m-d H:i:s"
+    ];
 
     /**
      * 取得資料
