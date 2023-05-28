@@ -18,6 +18,8 @@ use Illuminate\Support\Str;
 use Illuminate\Database\QueryException;
 //上傳檔案
 use Illuminate\Support\Facades\Storage;
+//使用者權限
+use App\Libraries\AdminAuth;
 //Model
 use App\Models\Product;
 use App\Models\WebFile;
@@ -232,6 +234,32 @@ class Controller extends BaseController
         }
         
         return $return_datas;
+    }
+
+    /**
+     * 確認是否有權限
+     * @param  permission_name：權限名稱
+     * @param  action：動作(read、write)
+     * @return boolean
+     */
+    public function checkPermission($permission_name="",$action="") 
+    {
+        $admin_id = AdminAuth::admindata()->id;
+        $admin_group_id = AdminAuth::admindata()->admin_group_id;
+
+        $isPermission = false;
+        if($admin_id > 0 && $admin_group_id > 0) {
+            //管理員管理
+            if(in_array($permission_name,["admin"])) { 
+                if($admin_group_id == 1) {
+                    $isPermission = true;
+                }
+            } else {
+                $isPermission = true;
+            }
+        }
+
+        return $isPermission;
     }
 
     /**

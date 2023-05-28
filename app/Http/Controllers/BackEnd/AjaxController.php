@@ -47,14 +47,12 @@ class AjaxController extends Controller
     public function admin_data(Request $request)
     {
         $this->resetResult();
-
-        $admin_id = AdminAuth::admindata()->id;
-
-        if(AdminAuth::admindata()->admin_group_id != 1) {
+        if(!$this->checkPermission("admin","write")) {
             $this->message = "您沒有權限操作！";
             return response()->json($this->returnResult());
         }
 
+        $admin_id = AdminAuth::admindata()->id;
         $input = $request->all();
         //去除空白
         foreach($input as $key => $val) {
@@ -177,9 +175,12 @@ class AjaxController extends Controller
     public function user_data(Request $request)
     {
         $this->resetResult();
+        if(!$this->checkPermission("user","write")) {
+            $this->message = "您沒有權限操作！";
+            return response()->json($this->returnResult());
+        }
 
         $admin_id = AdminAuth::admindata()->id;
-
         $input = $request->all();
         //去除空白
         foreach($input as $key => $val) {
@@ -286,9 +287,12 @@ class AjaxController extends Controller
     public function orders_data(Request $request)
     {
         $this->resetResult();
+        if(!$this->checkPermission("orders","write")) {
+            $this->message = "您沒有權限操作！";
+            return response()->json($this->returnResult());
+        }
 
         $admin_id = AdminAuth::admindata()->id;
-
         $input = $request->all();
         //去除空白
         foreach($input as $key => $val) {
@@ -432,9 +436,12 @@ class AjaxController extends Controller
     public function feedback_data(Request $request)
     {
         $this->resetResult();
+        if(!$this->checkPermission("feedback","write")) {
+            $this->message = "您沒有權限操作！";
+            return response()->json($this->returnResult());
+        }
 
         $admin_id = AdminAuth::admindata()->id;
-
         $input = $request->all();
 
         //表單動作類型(編輯、刪除)
@@ -487,9 +494,12 @@ class AjaxController extends Controller
     public function contact_data(Request $request)
     {
         $this->resetResult();
+        if(!$this->checkPermission("contact","write")) {
+            $this->message = "您沒有權限操作！";
+            return response()->json($this->returnResult());
+        }
 
         $admin_id = AdminAuth::admindata()->id;
-
         $input = $request->all();
 
         //表單動作類型(編輯、刪除)
