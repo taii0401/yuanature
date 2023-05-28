@@ -40,7 +40,7 @@ class OrderController extends Controller
         //分頁
         $page = $assign_data["page"]??1;
         //標題
-        $assign_data["title_txt"] = "訂單列表";
+        $assign_data["title_txt"] = "訂單管理";
 
         //排序
         $orderby_sort = "desc";
