@@ -40,7 +40,14 @@ class Controller extends BaseController
         echo "<pre>";print_r($data,$ret);echo "</pre>";
     }
 
-    //操作紀錄
+    /**
+     * 操作紀錄
+     * @param  type：管理者(admin)或使用者(user)
+     * @param  action：動作名稱
+     * @param  title：標題
+     * @param  record：紀錄
+     * @param  isServer：是否為伺服器
+     */
     public function createLogRecord($type="admin",$action="",$title="",$record="",$isServer=false) 
     {
         if($isServer) {
@@ -211,7 +218,7 @@ class Controller extends BaseController
      * @param  is_all：是否回傳全部的選項
      * @return array
      */
-    public static function getConfigOptions($type="",$is_all=true)
+    public function getConfigOptions($type="",$is_all=true)
     {
         $return_datas = [];
         if($is_all) {
