@@ -96,7 +96,7 @@ class AdminController extends Controller
             $orderby_col = isset($str[1])?str_replace($orderby_sort."_","",$orderby):$orderby_col;
         }
         //取得所有資料
-        $all_datas = Feedback::getAllDatas($get_search_data["conds"]);
+        $all_datas = Feedback::getAllDatas($get_search_data["conds"],$orderby_col,$orderby_sort);
         //處理分頁資料
         $page_data = $this->getPage($page,$all_datas,$assign_data["search_get_url"],$orderby_col,$orderby_sort);
         $page_data["search_get_url"] = $assign_data["search_get_url"];
@@ -106,6 +106,8 @@ class AdminController extends Controller
         //轉換名稱
         if(!empty($list_data)) {
             foreach($list_data as $key => $val) {
+                //使用者回饋及感想
+                $list_data[$key]["content"] = nl2br($val["content"]);
                 //建立時間
                 $list_data[$key]["created_at_format"] = date("Y-m-d H:i:s",strtotime($val["created_at"]." + 8 hours"));
             }
@@ -116,7 +118,7 @@ class AdminController extends Controller
         $datas["list_data"] = $list_data;
         //dd($list_data);
 
-        //return view("backend.feedbackList",["datas" => $datas,"page_data" => $page_data]);
+        return view("backend.feedbackList",["datas" => $datas,"page_data" => $page_data]);
     }
 
     //聯絡我們

@@ -19,9 +19,12 @@ use Illuminate\Support\Facades\Storage;
 use App\Libraries\AdminAuth;
 //Model
 use App\Models\Administrator;
+use App\Models\WebFileData;
 use App\Models\WebUser;
 use App\Models\User;
 use App\Models\Orders;
+use App\Models\Contact;
+use App\Models\Feedback;
 
 class AjaxController extends Controller
 {
@@ -417,6 +420,59 @@ class AjaxController extends Controller
         }
 
         $this->createLogRecord("admin",$action_type,"訂單管理",$log_msg);
+
+        DB::commit();
+
+        return response()->json($this->returnResult());
+    }
+
+    //使用者回饋資料-刪除
+    public function feedback_data(Request $request)
+    {
+        $this->resetResult();
+
+        $admin_id = AdminAuth::admindata()->id;
+
+        $input = $request->all();
+
+        //表單動作類型(編輯、刪除)
+        $action_type = $input["action_type"]??"delete";
+        $action_name = config("yuanature.action_name")[$action_type];
+        $log_msg = $action_name;
+
+        DB::beginTransaction();
+
+        if($action_type == "delete") { //刪除
+            $check_list = $input["check_list"]??[];
+            $uuids = explode(",",$check_list);
+            if(!empty($uuids)) {
+                try {
+                    $check_list = $input["check_list"]??[];
+                    $uuids = explode(",",$check_list);
+                    $data = Feedback::whereIn("uuid",$uuids);
+                    $ids = $data->pluck("id")->toArray();
+                    $data->update(["deleted_id" => $admin_id]);
+                    $data->delete();
+                    
+                    //刪除檔案資料
+                    $file_data = WebFileData::whereIn("data_id",$ids)->where("data_type","feedback");
+                    $file_data->update(["deleted_id" => $admin_id]);
+                    $file_data->delete();
+
+                    $this->error = false;
+
+                    $log_msg .= "-使用者回饋UUID：".implode(",",$uuids);
+                } catch(QueryException $e) {
+                    Log::Info("後台使用者回饋刪除失敗：UUID - ".implode(",",$uuids));
+                    Log::error($e);
+                    $this->message = "刪除失敗！";
+                }
+            } else {
+                $this->message = "刪除失敗！";
+            }
+        }
+
+        $this->createLogRecord("admin",$action_type,"使用者回饋",$log_msg);
 
         DB::commit();
 

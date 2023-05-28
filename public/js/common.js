@@ -788,7 +788,7 @@ function feedbackSubmit(action_type) {
             returnFalseAction();
             return false;
         }
-        
+
         $('.form-control').attr('disabled', false);
 
         $.ajax({
@@ -826,24 +826,22 @@ function feedbackSubmit(action_type) {
 
 
 /* =================================後台================================= */
-//送出-管理員資料、會員資料、訂單資料
+//送出-管理員資料、會員資料、訂單資料、聯絡我們資料、使用者回饋資料、折抵劵資料
 function adminSubmit(type) {
     $('.btn_submit').attr('disabled', true);
     var action_type = $('#input_modal_action_type').val();
 
-
     if (type == 'admin') {
         change_url = '/admin/list';
-    } else if (type == 'user') {
-        change_url = '/admin/user/';
     } else if (type == 'orders') {
         change_url = '/admin/orders/';
         if(action_type == 'edit') {
             change_url += 'detail?orders_uuid='+$('#input_modal_uuid').val();
         }
+    } else {
+        change_url = '/admin/'+type;
     }
 
-    
     var form_name = 'form_data';
     if(action_type == 'cancel' && type == 'orders') {
         form_name = 'form_data_cancel';
