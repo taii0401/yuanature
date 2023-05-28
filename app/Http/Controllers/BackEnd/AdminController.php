@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 //Model
 use App\Models\Administrator;
 use App\Models\AdminGroup;
+use App\Models\WebCode;
 use App\Models\Contact;
 use App\Models\Feedback;
 
@@ -30,7 +31,7 @@ class AdminController extends Controller
         //分頁
         $page = $assign_data["page"]??1;
         //標題
-        $assign_data["title_txt"] = "管理員列表";
+        $assign_data["title_txt"] = "管理員管理";
 
         //取得所有資料
         $all_datas = Administrator::getAllDatas($get_search_data["conds"]);
@@ -65,7 +66,43 @@ class AdminController extends Controller
     //折抵劵管理
     public function discount(Request $request) 
     {
+        $input = $request->all();
+        $datas = $assign_data = $list_data = $page_data = $option_data = [];
 
+        //選單搜尋條件-狀態
+        $option_data["status"] = ["name" => "是否啟用","data" => ["" => "全部",WebCode::STATUS_SUCCESS => WebCode::class::$statusName[WebCode::STATUS_SUCCESS],WebCode::STATUS_FAIL => WebCode::class::$statusName[WebCode::STATUS_FAIL]]];
+        //取得目前頁數及搜尋條件
+        $search_datas = ["page","orderby","keywords","status"];
+        $get_search_data = $this->getSearch($search_datas,$input);
+        //顯示資料
+        $assign_data = $get_search_data["assign_data"]??[];
+        //分頁
+        $page = $assign_data["page"]??1;
+        //標題
+        $assign_data["title_txt"] = "折抵劵管理";
+
+        //取得所有資料
+        $get_search_data["conds"]["type"] = "orders_discount";
+        $all_datas = WebCode::getAllDatas($get_search_data["conds"]);
+        //處理分頁資料
+        $page_data = $this->getPage($page,$all_datas,$assign_data["search_get_url"]);
+        $page_data["search_get_url"] = $assign_data["search_get_url"];
+        $list_data = isset($page_data["list_data"])?$page_data["list_data"]:array();
+        //$this->pr($list_data);exit;
+
+        //轉換名稱
+        if(!empty($list_data)) {
+            foreach($list_data as $key => $val) {
+                $list_data[$key]["status_name"] = WebCode::class::$statusName[$val["status"]]??"";
+            }
+        }
+
+        $datas["assign_data"] = $assign_data;
+        $datas["option_data"] = $option_data;
+        $datas["list_data"] = $list_data;
+        //dd($list_data);
+
+        return view("backend.discountList",["datas" => $datas,"page_data" => $page_data]);
     }
 
     //使用者回饋
