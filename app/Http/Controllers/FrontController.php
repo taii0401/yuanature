@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 //Model
 use App\Models\Product;
+use App\Models\Feedback;
+use App\Models\WebFileData;
 
 class FrontController extends Controller
 {
@@ -95,7 +97,53 @@ class FrontController extends Controller
     {
         $data = [];
         $data["title_txt"] = "使用者回饋";
-        return view("fronts.feedback",$data);
+        
+        $input = $request->all();
+        $datas = $assign_data = $list_data = $page_data = [];
+
+        //取得目前頁數及搜尋條件
+        $search_datas = ["page"];
+        $get_search_data = $this->getSearch($search_datas,$input,"desc_created_at");
+        //顯示資料
+        $assign_data = $get_search_data["assign_data"]??[];
+        //分頁
+        $page = $assign_data["page"]??1;
+        //標題
+        $assign_data["title_txt"] = "使用者回饋";
+
+        //排序
+        $orderby_sort = "desc";
+        $orderby_col = "created_at";
+        //取得所有資料
+        $all_datas = Feedback::getAllDatas($get_search_data["conds"],$orderby_col,$orderby_sort);
+        //處理分頁資料
+        $page_data = $this->getPage($page,$all_datas,$assign_data["search_get_url"]);
+        $page_data["search_get_url"] = $assign_data["search_get_url"];
+        $list_data = isset($page_data["list_data"])?$page_data["list_data"]:array();
+        //$this->pr($list_data);exit;
+
+        //轉換名稱
+        if(!empty($list_data)) {
+            foreach($list_data as $key => $val) {
+                //內容
+                $list_data[$key]["content"] = nl2br($val["content"]);
+                //取得檔案
+                $conds_file = [];
+                $conds_file["data_id"] = $list_data[$key]["id"];
+                $conds_file["data_type"] = "feedback";
+                $get_file_datas = WebFileData::getFileData($conds_file,true);
+                if(!empty($get_file_datas)) {
+                    foreach($get_file_datas as $get_file_data) {
+                        $list_data[$key]["file_data"] = $get_file_data;
+                    }
+                }
+            }
+        }
+
+        $datas["assign_data"] = $assign_data;
+        $datas["list_data"] = $list_data;
+
+        return view("fronts.feedback",["datas" => $datas,"page_data" => $page_data]);
     }
 
     //使用者回饋-填寫資料

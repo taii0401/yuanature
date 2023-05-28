@@ -12,8 +12,6 @@ use Illuminate\Support\Str;
 use Illuminate\Database\QueryException;
 //雜湊-密碼
 use Illuminate\Support\Facades\Hash;
-//上傳檔案
-use Illuminate\Support\Facades\Storage;
 //使用者權限
 use App\Libraries\UserAuth;
 //Model
@@ -47,86 +45,25 @@ class AjaxController extends Controller
     public function upload_file(Request $request)
     {
         $this->resetResult();
+
+        $input = $request->all();
         
-        $name = $file_id = "";
-        //判斷是否登入
-        if(UserAuth::isLoggedIn()) {
-            $user_uuid = session("user");
-            $user_id = 0;
-            if($user_uuid != "") {
-                //使用者資料
-                $web_user = WebUser::where(["uuid" => $user_uuid])->first()->toArray();
-                $user_id = isset($web_user["user_id"])?$web_user["user_id"]:0;
-            }
+        //上傳檔案
+        $return_data = WebFile::uploadFile($input);
 
-            //檔案名稱
-            $name = $request->file("file")->getClientOriginalName();
-            //檔案大小
-            $size = $request->file("file")->getSize();
-            //檔案型態
-            $str = explode(".",$name);
-            $types = isset($str[1])?$str[1]:"";
-            //新檔案名稱
-            $file_name = substr(Str::uuid()->toString(),0,8)."_".date("YmdHis").".".$types;
-
-            //檔案存放路徑
-            $diskName = "public";
-            //將檔案存在./storage/public/files/$user_id/，並將檔名改為$file_name
-            $path = $request->file("file")->storeAs(
-                "files/".$user_id,
-                $file_name,
-                $diskName
-            );
-            //print_r($path);
-
-            try {
-                //新增檔案
-                $data = array();
-                $data["name"] = $name;
-                $data["file_name"] = $file_name;
-                $data["path"] = $diskName."/".$path;
-                $data["size"] = $size;
-                $data["types"] = $types;
-                $file_data = WebFile::create($data);
-                $file_id = (int)$file_data->id;
-
-                if($file_id > 0) { //新增成功
-                    $this->error = false;
-                } else {
-                    //刪除檔案存放路徑
-                    $file_path = "public/files/".$user_id."/".$file_name;
-                    if(Storage::exists($file_path)) {
-                        Storage::delete($file_path);
-                    }
-                    $this->message = "新增檔案失敗！";
-                }
-            } catch(QueryException $e) {
-                Log::Info("前台新增檔案失敗：路徑 - ".$path);
-                Log::error($e);
-                $this->message = "新增檔案失敗！";
-            }
-        } else {
-            $this->message = "沒有權限上傳檔案！";
-        }
-
-        $return_data = $this->returnResult();
-        $return_data["file_name"] = $name;
-        $return_data["file_id"] = $file_id;
-        //print_r($return_data);
         return response()->json($return_data);
     }
     
     //檔案-刪除檔案
-    public function upload_file_delete(Request $request,$file_ids=array())
+    public function delete_file(Request $request)
     {
         $this->resetResult();
 
-        if(empty($file_ids)) {
-            $file_ids = $request->has("file_id")?array($request->input("file_id")):array();
-        }
+        $input = $request->all();
+        $file_id = $input["file_id"]??[];
         
         //刪除檔案
-        $delete = WebFile::deleteFile($file_ids);
+        $delete = WebFile::deleteFile($file_id);
         if($delete) {
             $this->error = false;
         } else {
@@ -735,8 +672,9 @@ class AjaxController extends Controller
     public function feedback_data(Request $request)
     {
         $this->resetResult();
-
+        
         $input = $request->all();
+
         //去除空白
         foreach($input as $key => $val) {
             if(in_array($key,["name"])) {
@@ -786,11 +724,27 @@ class AjaxController extends Controller
             $add_data["address_district"] = $input["address_district"]??NULL;
             $add_data["content"] = $input["content"]??NULL;
             $data = Feedback::create($add_data);
-            if((int)$data->id > 0) {//新增成功
-                $this->error = false;
-                $this->message = $uuid;
+
+            if($data->exists("id") && isset($input["file"])) {//新增成功
+                $data_id = (int)$data->id;
+                //上傳檔案
+                $result_file = WebFile::uploadFile($input);
+                if(isset($result_file["error"]) && !$result_file["error"] && isset($result_file["file_id"]) && $result_file["file_id"] > 0) {
+                    $file_data = [];
+                    $file_data["data_id"] = $data_id;
+                    $file_data["data_type"] = "feedback";
+                    $file_data["file_ids"] = $result_file["file_id"];
+                    $result = UnshopFileData::updateFileData($action_type,$file_data);
+                    if(isset($result["error"]) && !($result["error"])) {
+                        $this->error = false;
+                    } else {
+                        $this->message = isset($result["message"])?$result["message"]:"檔案儲存錯誤！";
+                    }
+                } else {
+                    $this->message = "送出失敗！";
+                }
             } else {
-                $this->message = "送出失敗！";
+                $this->error = false;
             }
         }
 

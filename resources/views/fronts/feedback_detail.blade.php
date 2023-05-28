@@ -54,15 +54,16 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <label>照片上傳&nbsp;&nbsp;</label>
-                                        <input type="file" id="file_id" name="file_id[]" value=""/>
+                                        <label>照片上傳<span style="color:red;font-size:x-small"> (限制大小：300KB)</span></label>
+                                        <input type="hidden" id="folder_name" name="folder_name" value="feedback" class="form-control">
+                                        <input type="file" id="file" name="file" multiple="" accept="image/x-png,image/jpg,image/jpeg"/>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-top: 10px;">
                                     <div class="col-12">
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="agree" id="agree_1" value="1" onclick="$('#btn_feedback').css('display', '');">
-                                            <label class="form-check-label">本人確認已詳閱下述「個人資料蒐集、處理、利用告知事項」 (請勾選)。</label>
+                                            <input class="form-check-input" type="radio" name="agree" id="agree" value="1" onclick="$('#btn_feedback').css('display', '');">
+                                            <label class="form-check-label"><span class="star">本人確認已詳閱下述「個人資料蒐集、處理、利用告知事項」 (請勾選)。</span></label>
                                         </div>
                                     </div>
                                 </div>

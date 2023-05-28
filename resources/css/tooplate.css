@@ -950,7 +950,7 @@ footer {
         display: block;
     }
     .tm-table-actions-col-right {
-        margin-top: 30px;
+        margin-top: 15px;
     }
 }
 
@@ -1012,10 +1012,6 @@ footer {
     }
     .tm-table-actions-row {
         display: block;
-    }
-    .tm-table-actions-col-right {
-        text-align: left;
-        margin-top: 30px;
     }
     .tm-edit-product-row {
         flex-direction: column-reverse;

@@ -27,9 +27,9 @@ class WebFileData extends Model
      * @param  sort：排序-遞增、遞減
      * @return array
      */
-    public static function getFileData($cond=array(),$is_detail=false,$orderby="file_id",$sort="asc")
+    public static function getFileData($cond=[],$is_detail=false,$orderby="file_id",$sort="asc")
     {
-        $data = array();
+        $data = [];
         //取得檔案資料
         $file_datas = self::where($cond)->orderBy($orderby,$sort)->get()->toArray();
         //$this->pr($file_datas);exit;
@@ -40,7 +40,7 @@ class WebFileData extends Model
 
                 //取得檔案詳細資料
                 if($file_id > 0 && $is_detail) {
-                    $conds = array();
+                    $conds = [];
                     $conds["id"] = $file_id;
                     $file_details = WebFile::where($conds)->get()->toArray();
                     if(!empty($file_details)) {
@@ -70,7 +70,7 @@ class WebFileData extends Model
      * @param  data：檔案資料
      * @return boolean
      */
-    public static function updateFileData($action_type="add",$data=array())
+    public static function updateFileData($action_type="add",$data=[])
     {
         $error = true;
         $message = "請確認資料！";
@@ -79,7 +79,7 @@ class WebFileData extends Model
         $now = date("Y-m-d H:i:s");
         
         if($action_type == "add" || $action_type == "edit") {
-            $conds = array();
+            $conds = [];
             if(isset($data["data_id"]) && $data["data_id"] != "") {
                 $conds["data_id"] = $data["data_id"];
             }
@@ -89,7 +89,7 @@ class WebFileData extends Model
             //$this->pr($data["file_ids"]);
             
             if(!empty($conds) && isset($data["file_ids"]) && !empty($data["file_ids"])) {
-                $exist_file_ids = $delete_file_ids = array();
+                $exist_file_ids = $delete_file_ids = [];
                 //取得資料內所有file_id
                 $all_datas = self::where($conds)->get()->toArray();
                 //$this->pr($all_datas);
@@ -130,7 +130,7 @@ class WebFileData extends Model
                 }
 
                 //新增檔案
-                $insert_data = array();
+                $insert_data = [];
                 $insert_data["data_id"] = $data["data_id"];
                 $insert_data["data_type"] = $data["data_type"];
                 $insert_data["create_by"] = isset($data["user_id"])?$data["user_id"]:0;
@@ -157,7 +157,7 @@ class WebFileData extends Model
                 }
             }
         } else if($action_type == "delete") { //刪除
-            $data_ids = array();
+            $data_ids = [];
             if(isset($data["data_ids"]) && !empty($data["data_ids"])) { //多筆資料id
                 $data_ids = $data["data_ids"];
             }
