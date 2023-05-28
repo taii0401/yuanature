@@ -18,7 +18,7 @@ class UserController extends Controller
         //登入方式
         $user_register_datas = config("yuanature.user_register");
 
-        $assign_data = $list_data = $page_data = $option_data = [];
+        $datas = $assign_data = $list_data = $page_data = $option_data = [];
 
         //選單搜尋條件-登入方式、是否驗證、排序
         $option_data["register_type"] = ["name" => "登入方式","data" => $this->getConfigOptions("user_register")];

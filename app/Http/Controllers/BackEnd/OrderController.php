@@ -25,7 +25,7 @@ class OrderController extends Controller
         //取消原因
         $orders_cancel_datas = config("yuanature.orders_cancel");
 
-        $assign_data = $list_data = $page_data = $option_data = [];
+        $datas = $assign_data = $list_data = $page_data = $option_data = [];
 
         //選單搜尋條件-付款方式、配送方式、訂單狀態
         $option_data["payment"] = ["name" => "付款方式","data" => $this->getConfigOptions("orders_payment")];
@@ -96,7 +96,7 @@ class OrderController extends Controller
         $input = $request->all();
         $orders_uuid = $input["orders_uuid"]??"";
 
-        $assign_data = [];
+        $datas = $assign_data = [];
 
         //取得訂單資料
         $orders_data = [];
