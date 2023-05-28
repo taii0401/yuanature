@@ -35,7 +35,7 @@
                 </div>
                 <div class="col-md-4 col-sm-12 text-right">
                     <button type="button" class="btn btn-primary dataModalBtn" data-bs-toggle="modal" data-bs-target="#dataModal" data-id="add">新增</button>
-                    <button type="button" class="btn btn-danger check_btn btn_submit" style="display:none" onclick="adminSubmit('admin');">刪除</button>
+                    <button type="button" class="btn btn-danger check_btn btn_submit" style="display:none" onclick="$('#input_modal_action_type').val('delete');adminSubmit('admin');">刪除</button>
                 </div>
             </div>
             <div class="tm-table-mt tm-table-actions-row">

@@ -36,7 +36,7 @@
                     @endif
                 </div>
                 <div class="col-md-2 col-sm-12 text-right">
-                    <button type="button" class="btn btn-danger check_btn btn_submit" style="display:none" onclick="adminSubmit('user');">刪除</button>
+                    <button type="button" class="btn btn-danger check_btn btn_submit" style="display:none" onclick="$('#input_modal_action_type').val('delete');adminSubmit('user');">刪除</button>
                 </div>
             </div>
             <div class="tm-table-mt tm-table-actions-row">
@@ -89,7 +89,7 @@
                                             </i>
                                         </div>
                                         <div class="btn-action">
-                                            <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');userSubmit('delete');"></i>
+                                            <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('user');"></i>
                                         </div>
                                     </div>
                                 </td>
