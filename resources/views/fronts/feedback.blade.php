@@ -38,7 +38,7 @@
                         @endif
                     </div>
                     <div class="col-xl-9 col-lg-9 col-md-8 col-sm-12" style="margin-top:5px;">
-                        {{ @$data["name"] }}&nbsp;&nbsp;{{ @$data["age"] }}歲&nbsp;&nbsp;{{ @$data["address_county"] }}&nbsp;{{ @$data["address_district"] }}
+                        {{ @$data["name"] }}&nbsp;&nbsp;{{ @$data["age"] }}歲&nbsp;&nbsp;{{ @$data["address_county"] }}{{ @$data["address_district"] }}
                         <p>{!! @$data["content"] !!}</p>
                     </div>
                 </div>
