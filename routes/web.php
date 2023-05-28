@@ -192,7 +192,7 @@ Route::group([
 //AJAX
 $ajaxs = [];
 $ajaxs[] = "upload_file"; //檔案-上傳檔案
-$ajaxs[] = "upload_file_delete"; //檔案-刪除檔案實際路徑
+$ajaxs[] = "delete_file"; //檔案-刪除檔案實際路徑
 $ajaxs[] = "user_exist"; //會員資料-檢查帳號是否存在
 $ajaxs[] = "user_forget"; //會員資料-忘記密碼
 $ajaxs[] = "user_data"; //會員資料-新增、編輯、刪除
