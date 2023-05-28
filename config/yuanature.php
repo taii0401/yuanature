@@ -68,7 +68,7 @@ return [
         "hilife" => ["name" => "萊爾富","color" => "#E00000"]
     ],
 
-    //聯絡我們類型
+    //聯絡我們-問題類型
     "contact_type" => [
         "user" => ["name" => "會員相關問題","color" => "#B87800"],
         "product" => ["name" => "商品相關問題","color" => "#8100E0"],
@@ -79,21 +79,21 @@ return [
         "other" => ["name" => "其他","color" => "#008F00"]
     ],
 
-    //聯絡我們狀態
+    //聯絡我們-處理狀態
     "contact_status" => [
         "handle" => ["name" => "處理中","color" => "#696969"],
         "complete" => ["name" => "已處理","color" => "#008A8A"],
         "cancel" => ["name" => "已取消","color" => "#E00000"]
     ],
 
-    //折抵分類
+    //折抵劵-分類
     "discount_type" => [
         "money" => ["name" => "購物金","color" => "#B87800"],
         //"coupon" => ["name" => "優惠劵","color" => "#8100E0"],
         //"code" => ["name" => "折扣碼","color" => "#008A8A"]
     ],
 
-    //折抵狀態
+    //折抵劵-狀態
     "discount_status" => [
         "nouse" => ["name" => "未使用","color" => "#696969"],
         "used" => ["name" => "已使用","color" => "#008A8A"],
