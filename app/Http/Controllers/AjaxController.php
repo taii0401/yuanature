@@ -146,7 +146,7 @@ class AjaxController extends Controller
                 //隨機產生亂碼
                 $ran_str = $this->getRandom(6);
                 //更新密碼
-                $data = array();
+                $data = [];
                 $data["password"] = Hash::make($ran_str);
                 User::where(["email" => $email])->update($data);
 

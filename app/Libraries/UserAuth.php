@@ -43,7 +43,7 @@ class UserAuth
 
         //新增會員
         if(!empty($post_data)) {
-            $data = array();
+            $data = [];
             $data["name"] = $post_data["name"]??NULL;
             $data["email"] = $post_data["email"]??NULL;
             $data["password"] = isset($post_data["password"])?Hash::make($post_data["password"]):NULL;

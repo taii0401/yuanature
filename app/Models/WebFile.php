@@ -62,7 +62,7 @@ class WebFile extends Model
 
                 try {
                     //新增檔案
-                    $data = array();
+                    $data = [];
                     $data["name"] = $name;
                     $data["file_name"] = $file_name;
                     $data["path"] = $disk_name."/".$path;

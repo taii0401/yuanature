@@ -130,7 +130,7 @@ class UserController extends Controller
     //共用data樣板-新增會員、編輯會員
     public function get_data($action_type="add",$user_uuid="")
     {
-        $data = array();
+        $data = [];
         $data["action_type"] = $action_type;
         $data["require"] = $data["pass_require"] = $data["edit_require"] = $data["disabled"] = "";
         $data["add_none"] = $data["edit_none"] = $data["edit_data_none"] = $data["edit_pass_none"] = "none";

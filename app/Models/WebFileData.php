@@ -180,7 +180,7 @@ class WebFileData extends Model
             }
         }
 
-        $return_data = array("error" => $error,"message" => $message);
+        $return_data = ["error" => $error,"message" => $message];
         //print_r($return_data);
         return $return_data;
     }

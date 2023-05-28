@@ -63,7 +63,7 @@ class Feedback extends Model
         //關鍵字
         if(isset($cond["keywords"]) && $cond["keywords"] != "") {
             $keywords = $cond["keywords"];
-            $conds_or = array("name");
+            $conds_or = ["name"];
             $all_datas = $all_datas->where(function ($query) use($conds_or,$keywords) {
                 foreach($conds_or as $value) {
                     $query->orWhere($value,"like","%".$keywords."%");

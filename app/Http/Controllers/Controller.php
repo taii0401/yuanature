@@ -102,7 +102,7 @@ class Controller extends BaseController
      */
     public function getPage($page=1,$datas,$search_get_url="")
     {
-        $page_data = array();
+        $page_data = [];
         //頁面連結
         $page_data["page_link"] = str_replace(env("APP_URL"),"",URL::current());
     
@@ -413,7 +413,7 @@ class Controller extends BaseController
             //取得商品ID
             $product_ids = array_keys($cart_datas);  
             //取得商品資料
-            $conds = array();
+            $conds = [];
             $conds["id"] = $product_ids;
             $product = Product::getAllDatas($conds)->get()->toArray();
             //dd($product);
