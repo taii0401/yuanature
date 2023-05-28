@@ -179,8 +179,9 @@
 
     $('.dataModalBtn').click(function () {
         var input_modal_keys = ['action_type','uuid','account','name','status','admin_group_id'];
-        var select_modal_keys = ['status'];
-        setModalInput($(this).data('id'),input_modal_keys,select_modal_keys,[]);
+        var switch_modal_keys = ['status'];
+        var radio_modal_keys = [];
+        setModalInput($(this).data('id'),input_modal_keys,switch_modal_keys,radio_modal_keys);
 
         var action_type = $('#input_modal_action_type').val();
         if(action_type == 'add') {

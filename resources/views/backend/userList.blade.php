@@ -170,8 +170,9 @@
 
     $('.dataModalBtn').click(function () {
         var input_modal_keys = ['action_type','uuid','name','email','phone','is_verified'];
-        var select_modal_keys = ['is_verified'];
-        setModalInput($(this).data('id'),input_modal_keys,select_modal_keys,[]);
+        var switch_modal_keys = ['is_verified'];
+        var radio_modal_keys = [];
+        setModalInput($(this).data('id'),input_modal_keys,switch_modal_keys,radio_modal_keys);
     });
 </script>
 @endsection

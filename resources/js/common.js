@@ -346,20 +346,20 @@ function showMsg(div_msg, message, isShowMsg) {
 }
 
 //Modal-設定輸入值
-function setModalInput(modal_values, input_modal_keys, select_modal_keys, radio_modal_keys) {
+function setModalInput(modal_values, input_modal_keys, switch_modal_keys, radio_modal_keys) {
     if (input_modal_keys.length > 0) {
         for (var i = 0; i < input_modal_keys.length; i++) {
             var input_modal_key = input_modal_keys[i];
             var value = modal_values.split(',')[i];
 
-            if (select_modal_keys.length > 0 && select_modal_keys.includes(input_modal_key)) { //switch、select
+            if (switch_modal_keys.length > 0 && switch_modal_keys.includes(input_modal_key)) { //switch
                 if (value == "1") {
                     $('#input_modal_' + input_modal_key).prop('checked', true);
                 } else {
                     $('#input_modal_' + input_modal_key).prop('checked', false);
                 }
                 changeSwitch('input_modal_' + input_modal_key);
-            } else if (radio_modal_keys.length > 0 && radio_modal_keys.includes(input_modal_key)) {
+            } else if (radio_modal_keys.length > 0 && radio_modal_keys.includes(input_modal_key)) { //radio
                 $('#input_modal_' + input_modal_key + '_' + value).prop('checked', true);
             } else {
                 $('#input_modal_' + input_modal_key).val(value);
@@ -826,11 +826,10 @@ function feedbackSubmit(action_type) {
 
 
 /* =================================後台================================= */
-//送出-管理員資料、會員資料、訂單資料、聯絡我們資料、使用者回饋資料、折抵劵資料
+//送出-管理員資料、會員資料、訂單資料、折抵劵資料、使用者回饋資料、聯絡我們資料
 function adminSubmit(type) {
     $('.btn_submit').attr('disabled', true);
     var action_type = $('#input_modal_action_type').val();
-
 
     if (type == 'admin') {
         change_url = '/admin/list';
@@ -843,7 +842,6 @@ function adminSubmit(type) {
         change_url = '/admin/'+type;
     }
 
-    
     var form_name = 'form_data';
     if(action_type == 'cancel' && type == 'orders') {
         form_name = 'form_data_cancel';

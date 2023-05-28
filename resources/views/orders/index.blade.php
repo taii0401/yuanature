@@ -110,8 +110,9 @@
     //訂單付款
     $('.dataModalOrderPayBtn').click(function () {
         var input_modal_keys = ['pay_uuid','pay_serial','payment','delivery','address_zip','address'];
+        var switch_modal_keys = [];
         var radio_modal_keys = ['payment','delivery'];
-        setModalInput($(this).data('id'),input_modal_keys,[],radio_modal_keys);
+        setModalInput($(this).data('id'),input_modal_keys,switch_modal_keys,radio_modal_keys);
 
         $('#pay_serial_text').text($('#input_modal_pay_serial').val());
         $('#input_modal_pay_source').val('user');
@@ -126,7 +127,8 @@
     //取消訂單
     $('.dataModalOrderCancelBtn').click(function () {
         var input_modal_keys = ['uuid','serial'];
-        setModalInput($(this).data('id'),input_modal_keys,[],[]);
+        var switch_modal_keys = radio_modal_keys = [];
+        setModalInput($(this).data('id'),input_modal_keys,switch_modal_keys,radio_modal_keys);
 
         $('#serial_text').text($('#input_modal_serial').val());
         $('#input_modal_source').val('user');
