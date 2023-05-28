@@ -62,6 +62,24 @@ class DataSeeder extends Seeder
                 "code" => "BA",
                 "name" => "beauty",
                 "cname" => "美容"
+            ],
+            [
+                "type" => "order_discount",
+                "code" => "ODM",
+                "name" => "money",
+                "cname" => "購物金"
+            ],
+            [
+                "type" => "order_discount",
+                "code" => "ODC",
+                "name" => "coupon",
+                "cname" => "優惠劵"
+            ],
+            [
+                "type" => "order_discount",
+                "code" => "ODD",
+                "name" => "discode",
+                "cname" => "折扣碼"
             ]
         ];
 
@@ -76,7 +94,7 @@ class DataSeeder extends Seeder
                 $db_web_code->code = $web_code_data["code"];
                 $db_web_code->name = $web_code_data["name"];
                 $db_web_code->cname = $web_code_data["cname"];
-                $db_web_code->is_display = 1;
+                $db_web_code->status = 1;
                 $db_web_code->save();
             }
         }

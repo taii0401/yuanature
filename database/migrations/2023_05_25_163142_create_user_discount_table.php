@@ -16,7 +16,7 @@ class CreateUserDiscountTable extends Migration
         Schema::create('user_discount', function (Blueprint $table) {
             $table->id();
             $table->string('uuid',50)->comment('uuid');
-            $table->string('type')->comment('折抵分類：config.discount_type');
+            $table->string('type')->comment('折抵分類：web_code.type = orders_discount');
             $table->string('status',10)->comment('折抵狀態：config.discount_status');
             $table->string('serial')->nullable()->comment('編號(亂碼)');
             $table->integer('total')->comment('金額');

@@ -86,13 +86,6 @@ return [
         "cancel" => ["name" => "已取消","color" => "#E00000"]
     ],
 
-    //折抵劵-分類
-    "discount_type" => [
-        "money" => ["name" => "購物金","color" => "#B87800"],
-        //"coupon" => ["name" => "優惠劵","color" => "#8100E0"],
-        //"code" => ["name" => "折扣碼","color" => "#008A8A"]
-    ],
-
     //折抵劵-狀態
     "discount_status" => [
         "nouse" => ["name" => "未使用","color" => "#696969"],

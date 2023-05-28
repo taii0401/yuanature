@@ -19,7 +19,7 @@ class CreateWebCodeTable extends Migration
             $table->string('code',30)->nullable()->comment('代碼');
             $table->string('name',100)->nullable()->comment('代碼名稱');
             $table->string('cname',100)->nullable()->comment('代碼中文名稱');
-            $table->tinyInteger('is_display')->default(0)->comment('是否顯示');
+            $table->tinyInteger('status')->default(2)->comment('狀態：1.啟用 2.未啟用');
             $table->integer('created_id')->nullable()->comment('建立者id');
             $table->integer('updated_id')->nullable()->comment('修改者id');
             $table->integer('deleted_id')->nullable()->comment('刪除者id');

@@ -19,7 +19,7 @@ class CreateAdministratorTable extends Migration
             $table->string('account')->unique()->comment('帳號');
             $table->string('password')->comment('密碼');
             $table->string('name')->comment('名稱');
-            $table->tinyInteger('status')->default(2)->comment('狀態1.啟用 2.未啟用');
+            $table->tinyInteger('status')->default(2)->comment('狀態：1.啟用 2.未啟用');
             $table->integer('admin_group_id')->nullable()->comment('ref. admin_group.id');
             $table->integer('created_id')->nullable()->comment('建立者id');
             $table->integer('updated_id')->nullable()->comment('修改者id');
