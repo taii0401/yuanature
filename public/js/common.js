@@ -185,7 +185,7 @@ function deleteFile(id, type) {
         //刪除實際路徑
         $.ajax({
             type: 'POST',
-            url: '/ajax/upload_file_delete',
+            url: '/ajax/delete_file',
             dataType: 'json',
             data: { '_token': csrf_token, file_id: id },
             error: function(xhr) {
@@ -788,7 +788,7 @@ function feedbackSubmit(action_type) {
             returnFalseAction();
             return false;
         }
-
+        
         $('.form-control').attr('disabled', false);
 
         $.ajax({
