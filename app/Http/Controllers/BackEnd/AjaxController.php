@@ -148,7 +148,6 @@ class AjaxController extends Controller
             $uuids = explode(",",$check_list);
             if(!empty($uuids)) {
                 try {
-                
                     $data = Administrator::whereIn("uuid",$uuids);
                     $data->update(["deleted_id" => $admin_id]);
                     $data->delete();
@@ -163,6 +162,8 @@ class AjaxController extends Controller
             } else {
                 $this->message = "刪除失敗！";
             }
+        } else {
+            $this->message = "操作失敗！";
         }
 
         $this->createLogRecord("admin",$action_type,"管理員管理",$log_msg);
@@ -223,7 +224,6 @@ class AjaxController extends Controller
 
         if($action_type == "edit") { //編輯
             $uuid = $input["uuid"]??"";
-
             if($uuid != "") {
                 try {
                     $add_data["updated_id"] = $admin_id;
@@ -271,6 +271,8 @@ class AjaxController extends Controller
             } else {
                 $this->message = "刪除失敗！";
             }
+        } else {
+            $this->message = "操作失敗！";
         }
 
         $this->createLogRecord("admin",$action_type,"會員管理",$log_msg);
@@ -470,9 +472,101 @@ class AjaxController extends Controller
             } else {
                 $this->message = "刪除失敗！";
             }
+        } else {
+            $this->message = "操作失敗！";
         }
 
         $this->createLogRecord("admin",$action_type,"使用者回饋",$log_msg);
+
+        DB::commit();
+
+        return response()->json($this->returnResult());
+    }
+
+    //聯絡我們資料-編輯、刪除
+    public function contact_data(Request $request)
+    {
+        $this->resetResult();
+
+        $admin_id = AdminAuth::admindata()->id;
+
+        $input = $request->all();
+
+        //表單動作類型(編輯、刪除)
+        $action_type = $input["action_type"]??"edit";
+        $action_name = config("yuanature.action_name")[$action_type];
+        $log_msg = $action_name;
+
+        //檢查欄位、檢查訊息
+        $validator_data = $validator_message = [];
+        if($action_type == "edit") { 
+            $validator_data["status"] = "required"; //狀態
+            $validator_message["status.required"] = "請選擇狀態！";
+        } 
+        
+        $validator = Validator::make($input,$validator_data,$validator_message);
+
+        if($validator->fails()) {
+            foreach($validator->errors()->all() as $message) {
+                $this->message = $message;
+            }
+        }
+       
+        if($this->message != "") {
+            return response()->json($this->returnResult());
+        }
+
+        $add_data = [];
+        if($action_type == "edit") {
+            $add_data["status"] = $input["status"];
+            $add_data["reply"] = $input["reply"]??NULL;
+        }
+
+        DB::beginTransaction();
+
+        if($action_type == "edit") { //編輯
+            $uuid = $input["uuid"]??"";
+            if($uuid != "") {
+                try {
+                    $add_data["updated_id"] = $admin_id;
+                    Contact::where(["uuid" => $uuid])->update($add_data);
+                    $this->error = false;
+
+                    $log_msg .= "-聯絡我們UUID：".$uuid;
+                } catch(QueryException $e) {
+                    Log::Info("後台聯絡我們修改失敗：UUID - ".$uuid);
+                    Log::error($e);
+                    $this->message = "修改失敗！";
+                }
+            } else {
+                $this->message = "修改失敗！";
+            }
+        } else if($action_type == "delete") { //刪除
+            $check_list = $input["check_list"]??[];
+            $uuids = explode(",",$check_list);
+            if(!empty($uuids)) {
+                try {
+                    $check_list = $input["check_list"]??[];
+                    $uuids = explode(",",$check_list);
+                    $data = Contact::whereIn("uuid",$uuids);
+                    $data->update(["deleted_id" => $admin_id]);
+                    $data->delete();
+                    $this->error = false;
+
+                    $log_msg .= "-聯絡我們UUID：".implode(",",$uuids);
+                } catch(QueryException $e) {
+                    Log::Info("後台聯絡我們刪除失敗：UUID - ".implode(",",$uuids));
+                    Log::error($e);
+                    $this->message = "刪除失敗！";
+                }
+            } else {
+                $this->message = "刪除失敗！";
+            }
+        } else {
+            $this->message = "操作失敗！";
+        }
+
+        $this->createLogRecord("admin",$action_type,"聯絡我們",$log_msg);
 
         DB::commit();
 
