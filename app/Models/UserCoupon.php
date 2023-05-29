@@ -28,7 +28,7 @@ class UserCoupon extends Model
     public static function getDataByOrderid($orders_id)
     {
         $datas = [];
-        $get_data = self::where("orders_id",$orders_id)->get();
+        $get_data = self::where("orders_id",$orders_id)->orderByDesc("created_at")->get();
         if(isset($get_data) && !empty($get_data)) {
             $datas = $get_data->toArray();
         }
@@ -43,7 +43,7 @@ class UserCoupon extends Model
     public static function getDataByUserid($user_id)
     {
         $datas = [];
-        $get_data = self::where("user_id",$user_id)->get();
+        $get_data = self::where("user_id",$user_id)->orderByDesc("created_at")->get();
         if(isset($get_data) && !empty($get_data)) {
             $datas = $get_data->toArray();
         }

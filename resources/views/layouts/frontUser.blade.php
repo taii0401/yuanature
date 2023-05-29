@@ -11,6 +11,7 @@
                     @if(UserAuth::userdata()->register_type == "email")
                         <li><a href="/users/edit_password">修改密碼</a></li>
                     @endif
+                    <li><a href="/users/coupon">折價劵</a></li>
                     <li><a href="/orders">訂單查詢</a></li>
                 </ul>
             </div>

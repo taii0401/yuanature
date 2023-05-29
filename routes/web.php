@@ -85,6 +85,8 @@ Route::group([
         Route::get("edit","edit");
         //編輯會員密碼(畫面)
         Route::get("edit_password","editPassword");
+        //折價劵
+        Route::get("coupon","coupon");
         //驗證會員
         Route::get("verify/{type}/{user_uuid}","verify");
         //重發驗證信

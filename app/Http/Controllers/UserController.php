@@ -14,6 +14,8 @@ use App\Libraries\UserAuth;
 //Model
 use App\Models\User; 
 use App\Models\WebUser; 
+use App\Models\Coupon;
+use App\Models\UserCoupon; 
 
 
 class UserController extends Controller
@@ -120,7 +122,7 @@ class UserController extends Controller
     {
         //判斷是否登入
         if(!UserAuth::isLoggedIn()) {
-            //新增會員
+            //登入會員
             return redirect("users");
         }
         $data = $this->get_data("edit_password",session("user"));
@@ -269,5 +271,43 @@ class UserController extends Controller
         }
 
         return redirect("users");
+    }
+
+    //折價劵
+    public function coupon()
+    {
+        //判斷是否登入
+        if(!UserAuth::isLoggedIn()) {
+            //登入會員
+            return redirect("users");
+        }
+        $user_id = UserAuth::userdata()->user_id??0;
+
+        //折價劵-使用狀態
+        $coupon_status_datas = config("yuanature.coupon_status");
+
+        $datas = $assign_data = $list_data = [];
+        $assign_data["title_txt"] = "折價劵";
+
+        $list_data = UserCoupon::getDataByUserid($user_id);
+        //轉換名稱
+        if(!empty($list_data)) {
+            foreach($list_data as $key => $val) {
+                //折價劵名稱
+                $list_data[$key]["coupon_name"] = Coupon::getName($val["coupon_id"])??"";
+                //使用狀態
+                $list_data[$key]["status_name"] = $coupon_status_datas[$val["status"]]["name"]??"";
+                $list_data[$key]["status_color"] = $coupon_status_datas[$val["status"]]["color"]??"";
+                //到期時間
+                $list_data[$key]["expire_time_format"] = $val["expire_time"] != ""?date("Y-m-d H:i:s",strtotime($val["expire_time"]." + 8 hours")):"";
+                //使用時間
+                $list_data[$key]["used_time_format"] = $val["used_time"] != ""?date("Y-m-d H:i:s",strtotime($val["used_time"]." + 8 hours")):"";
+            }
+        }
+
+        $datas["assign_data"] = $assign_data;
+        $datas["list_data"] = $list_data;
+        
+        return view("users.coupon",["datas" => $datas]);
     }
 }
