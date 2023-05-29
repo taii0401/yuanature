@@ -34,8 +34,8 @@
                                 <td class="text-center">{{ @$data["coupon_name"] }}</td>
                                 <td class="text-center">{{ @$data["total"] }}元</td>
                                 <td class="text-center" style="color:{{ @$data["status_color"] }}">{{ @$data["status_name"] }}</td>
-                                <td class="text-center">{{ @$data["expire_time_format"] }}</td>
-                                <td class="text-center">{{ @$data["used_time_format"] }}</td>
+                                <td class="text-center">{{ @$data["expire_time"] }}</td>
+                                <td class="text-center">{{ @$data["used_time"] }}</td>
                             </tr>
                             @endforeach
                         @endif

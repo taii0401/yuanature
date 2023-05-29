@@ -298,10 +298,6 @@ class UserController extends Controller
                 //使用狀態
                 $list_data[$key]["status_name"] = $coupon_status_datas[$val["status"]]["name"]??"";
                 $list_data[$key]["status_color"] = $coupon_status_datas[$val["status"]]["color"]??"";
-                //到期時間
-                $list_data[$key]["expire_time_format"] = $val["expire_time"] != ""?date("Y-m-d H:i:s",strtotime($val["expire_time"]." + 8 hours")):"";
-                //使用時間
-                $list_data[$key]["used_time_format"] = $val["used_time"] != ""?date("Y-m-d H:i:s",strtotime($val["used_time"]." + 8 hours")):"";
             }
         }
 
