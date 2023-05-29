@@ -35,6 +35,6 @@ class CreateWebFileTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('unshop_file');
+        Schema::dropIfExists('web_file');
     }
 }

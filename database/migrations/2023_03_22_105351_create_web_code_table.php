@@ -35,6 +35,6 @@ class CreateWebCodeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('unshop_code');
+        Schema::dropIfExists('web_code');
     }
 }
