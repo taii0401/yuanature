@@ -21,11 +21,14 @@ use Illuminate\Support\Facades\Storage;
 //使用者權限
 use App\Libraries\AdminAuth;
 //Model
+use App\Models\LogRecord;
 use App\Models\Product;
 use App\Models\WebFile;
 use App\Models\WebFileData;
 use App\Models\WebUser;
-use App\Models\LogRecord;
+use App\Models\User;
+use App\Models\Coupon;
+use App\Models\UserCoupon;
 
 class Controller extends BaseController
 {
@@ -487,5 +490,48 @@ class Controller extends BaseController
 
         //$this->pr($datas);
         return $datas;
+    }
+
+    /**
+     * 送折價劵
+     * @param  type：註冊(user_register)
+     * @param  user_id：會員ID
+     */
+    public function sendCouponToUser($type="",$user_id=0)
+    {
+        if($user_id > 0) {
+            if($type == "user_register") { //註冊送購物金-一年期限
+                //取得購物金ID
+                $coupon_data = Coupon::getDataByCode("M");
+                $coupon_id = $coupon_data["id"]??0;
+                $coupon_total = $coupon_data["total"]??0;
+                if($coupon_id > 0 && $coupon_total > 0) {
+                    //檢查是否已註冊成功
+                    $user = User::where(["id" => $user_id])->where(function($query) {
+                        $query->whereNotNull("email_verified_at")
+                                ->orWhereNotNull("facebook_id")
+                                ->orWhereNotNull("line_id");
+                    })->first();
+                    if(!empty($user)) {
+                        //檢查是否已贈送過
+                        $user_coupon = UserCoupon::where(["user_id" => $user_id,"coupon_id" => $coupon_id])->first();
+                        if(empty($user_coupon)) {
+                            $uuid = Str::uuid()->toString();
+                            $add_data = [];
+                            $add_data["uuid"] = $uuid;
+                            $add_data["user_id"] = $user_id;
+                            $add_data["coupon_id"] = $coupon_id;
+                            $add_data["serial"] = "M".$this->getRandom(6);
+                            $add_data["total"] = $coupon_total;
+                            $add_data["status"] = "nouse";
+                            $add_data["expire_time"] = date("Y-m-d",strtotime("+1 year"))." 23:59:59";
+                            $add_data["source"] = "register";
+                            $add_data["created_id"] = $user_id;
+                            UserCoupon::create($add_data);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

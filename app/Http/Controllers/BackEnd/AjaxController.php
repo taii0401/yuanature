@@ -466,6 +466,10 @@ class AjaxController extends Controller
             $validator_message["name.required"] = "請輸入名稱！";
             $validator_message["total.required"] = "請輸入金額！";
         }  
+        if($action_type == "add") {
+            $validator_data["code"] = "required|unique:coupon,code"; //代碼
+            $validator_message["code.unique"] = "代碼已重複！";
+        }
         
         $validator = Validator::make($input,$validator_data,$validator_message);
 

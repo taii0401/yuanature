@@ -15,7 +15,7 @@ class CreateCouponTable extends Migration
     {
         Schema::create('coupon', function (Blueprint $table) {
             $table->id();
-            $table->string('code',30)->nullable()->comment('代碼');
+            $table->string('code',30)->unique()->comment('代碼');
             $table->string('name',100)->nullable()->comment('名稱');
             $table->integer('total')->comment('金額');
             $table->tinyInteger('status')->default(2)->comment('狀態：1.啟用 2.未啟用');

@@ -67,6 +67,8 @@ class ThirdController extends Controller
                     //dd($user_data->id);
                     if((int)$user_data->id > 0) {
                         $isSuccess = true;
+                        //贈送註冊禮
+                        $this->sendCouponToUser("user_register",(int)$user_data->id);
                     } else {
                         //刪除使用者
                         User::destroy($user_id);
@@ -163,6 +165,8 @@ class ThirdController extends Controller
                     //dd($user_data->id);
                     if((int)$user_data->id > 0) {
                         $isSuccess = true;
+                        //贈送註冊禮
+                        $this->sendCouponToUser("user_register",(int)$user_data->id);
                     } else {
                         //刪除使用者
                         User::destroy($user_id);

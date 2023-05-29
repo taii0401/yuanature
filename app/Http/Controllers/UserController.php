@@ -210,6 +210,9 @@ class UserController extends Controller
                             $web_user->updated_id = $user_id;
                             $web_user->save();
                             $isSuccess = true;
+
+                            //贈送註冊禮
+                            $this->sendCouponToUser("user_register",$user_id);
                         }
                     }
                 }

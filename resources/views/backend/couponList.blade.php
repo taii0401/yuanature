@@ -124,7 +124,7 @@
                     <div class="col-12">
                         <div class="row m-t-10">
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label>代碼</label>
+                                <label>代碼<span style="color:red;font-size:x-small"> (新增後不可編輯)</span></label>
                                 <input type="text" id="input_modal_code" name="code" class="form-control require" value="" >
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
@@ -168,6 +168,13 @@
         var switch_modal_keys = ['status'];
         var radio_modal_keys = [];
         setModalInput($(this).data('id'),input_modal_keys,switch_modal_keys,radio_modal_keys);
+
+        var action_type = $('#input_modal_action_type').val();
+        if(action_type == 'edit') {
+            $('#input_modal_code').attr('disabled',true);
+        } else {
+            $('#input_modal_code').attr('disabled',false);
+        }
     });
 </script>
 @endsection

@@ -27,6 +27,21 @@ class Coupon extends Model
     ];
 
     /**
+     * 取得名稱
+     * @param  id
+     * @return string
+     */
+    public static function getName($id)
+    {
+        $name = "";
+        $data = self::where(["id" => $id])->withTrashed()->first("name");
+        if(isset($data) && $data->exists("name")) {
+            $name = $data->name;
+        }
+        return $name;
+    }
+
+    /**
      * 取得資料
      * @param  cond：搜尋條件
      * @param  orderby：排序欄位
@@ -83,5 +98,20 @@ class Coupon extends Model
         //print_r($all_datas->toSql());
 
         return $all_datas;
+    }
+
+    /**
+     * 依代碼取得可使用的折價劵
+     * @param  code：代碼
+     * @return array
+     */
+    public static function getDataByCode($code)
+    {
+        $return_data = [];
+        $data = self::where(["code" => $code,"status" => 1])->first();
+        if(isset($data) && $data->exists("id")) {
+            $return_data = $data->toArray();
+        }
+        return $return_data;
     }
 }

@@ -75,9 +75,6 @@ class UserAuth
                 $data->email_verified_at = date("Y-m-d H:i:s");
                 $data->save();
                 $isSuccess = true;
-
-                //贈送註冊禮
-                Controller::sendCouponToUser((int)$user_data->id);
             }
         } catch(QueryException $e) {
             

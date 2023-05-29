@@ -94,4 +94,9 @@ return [
         "cancel" => ["name" => "已取消","color" => "#E00000"]
     ],
 
+    //折價劵-發放來源
+    "coupon_source" => [
+        "register" => ["name" => "會員註冊","color" => "#696969"],
+        "admin" => ["name" => "管理員贈送","color" => "#008A8A"]
+    ],
 ];
