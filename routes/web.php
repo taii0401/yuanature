@@ -163,8 +163,8 @@ Route::group([
     Route::controller(BackEndAdminController::class)->group(function() {
         //列表
         Route::get("list","list");
-        //折抵劵管理
-        Route::get("discount","discount");
+        //折價劵管理
+        Route::get("coupon","coupon");
         //使用者回饋
         Route::get("feedback","feedback");
         //聯絡我們
@@ -209,7 +209,7 @@ $ajaxs_admin = [];
 $ajaxs_admin[] = "admin_data"; //管理員資料-新增、編輯、刪除
 $ajaxs_admin[] = "user_data"; //會員資料-編輯、刪除
 $ajaxs_admin[] = "orders_data"; //訂單資料-編輯、取消
-$ajaxs_admin[] = "discount_data"; //折抵劵資料-新增、編輯、刪除
+$ajaxs_admin[] = "coupon_data"; //折價劵資料-新增、編輯、刪除
 $ajaxs_admin[] = "contact_data"; //聯絡我們-編輯、刪除
 $ajaxs_admin[] = "feedback_data"; //使用者回饋-編輯、刪除
 foreach($ajaxs_admin as $ajax_admin) {

@@ -20,10 +20,10 @@ use App\Libraries\AdminAuth;
 //Model
 use App\Models\Administrator;
 use App\Models\WebFileData;
-use App\Models\WebCode;
 use App\Models\WebUser;
 use App\Models\User;
 use App\Models\Orders;
+use App\Models\Coupon;
 use App\Models\Contact;
 use App\Models\Feedback;
 
@@ -433,11 +433,11 @@ class AjaxController extends Controller
         return response()->json($this->returnResult());
     }
 
-    //折抵劵資料-新增、編輯、刪除
-    public function discount_data(Request $request)
+    //折價劵資料-新增、編輯、刪除
+    public function coupon_data(Request $request)
     {
         $this->resetResult();
-        if(!$this->checkPermission("discount","write")) {
+        if(!$this->checkPermission("coupon","write")) {
             $this->message = "您沒有權限操作！";
             return response()->json($this->returnResult());
         }
@@ -446,7 +446,7 @@ class AjaxController extends Controller
         $input = $request->all();
         //去除空白
         foreach($input as $key => $val) {
-            if(in_array($key,["code","name","cname"])) {
+            if(in_array($key,["code","name"])) {
                 $input[$key] = trim($val);
             }
         }
@@ -460,11 +460,11 @@ class AjaxController extends Controller
         $validator_data = $validator_message = [];
         if($action_type == "add" || $action_type == "edit") { //新增、編輯
             $validator_data["code"] = "required"; //代碼
-            $validator_data["name"] = "required"; //英文名稱
-            $validator_data["cname"] = "required"; //中文名稱
+            $validator_data["name"] = "required"; //名稱
+            $validator_data["total"] = "required"; //金額
             $validator_message["code.required"] = "請輸入代碼！";
-            $validator_message["name.required"] = "請輸入英文名稱！";
-            $validator_message["cname.required"] = "請輸入中文名稱！";
+            $validator_message["name.required"] = "請輸入名稱！";
+            $validator_message["total.required"] = "請輸入金額！";
         }  
         
         $validator = Validator::make($input,$validator_data,$validator_message);
@@ -483,21 +483,20 @@ class AjaxController extends Controller
         if($action_type == "add" || $action_type == "edit") {
             $add_data["code"] = $input["code"]??NULL;
             $add_data["name"] = $input["name"]??NULL;
-            $add_data["cname"] = $input["cname"]??NULL;
+            $add_data["total"] = $input["total"]??NULL;
             $add_data["status"] = isset($input["status"]) && $input["status"] == "on"?1:2;
-            $add_data["type"] = "orders_discount";
         }
 
         DB::beginTransaction();
 
         if($action_type == "add") { //新增
             $add_data["created_id"] = $admin_id;
-            $data = WebCode::create($add_data);
+            $data = Coupon::create($add_data);
             if((int)$data->id > 0) {
                 $this->error = false;
                 $this->message = (int)$data->id;  
 
-                $log_msg .= "-折抵劵：".$input["name"]; 
+                $log_msg .= "-折價劵：".$input["name"]; 
             } else {
                 $this->message = "新增失敗！";
             }
@@ -506,12 +505,12 @@ class AjaxController extends Controller
             if($id != "") {
                 try {
                     $add_data["updated_id"] = $admin_id;
-                    WebCode::where(["id" => $id])->update($add_data);
+                    Coupon::where(["id" => $id])->update($add_data);
                     $this->error = false;
 
-                    $log_msg .= "-折抵劵ID：".$id;
+                    $log_msg .= "-折價劵ID：".$id;
                 } catch(QueryException $e) {
-                    Log::Info("後台折抵劵修改失敗：ID - ".$id);
+                    Log::Info("後台折價劵修改失敗：ID - ".$id);
                     Log::error($e);
                     $this->message = "修改失敗！";
                 }
@@ -523,14 +522,14 @@ class AjaxController extends Controller
             $ids = explode(",",$check_list);
             if(!empty($ids)) {
                 try {
-                    $data = WebCode::whereIn("id",$ids)->where("type","orders_discount");
+                    $data = Coupon::whereIn("id",$ids);
                     $data->update(["deleted_id" => $admin_id]);
                     $data->delete();
                     $this->error = false;
 
-                    $log_msg .= "-折抵劵ID：".implode(",",$ids);
+                    $log_msg .= "-折價劵ID：".implode(",",$ids);
                 } catch(QueryException $e) {
-                    Log::Info("後台折抵劵刪除失敗：ID - ".implode(",",$ids));
+                    Log::Info("後台折價劵刪除失敗：ID - ".implode(",",$ids));
                     Log::error($e);
                     $this->message = "刪除失敗！";
                 }
@@ -541,7 +540,7 @@ class AjaxController extends Controller
             $this->message = "操作失敗！";
         }
 
-        $this->createLogRecord("admin",$action_type,"折抵劵管理",$log_msg);
+        $this->createLogRecord("admin",$action_type,"折價劵管理",$log_msg);
 
         DB::commit();
 

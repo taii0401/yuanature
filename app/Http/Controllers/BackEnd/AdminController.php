@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 //Model
 use App\Models\Administrator;
 use App\Models\AdminGroup;
-use App\Models\WebCode;
+use App\Models\Coupon;
 use App\Models\Contact;
 use App\Models\Feedback;
 
@@ -63,14 +63,14 @@ class AdminController extends Controller
         return view("backend.adminList",["datas" => $datas,"page_data" => $page_data]);
     }
 
-    //折抵劵管理
-    public function discount(Request $request) 
+    //折價劵管理
+    public function coupon(Request $request) 
     {
         $input = $request->all();
         $datas = $assign_data = $list_data = $page_data = $option_data = [];
 
         //選單搜尋條件-狀態
-        $option_data["status"] = ["name" => "是否啟用","data" => ["" => "全部",WebCode::STATUS_SUCCESS => WebCode::class::$statusName[WebCode::STATUS_SUCCESS],WebCode::STATUS_FAIL => WebCode::class::$statusName[WebCode::STATUS_FAIL]]];
+        $option_data["status"] = ["name" => "是否啟用","data" => ["" => "全部",Coupon::STATUS_SUCCESS => Coupon::class::$statusName[Coupon::STATUS_SUCCESS],Coupon::STATUS_FAIL => Coupon::class::$statusName[Coupon::STATUS_FAIL]]];
         //取得目前頁數及搜尋條件
         $search_datas = ["page","orderby","keywords","status"];
         $get_search_data = $this->getSearch($search_datas,$input);
@@ -79,11 +79,10 @@ class AdminController extends Controller
         //分頁
         $page = $assign_data["page"]??1;
         //標題
-        $assign_data["title_txt"] = "折抵劵管理";
+        $assign_data["title_txt"] = "折價劵管理";
 
         //取得所有資料
-        $get_search_data["conds"]["type"] = "orders_discount";
-        $all_datas = WebCode::getAllDatas($get_search_data["conds"]);
+        $all_datas = Coupon::getAllDatas($get_search_data["conds"]);
         //處理分頁資料
         $page_data = $this->getPage($page,$all_datas,$assign_data["search_get_url"]);
         $page_data["search_get_url"] = $assign_data["search_get_url"];
@@ -93,7 +92,8 @@ class AdminController extends Controller
         //轉換名稱
         if(!empty($list_data)) {
             foreach($list_data as $key => $val) {
-                $list_data[$key]["status_name"] = WebCode::class::$statusName[$val["status"]]??"";
+                //狀態
+                $list_data[$key]["status_name"] = Coupon::class::$statusName[$val["status"]]??"";
             }
         }
 
@@ -102,7 +102,7 @@ class AdminController extends Controller
         $datas["list_data"] = $list_data;
         //dd($list_data);
 
-        return view("backend.discountList",["datas" => $datas,"page_data" => $page_data]);
+        return view("backend.couponList",["datas" => $datas,"page_data" => $page_data]);
     }
 
     //使用者回饋

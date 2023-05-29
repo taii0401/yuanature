@@ -86,8 +86,8 @@ return [
         "cancel" => ["name" => "已取消","color" => "#E00000"]
     ],
 
-    //折抵劵-狀態
-    "discount_status" => [
+    //折價劵-處理狀態
+    "coupon_status" => [
         "nouse" => ["name" => "未使用","color" => "#696969"],
         "used" => ["name" => "已使用","color" => "#008A8A"],
         "expire" => ["name" => "已過期","color" => "#FF2626"],

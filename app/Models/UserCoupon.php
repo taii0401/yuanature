@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\Product;
 
-class UserDiscount extends Model
+class UserCoupon extends Model
 {
     use HasFactory,SoftDeletes;
 
-    protected $table = "user_discount"; //指定資料表名稱
+    protected $table = "user_coupon"; //指定資料表名稱
     protected $guarded = [];
     protected $casts = [
         "created_at" => "datetime:Y-m-d H:i:s",

@@ -250,7 +250,7 @@ class Controller extends BaseController
         $isPermission = false;
         if($admin_id > 0 && $admin_group_id > 0) {
             //管理員管理
-            if(in_array($permission_name,["admin","discount"])) { 
+            if(in_array($permission_name,["admin","coupon"])) { 
                 if($admin_group_id == 1) {
                     $isPermission = true;
                 }

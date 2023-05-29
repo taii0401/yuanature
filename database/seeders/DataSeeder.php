@@ -62,24 +62,6 @@ class DataSeeder extends Seeder
                 "code" => "BA",
                 "name" => "beauty",
                 "cname" => "美容"
-            ],
-            [
-                "type" => "orders_discount",
-                "code" => "ODM",
-                "name" => "money",
-                "cname" => "購物金"
-            ],
-            [
-                "type" => "orders_discount",
-                "code" => "ODC",
-                "name" => "coupon",
-                "cname" => "優惠劵"
-            ],
-            [
-                "type" => "orders_discount",
-                "code" => "ODD",
-                "name" => "discode",
-                "cname" => "折扣碼"
             ]
         ];
 

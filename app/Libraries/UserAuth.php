@@ -2,6 +2,8 @@
 
 namespace App\Libraries;
 
+use App\Http\Controllers\Controller;
+
 use DB;
 //字串-隨機產生亂碼
 use Illuminate\Support\Str;
@@ -73,6 +75,9 @@ class UserAuth
                 $data->email_verified_at = date("Y-m-d H:i:s");
                 $data->save();
                 $isSuccess = true;
+
+                //贈送註冊禮
+                Controller::sendCouponToUser((int)$user_data->id);
             }
         } catch(QueryException $e) {
             

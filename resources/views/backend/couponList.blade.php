@@ -35,7 +35,7 @@
                 </div>
                 <div class="col-md-4 col-sm-12 text-right">
                     <button type="button" class="btn btn-primary dataModalBtn" data-bs-toggle="modal" data-bs-target="#dataModal" data-id="add">新增</button>
-                    <button type="button" class="btn btn-danger check_btn btn_submit" style="display:none" onclick="$('#input_modal_action_type').val('delete');adminSubmit('discount');">刪除</button>
+                    <button type="button" class="btn btn-danger check_btn btn_submit" style="display:none" onclick="$('#input_modal_action_type').val('delete');adminSubmit('coupon');">刪除</button>
                 </div>
             </div>
             <div class="tm-table-mt tm-table-actions-row">
@@ -57,8 +57,8 @@
                                 </div>
                             </th>
                             <th scope="col" style="width:20%;">代碼</th>
-                            <th scope="col" style="width:20%;">英文名稱</th>
-                            <th scope="col">中文名稱</th>
+                            <th scope="col" style="width:20%;">名稱</th>
+                            <th scope="col">金額</th>
                             <th scope="col" style="width:15%;">狀態</th>
                             <th scope="col" style="width:15%;"></th>
                         </tr>
@@ -75,16 +75,16 @@
                                 </td>
                                 <td>{{ @$data["code"] }}</td>
                                 <td>{{ @$data["name"] }}</td>
-                                <td>{{ @$data["cname"] }}</td>
+                                <td>{{ @$data["total"] }}</td>
                                 <td>{{ @$data["status_name"] }}</td>
                                 <td>
                                     <div class="col-12">
                                         <div class="btn-action">
-                                            <i class="fas fa-edit tm-edit-icon dataModalBtn" data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["id"] }},{{ @$data["code"] }},{{ @$data["name"] }},{{ @$data["cname"] }},{{ @$data["status"] }}">
+                                            <i class="fas fa-edit tm-edit-icon dataModalBtn" data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["id"] }},{{ @$data["code"] }},{{ @$data["name"] }},{{ @$data["total"] }},{{ @$data["status"] }}">
                                             </i>
                                         </div>
                                         <div class="btn-action">
-                                            <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["id"] }}');adminSubmit('discount');"></i>
+                                            <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["id"] }}');adminSubmit('coupon');"></i>
                                         </div>
                                     </div>
                                 </td>
@@ -115,7 +115,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="semi-bold"><span id="modal_title_name"></span>折抵劵</h6>
+                    <h6 class="semi-bold"><span id="modal_title_name"></span>折價劵</h6>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">×</button>
                 </div>
                 <div class="modal-body">
@@ -135,18 +135,18 @@
                                 </label>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label>英文名稱</label>
+                                <label>名稱</label>
                                 <input type="text" id="input_modal_name" name="name" class="form-control require" value="">
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label>中文名稱</label>
-                                <input type="text" id="input_modal_cname" name="cname" class="form-control require" value="">
+                                <label>金額</label>
+                                <input type="text" id="input_modal_total" name="total" class="form-control require" value="">
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn_submit" onclick="adminSubmit('discount');">送出</button>
+                    <button type="button" class="btn btn-danger btn_submit" onclick="adminSubmit('coupon');">送出</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">取消</button>
                 </div>
             </div>
@@ -164,7 +164,7 @@
     });
 
     $('.dataModalBtn').click(function () {
-        var input_modal_keys = ['action_type','id','code','name','cname','status'];
+        var input_modal_keys = ['action_type','id','code','name','total','status'];
         var switch_modal_keys = ['status'];
         var radio_modal_keys = [];
         setModalInput($(this).data('id'),input_modal_keys,switch_modal_keys,radio_modal_keys);
