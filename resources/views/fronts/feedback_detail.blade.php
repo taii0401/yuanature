@@ -26,11 +26,11 @@
                                 <div class="row m-t-10" >
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                                         <label>名稱</label>
-                                        <input type="text" id="name" name="name" class="form-control require" value="dilys">
+                                        <input type="text" id="name" name="name" class="form-control require" value="">
                                     </div>
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                                         <label>年齡</label>
-                                        <input type="number" id="age" name="age" value="43" class="form-control" width="100%;">
+                                        <input type="number" id="age" name="age" value="" class="form-control" width="100%;">
                                     </div>
                                 </div>
                                 <div class="row input-group twzipcode" style="margin-top:10px;">
@@ -47,9 +47,7 @@
                                 <div class="row m-t-10" style="margin-top:20px;">
                                     <div class="col-12">
                                         <label>使用者回饋及感想</label>
-                                        <textarea id="content" name="content" rows="5" class="form-control require">sssl
-                                            llll
-                                        </textarea>
+                                        <textarea id="content" name="content" rows="5" class="form-control require"></textarea>
                                     </div>
                                 </div>
                                 <div class="row">

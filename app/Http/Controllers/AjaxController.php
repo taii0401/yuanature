@@ -706,12 +706,19 @@ class AjaxController extends Controller
             $this->message = "請先勾選同意！";
         }
 
+        if(isset($input["file"]) && !empty($input["file"])) {
+            $file_data = $input["file"];
+            if($file_data->getSize() > 300000) {
+                $this->message = "請檢查圖片大小是否超過限制！";
+            }
+        }
+
         if($this->message != "") {
             return response()->json($this->returnResult());
         }
 
         DB::beginTransaction();
-
+        
         if($action_type == "add") { //新增
             $uuid = Str::uuid()->toString();
             $add_data = [];
@@ -733,8 +740,8 @@ class AjaxController extends Controller
                     $file_data = [];
                     $file_data["data_id"] = $data_id;
                     $file_data["data_type"] = "feedback";
-                    $file_data["file_ids"] = $result_file["file_id"];
-                    $result = UnshopFileData::updateFileData($action_type,$file_data);
+                    $file_data["file_ids"] = [$result_file["file_id"]];
+                    $result = WebFileData::updateFileData($action_type,$file_data);
                     if(isset($result["error"]) && !($result["error"])) {
                         $this->error = false;
                     } else {

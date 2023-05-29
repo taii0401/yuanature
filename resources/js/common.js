@@ -791,12 +791,14 @@ function feedbackSubmit(action_type) {
 
         $('.form-control').attr('disabled', false);
 
+        //表單
+        var form_data = new FormData($('#form_data')[0]);
         $.ajax({
             type: 'POST',
             url: '/ajax/feedback_data',
-            dataType: 'json',
-            async: false,
-            data: $('#form_data').serialize(),
+            data: form_data,
+            processData: false,
+            contentType: false,
             error: function(xhr) {
                 //console.log(xhr);
                 alert('傳送錯誤！');

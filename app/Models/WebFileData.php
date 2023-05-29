@@ -133,10 +133,6 @@ class WebFileData extends Model
                 $insert_data = [];
                 $insert_data["data_id"] = $data["data_id"];
                 $insert_data["data_type"] = $data["data_type"];
-                $insert_data["create_by"] = isset($data["user_id"])?$data["user_id"]:0;
-                $insert_data["create_time"] = $now;
-                $insert_data["modify_by"] = $insert_data["create_by"];
-                $insert_data["modify_time"] = $insert_data["create_time"];
 
                 foreach($data["file_ids"] as $file_id) {
                     if(!in_array($file_id,$exist_file_ids)) {
