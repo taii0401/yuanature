@@ -112,7 +112,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="semi-bold"><span id="modal_title_name"></span>管理員</h6>
+                    <h6 class="semi-bold"><span id="modal_title_name"></span>使用者回饋</h6>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">×</button>
                 </div>
                 <div class="modal-body">
