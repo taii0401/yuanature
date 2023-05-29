@@ -34,7 +34,7 @@ class UserController extends Controller
         //分頁
         $page = $assign_data["page"]??1;
         //標題
-        $assign_data["title_txt"] = "會員管理";
+        $assign_data["title_txt"] = "會員資料";
 
         //排序
         $orderby_sort = "asc";
@@ -77,7 +77,7 @@ class UserController extends Controller
     {
         $input = $request->all();
         //折價劵
-        $all_datas_coupon = Coupon::getAllDatas()->get()->toArray();
+        $all_datas_coupon = Coupon::getAllDatas(["status" => 1])->get()->toArray();
         $select_coupon = $this->getSelect($all_datas_coupon,"id","name",true);
         //折價劵-使用狀態
         $coupon_status_datas = config("yuanature.coupon_status");
@@ -124,12 +124,13 @@ class UserController extends Controller
                 //使用狀態
                 $list_data[$key]["status_name"] = $coupon_status_datas[$val["status"]]["name"]??"";
                 $list_data[$key]["status_color"] = $coupon_status_datas[$val["status"]]["color"]??"";
-                //到期時間
-                $list_data[$key]["expire_time_format"] = $val["expire_time"] != ""?date("Y-m-d H:i:s",strtotime($val["expire_time"]." + 8 hours")):"";
-                //使用時間
-                $list_data[$key]["used_time_format"] = $val["used_time"] != ""?date("Y-m-d H:i:s",strtotime($val["used_time"]." + 8 hours")):"";
             }
         }
+
+        //模組視窗選項-折價劵
+        $all_datas_user = WebUser::getAllDatas(["is_verified" => 1],"name")->get()->toArray();
+        $datas["modal_data"]["user_id"] = $this->getSelect($all_datas_user,"user_id","name");
+        $datas["modal_data"]["coupon_id"] = $this->getSelect($all_datas_coupon,"id","name");
         
         $datas["assign_data"] = $assign_data;
         $datas["option_data"] = $option_data;

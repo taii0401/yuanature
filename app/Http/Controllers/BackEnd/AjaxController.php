@@ -22,6 +22,7 @@ use App\Models\Administrator;
 use App\Models\WebFileData;
 use App\Models\WebUser;
 use App\Models\User;
+use App\Models\UserCoupon;
 use App\Models\Orders;
 use App\Models\Coupon;
 use App\Models\Contact;
@@ -257,8 +258,6 @@ class AjaxController extends Controller
             $uuids = explode(",",$check_list);
             if(!empty($uuids)) {
                 try {
-                    $check_list = $input["check_list"]??[];
-                    $uuids = explode(",",$check_list);
                     $data = WebUser::whereIn("uuid",$uuids);
                     $data->update(["deleted_id" => $admin_id]);
                     $data->delete();
@@ -278,6 +277,104 @@ class AjaxController extends Controller
         }
 
         $this->createLogRecord("admin",$action_type,"會員管理",$log_msg);
+
+        DB::commit();
+
+        return response()->json($this->returnResult());
+    }
+
+    //會員折價劵資料-編輯、取消
+    public function user_coupon_data(Request $request)
+    {
+        $this->resetResult();
+        if(!$this->checkPermission("user","write")) {
+            $this->message = "您沒有權限操作！";
+            return response()->json($this->returnResult());
+        }
+
+        $admin_id = AdminAuth::admindata()->id;
+        $input = $request->all();
+        
+        //表單動作類型(編輯、刪除)
+        $action_type = $input["action_type"]??"edit";
+        $action_name = config("yuanature.action_name")[$action_type];
+        $log_msg = $action_name;
+
+        //檢查欄位、檢查訊息
+        $validator_data = $validator_message = [];
+        if($action_type == "add") { 
+            $validator_data["user_id"] = "required"; //會員ID
+            $validator_data["coupon_id"] = "required"; //折價劵ID
+            $validator_data["expire_time"] = "required"; //到期時間
+            $validator_message["user_id.required"] = "請輸入會員！";
+            $validator_message["coupon_id.required"] = "請輸入折價劵！";
+            $validator_message["expire_time.required"] = "請輸入到期時間！";
+        } 
+        
+        $validator = Validator::make($input,$validator_data,$validator_message);
+
+        if($validator->fails()) {
+            foreach($validator->errors()->all() as $message) {
+                $this->message = $message;
+            }
+        }
+       
+        if($this->message != "") {
+            return response()->json($this->returnResult());
+        }
+
+        DB::beginTransaction();
+
+        if($action_type == "add") {
+            //取得折價劵代碼
+            $coupon_data = Coupon::getDataById($input["coupon_id"]);
+            $coupon_code = $coupon_data["code"]??0;
+            $coupon_total = $coupon_data["total"]??0;
+
+            $uuid = Str::uuid()->toString();
+            $add_data = [];
+            $add_data["uuid"] = $uuid;
+            $add_data["user_id"] = $input["user_id"];
+            $add_data["coupon_id"] = $input["coupon_id"];
+            $add_data["serial"] = $coupon_code.$this->getRandom(6);
+            $add_data["total"] = $coupon_total;
+            $add_data["status"] = "nouse";
+            $add_data["expire_time"] = date("Y-m-d",strtotime("+1 year",strtotime($input["expire_time"])))." 23:59:59";
+            $add_data["source"] = "register";
+            $add_data["created_id"] = $admin_id;
+            $data = UserCoupon::create($add_data);
+
+            if((int)$data->id > 0) {
+                $this->error = false;
+                $this->message = $uuid;  
+
+                $log_msg .= "-會員折價劵：".$input["user_id"]; 
+            } else {
+                $this->message = "新增失敗！";
+            }
+        } else if($action_type == "cancel") { //取消
+            $check_list = $input["check_list"]??[];
+            $uuids = explode(",",$check_list);
+            if(!empty($uuids)) {
+                try {
+                    $data = UserCoupon::whereIn("uuid",$uuids)->whereIn("status",["nouse"]);
+                    $data->update(["status" => "cancel","updated_id" => $admin_id]);
+                    $this->error = false;
+
+                    $log_msg .= "-會員折價劵UUID：".implode(",",$uuids);
+                } catch(QueryException $e) {
+                    Log::Info("後台會員折價劵取消失敗：UUID - ".$uuid);
+                    Log::error($e);
+                    $this->message = "取消失敗！";
+                }
+            } else {
+                $this->message = "取消失敗！";
+            }
+        } else {
+            $this->message = "操作失敗！";
+        }
+
+        $this->createLogRecord("admin",$action_type,"會員折價劵",$log_msg);
 
         DB::commit();
 
@@ -575,8 +672,6 @@ class AjaxController extends Controller
             $uuids = explode(",",$check_list);
             if(!empty($uuids)) {
                 try {
-                    $check_list = $input["check_list"]??[];
-                    $uuids = explode(",",$check_list);
                     $data = Feedback::whereIn("uuid",$uuids);
                     $ids = $data->pluck("id")->toArray();
                     $data->update(["deleted_id" => $admin_id]);
@@ -675,8 +770,6 @@ class AjaxController extends Controller
             $uuids = explode(",",$check_list);
             if(!empty($uuids)) {
                 try {
-                    $check_list = $input["check_list"]??[];
-                    $uuids = explode(",",$check_list);
                     $data = Contact::whereIn("uuid",$uuids);
                     $data->update(["deleted_id" => $admin_id]);
                     $data->delete();

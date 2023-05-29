@@ -826,7 +826,7 @@ function feedbackSubmit(action_type) {
 
 
 /* =================================後台================================= */
-//送出-管理員資料、會員資料、訂單資料、折價劵資料、使用者回饋資料、聯絡我們資料
+//送出-管理員資料、會員資料、會員折價劵、訂單資料、折價劵資料、使用者回饋資料、聯絡我們資料
 function adminSubmit(type) {
     $('.btn_submit').attr('disabled', true);
     var action_type = $('#input_modal_action_type').val();
@@ -838,6 +838,8 @@ function adminSubmit(type) {
         if(action_type == 'edit') {
             change_url += 'detail?orders_uuid='+$('#input_modal_uuid').val();
         }
+    } else if (type == 'user_coupon') {
+        change_url = '/admin/user/coupon';
     } else {
         change_url = '/admin/'+type;
     }

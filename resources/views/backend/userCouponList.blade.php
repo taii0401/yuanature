@@ -37,7 +37,7 @@
                 </div>
                 <div class="col-md-2 col-sm-12 text-right">
                     <button type="button" class="btn btn-primary dataModalBtn" data-bs-toggle="modal" data-bs-target="#dataModal" data-id="add">新增</button>
-                    <button type="button" class="btn btn-danger check_btn btn_submit" style="display:none" onclick="$('#input_modal_action_type').val('cancal');adminSubmit('user_coupon');">取消</button>
+                    <button type="button" class="btn btn-danger check_btn btn_submit" style="display:none" onclick="$('#input_modal_action_type').val('cancel');adminSubmit('user_coupon');">取消</button>
                 </div>
             </div>
             <div class="tm-table-mt tm-table-actions-row">
@@ -74,8 +74,10 @@
                             <tr>
                                 <td scope="row">
                                     <div class="custom-control custom-checkbox">
-                                        <input id="checkbox_{{ @$data["uuid"] }}" type="checkbox" value="{{ @$data["uuid"] }}" name="check_list[]" onclick="checkId('{{ @$data["uuid"] }}')" class="check_list">
-                                        <label for="checkbox_{{ @$data["uuid"] }}"></label>
+                                        @if(@$data["status"] == "nouse")
+                                            <input id="checkbox_{{ @$data["uuid"] }}" type="checkbox" value="{{ @$data["uuid"] }}" name="check_list[]" onclick="checkId('{{ @$data["uuid"] }}')" class="check_list">
+                                            <label for="checkbox_{{ @$data["uuid"] }}"></label>
+                                        @endif
                                     </div>
                                 </td>
                                 <td class="text-center">{{ @$data["user_name"] }}</td>
@@ -83,13 +85,15 @@
                                 <td class="text-center">{{ @$data["coupon_name"] }}</td>
                                 <td class="text-center">{{ @$data["total"] }}元</td>
                                 <td class="text-center" style="color:{{ @$data["status_color"] }}">{{ @$data["status_name"] }}</td>
-                                <td class="text-center">{{ @$data["expire_time_format"] }}</td>
-                                <td class="text-center">{{ @$data["used_time_format"] }}</td>
+                                <td class="text-center">{{ @$data["expire_time"] }}</td>
+                                <td class="text-center">{{ @$data["used_time"] }}</td>
                                 <td>
                                     <div class="col-12">
-                                        <div class="btn-action">
-                                            <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('cancal');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('user_coupon');"></i>
-                                        </div>
+                                        @if(@$data["status"] == "nouse")
+                                            <div class="btn-action">
+                                                <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('cancel');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('user_coupon');"></i>
+                                            </div>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -114,12 +118,12 @@
     @csrf
     <input type="hidden" id="input_modal_action_type" name="action_type" value="">
     <input type="hidden" id="input_modal_uuid" name="uuid" value="">
-    <input type="hidden" id="check_list" name="check_list" value="">
+    <input type="text" id="check_list" name="check_list" value="">
     <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="semi-bold"><span id="modal_title_name"></span>會員</h6>
+                    <h6 class="semi-bold"><span id="modal_title_name"></span>會員折價劵</h6>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">×</button>
                 </div>
                 <div class="modal-body">
@@ -128,29 +132,41 @@
                     <div class="col-12">
                         <div class="row m-t-10">
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label>姓名</label>
-                                <input type="text" id="input_modal_name" name="name" class="form-control require" value="" >
+                                <label class="col-form-label">會員姓名</label>
+                                <input type="hidden" id="input_modal_user_id" name="user_id" class="form-control" value="" />
+                                <input id="input_modal_user_name" name="user_name" list="user_data" class="form-control" value="" />
+                                <datalist id="user_data">
+                                    @if(isset($datas["modal_data"]["user_id"]) && !empty($datas["modal_data"]["user_id"]))
+                                        @foreach($datas["modal_data"]["user_id"] as $key => $val)
+                                            <option id="{{ $key }}" value="{{ $key }} - {{ $val }}">
+                                        @endforeach
+                                    @endif
+                                </datalist>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label>EMAIL</label>
-                                <input type="text" id="input_modal_email" name="email" class="form-control " value="">                  
+                                <label class="col-form-label">折價劵</label>
+                                <select class="custom-select col-12" id="input_modal_coupon_id" name="coupon_id">
+                                    @if(isset($datas["modal_data"]["coupon_id"]) && !empty($datas["modal_data"]["coupon_id"]))
+                                        @foreach($datas["modal_data"]["coupon_id"] as $key => $val)
+                                            <option value="{{ $key }}">{{ $val }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
                             </div>
                             <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label>手機</label>
-                                <input type="text" id="input_modal_phone" name="phone" class="form-control " value="">
-                            </div>
-                            <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-                                <label class="col-12">是否驗證</label>
-                                <label class="form-switch">
-                                    <input type="checkbox" id="input_modal_is_verified" name="is_verified" class="form-control" onclick="changeSwitch('input_modal_is_verified');">
-                                    <i></i> <span id="input_switch_text_input_modal_is_verified"></span>
-                                </label>
+                                <label>到期時間</label>
+                                <div class="input-group date" id="input_datetimepicker" data-target-input="nearest">
+                                    <input type="text" id="input_modal_expire_time" name="expire_time" class="form-control datetimepicker" data-target="#input_datetimepicker" value="" />
+                                    <div class="input-group-append" data-target="#input_datetimepicker" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar" aria-hidden="true"></i></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger btn_submit" onclick="adminSubmit('user');">送出</button>
+                    <button type="button" class="btn btn-danger btn_submit" onclick="adminSubmit('user_coupon');">送出</button>
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">取消</button>
                 </div>
             </div>
@@ -162,11 +178,36 @@
 
 @section('script')
 <script>
+    $(function () {
+        $('.datetimepicker').datepicker({
+            language: 'zh-TW', //中文化
+            format: 'yyyy-mm-dd', //格式
+            autoclose: true, //選擇日期後就會自動關閉
+            todayHighlight: true //今天會有一個底色
+        });
+    });
+
     $('.dataModalBtn').click(function () {
-        var input_modal_keys = ['action_type','uuid','name','email','phone','is_verified'];
-        var switch_modal_keys = ['is_verified'];
+        var input_modal_keys = ['action_type','uuid'];
+        var switch_modal_keys = [];
         var radio_modal_keys = [];
         setModalInput($(this).data('id'),input_modal_keys,switch_modal_keys,radio_modal_keys);
+    });
+
+    //輸入框選單
+    $("#input_modal_user_name").change(function() {
+        var inputValue = $(this).val();
+        var optionValue;
+        var ID;
+        
+        //重複檢查
+        $("option").each(function() {
+            optionValue = $(this).val();
+            if(optionValue == inputValue) {
+                $('#input_modal_user_id').val($(this).attr('id'));
+                $('#input_modal_user_name').val(inputValue);
+            }
+        });
     });
 </script>
 @endsection

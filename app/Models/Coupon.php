@@ -109,7 +109,22 @@ class Coupon extends Model
     {
         $return_data = [];
         $data = self::where(["code" => $code,"status" => 1])->first();
-        if(isset($data) && $data->exists("id")) {
+        if(isset($data) && !empty($data)) {
+            $return_data = $data->toArray();
+        }
+        return $return_data;
+    }
+
+    /**
+     * 依ID取得可使用的折價劵
+     * @param  id
+     * @return array
+     */
+    public static function getDataById($id)
+    {
+        $return_data = [];
+        $data = self::where(["id" => $id,"status" => 1])->first();
+        if(isset($data) && !empty($data)) {
             $return_data = $data->toArray();
         }
         return $return_data;

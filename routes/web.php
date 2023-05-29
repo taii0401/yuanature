@@ -212,6 +212,7 @@ foreach($ajaxs as $ajax) {
 $ajaxs_admin = [];
 $ajaxs_admin[] = "admin_data"; //管理員資料-新增、編輯、刪除
 $ajaxs_admin[] = "user_data"; //會員資料-編輯、刪除
+$ajaxs_admin[] = "user_coupon_data"; //會員折價劵-新增、取消
 $ajaxs_admin[] = "orders_data"; //訂單資料-編輯、取消
 $ajaxs_admin[] = "coupon_data"; //折價劵資料-新增、編輯、刪除
 $ajaxs_admin[] = "contact_data"; //聯絡我們-編輯、刪除
