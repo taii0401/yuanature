@@ -177,6 +177,8 @@ Route::group([
     Route::controller(BackEndUserController::class)->group(function() {
         //列表
         Route::get("user","list");
+        //會員折價劵
+        Route::get("user/coupon","coupon");
     });
 
     //訂單管理

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Models\Product;
+use App\Models\WebUser;
 
 class UserCoupon extends Model
 {
@@ -61,17 +61,21 @@ class UserCoupon extends Model
     {
         $all_datas = $conds = $conds_in = [];
         
-        //條件欄位
-		$cols = ["id","orders_id","user_id","type","status"];
+		//條件欄位
+		$cols = ["id","uuid","user_id","orders_id","coupon_id","serial","status","source"];
 		foreach($cols as $col) {
 			if(isset($cond[$col])) {
-                if(is_array($cond[$col])) {
-                    $conds_in[$col] = $cond[$col];
-                } else if($cond[$col] != "") {
-                    if(is_numeric($cond[$col])) {
-                        $conds[$col] = (int)$cond[$col];
-                    } else {
-                        $conds[$col] = $cond[$col];
+                if(in_array($col,["serial"])) {
+                    $conds_like[$col] = $cond[$col];
+                } else {
+                    if(is_array($cond[$col])) {
+                        $conds_in[$col] = $cond[$col];
+                    } else if($cond[$col] != "") {
+                        if(is_numeric($cond[$col])) {
+                            $conds[$col] = (int)$cond[$col];
+                        } else {
+                            $conds[$col] = $cond[$col];
+                        }
                     }
                 }
 			}
@@ -82,6 +86,24 @@ class UserCoupon extends Model
             foreach($conds_in as $key => $val) {
                 $all_datas = $all_datas->whereIn($key,$val);
             }
+        }
+        if(!empty($conds_like)) {
+            foreach($conds_like as $key => $val) {
+                $all_datas = $all_datas->where($key,"like","%".$val."%");
+            }
+        }
+        //關鍵字
+        if(isset($cond["keywords"]) && $cond["keywords"] != "") {
+            $keywords = $cond["keywords"];
+            $conds_or = ["serial"];
+            //依會員姓名取得會員ID
+            $user_ids = WebUser::where("name","like","%".$keywords."%")->pluck("user_id")->toArray();
+            $all_datas = $all_datas->where(function ($query) use($conds_or,$keywords,$user_ids) {
+                foreach($conds_or as $value) {
+                    $query->orWhere($value,"like","%".$keywords."%");
+                }
+                $query->orWhereIn("user_id",$user_ids);
+            });
         }
         //排序
         $all_datas = $all_datas->orderBy($orderby,$sort);

@@ -58,19 +58,23 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mx-auto">
                         @if(AdminAuth::isLoggedIn())
-                            @if(AdminAuth::admindata()->admin_group_id == 1)
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">後台管理</a>
-                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">後台管理</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    @if(AdminAuth::admindata()->admin_group_id == 1)    
                                         <a class="dropdown-item" href="/admin/list">管理員管理</a>
-                                        <a class="dropdown-item" href="/admin/coupon">折價劵管理</a>
-                                        <a class="dropdown-item" href="/admin/feedback">使用者回饋</a>
-                                        <a class="dropdown-item" href="/admin/contact">聯絡我們</a>
-                                    </div>
-                                </li>
-                            @endif
-                            <li class="nav-item">
-                                <a class="nav-link" href="/admin/user">會員管理</a>
+                                    @endif
+                                    <a class="dropdown-item" href="/admin/coupon">折價劵管理</a>
+                                    <a class="dropdown-item" href="/admin/feedback">使用者回饋</a>
+                                    <a class="dropdown-item" href="/admin/contact">聯絡我們</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">會員管理</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="/admin/user">會員資料</a>
+                                    <a class="dropdown-item" href="/admin/user/coupon">會員折價劵</a>
+                                </div>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/admin/orders">訂單管理</a>

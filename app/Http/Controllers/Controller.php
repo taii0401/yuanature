@@ -198,11 +198,15 @@ class Controller extends BaseController
      * @param  datas：資料
      * @param  return_key：回傳的KEY值
      * @param  return_value：回傳的值
+     * @param  is_all：是否回傳全部的選項
      * @return array
      */
-    public function getSelect($datas=[],$return_key="id",$return_value="name")
+    public function getSelect($datas=[],$return_key="id",$return_value="name",$is_all=false)
     {
         $return_datas = [];
+        if($is_all) {
+            $return_datas = ["" => "全部"];
+        }
         if(!empty($datas)) {
             foreach($datas as $val) {
                 $id = $val[$return_key]??0;
