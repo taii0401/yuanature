@@ -18,12 +18,12 @@
                 <table class="table table-hover table-striped tm-table-striped-even mt-3"  style="vertical-align: middle;">
                     <thead>
                         <tr class="tm-bg-gray">
-                            <th scope="col" class="text-center" width="15%" height="50px">序號</th>
-                            <th scope="col" class="text-center" width="15%">折價劵</th>
-                            <th scope="col" class="text-center" width="15%">金額</th>
-                            <th scope="col" class="text-center" width="15%">使用狀態</th>
-                            <th scope="col" class="text-center" width="20%">到期時間</th>
-                            <th scope="col" class="text-center" width="20%">使用時間</th>
+                            <th scope="col" class="text-center" style="width:15%;" height="50px">序號</th>
+                            <th scope="col" class="text-center" style="width:15%;">折價劵</th>
+                            <th scope="col" class="text-center" style="width:15%;">金額</th>
+                            <th scope="col" class="text-center" style="width:15%;">使用狀態</th>
+                            <th scope="col" class="text-center" style="width:20%;">到期時間</th>
+                            <th scope="col" class="text-center" style="width:20%;">使用時間</th>
                         </tr>
                     </thead>
                     <tbody>
