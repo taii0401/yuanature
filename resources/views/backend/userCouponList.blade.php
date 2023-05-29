@@ -118,7 +118,7 @@
     @csrf
     <input type="hidden" id="input_modal_action_type" name="action_type" value="">
     <input type="hidden" id="input_modal_uuid" name="uuid" value="">
-    <input type="text" id="check_list" name="check_list" value="">
+    <input type="hidden" id="check_list" name="check_list" value="">
     <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="dataModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
