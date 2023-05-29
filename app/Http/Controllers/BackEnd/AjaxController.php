@@ -363,7 +363,7 @@ class AjaxController extends Controller
 
                     $log_msg .= "-會員折價劵UUID：".implode(",",$uuids);
                 } catch(QueryException $e) {
-                    Log::Info("後台會員折價劵取消失敗：UUID - ".$uuid);
+                    Log::Info("後台會員折價劵取消失敗：UUID - ".implode(",",$uuids));
                     Log::error($e);
                     $this->message = "取消失敗！";
                 }
