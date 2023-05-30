@@ -33,7 +33,7 @@
                         @endforeach
                     @endif
                 </div>
-                <div class="col-md-2 col-sm-12 text-right">
+                <div class="col-md-2 col-sm-12 text-right" style="margin:10px 0;">
                     <button type="button" class="btn btn-danger check_btn btn_submit" style="display:none" onclick="$('#input_modal_action_type').val('delete');adminSubmit('feedback');">刪除</button>
                 </div>
             </div>
@@ -57,7 +57,7 @@
                             <th>居住地</th>
                             <th>使用者回饋及感想</th>
                             <th>建立時間</th>
-                            <th>&nbsp;</th>
+                            <th width="50"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -80,7 +80,7 @@
                                     {{ @$data["address_county"] }}{{ @$data["address_district"] }}
                                 </td>
                                 <td>
-                                    <span class="td-data-span">使用者回饋及感想：</span><br>
+                                    <span class="td-data-span">使用者回饋及感想：<br></span>
                                     {!! @$data["content"] !!}
                                 </td>
                                 <td>
@@ -89,7 +89,11 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-action">
-                                        <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('feedback');"></i>
+                                        <ul>
+                                            <li>
+                                                <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('feedback');"></i>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </td>
                             </tr>

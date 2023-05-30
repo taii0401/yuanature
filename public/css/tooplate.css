@@ -466,6 +466,7 @@ label {
     margin-top: 5px;
 }
 
+/*table td 隱藏標題*/
 .td-data-span {
     display: none;
 }
@@ -664,7 +665,7 @@ footer {
 
 /*列表-按鈕並排加框*/
 
-.btn-action {
+/*.btn-action {
     width: 30px;
     height: 30px;
     display: flex;
@@ -672,6 +673,24 @@ footer {
     justify-content:left;
     color: #c8c8c8;
     float: left;
+}*/
+
+.btn-action {
+    padding: 0px;
+    margin: 0px auto;
+}
+
+.btn-action ul {
+    list-style: none;
+    padding: 10px;
+    margin: 0px auto;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.btn-action ul li {
+    display:inline;
 }
 
 
@@ -863,16 +882,16 @@ footer {
 
 /*商品圖片 START*/
 
-.pdt_img_area {
+.pdt-img-area {
     padding: 0px;
     margin: 0px auto;
 }
 
-.pdt_img_area img {
+.pdt-img-area img {
     height: 90px;
 }
 
-.pdt_img_area ul {
+.pdt-img-area ul {
     list-style: none;
     padding: 0px;
     margin: 0px auto;
@@ -881,16 +900,16 @@ footer {
     flex-wrap: wrap;
 }
 
-.pdt_img_area ul li {
+.pdt-img-area ul li {
     display:inline;
 }
 
-.pdt_img_area ul li a {
+.pdt-img-area ul li a {
     color: #5e5e5e;
     font-weight: 500;
 }
 
-.pdt_img_area ul li a:hover {
+.pdt-img-area ul li a:hover {
     color: #0266c4;
 }
 
@@ -970,7 +989,7 @@ footer {
     .search-w3ls {
         width: 40%;
     }
-    .pdt_img_area img {
+    .pdt-img-area img {
         height: 85px;
     }
     /*.navbar-collapse {
@@ -993,7 +1012,7 @@ footer {
 }
 
 @media (max-width: 1055px) {
-    .pdt_img_area img {
+    .pdt-img-area img {
         height: 80px;
     }
 }
@@ -1021,7 +1040,7 @@ footer {
     .search-w3ls {
         width: 50%;
     }
-    .pdt_img_area img {
+    .pdt-img-area img {
         height: 85px;
     }
 }
@@ -1042,14 +1061,15 @@ footer {
     .search-w3ls {
         /*width: 40%;*/
     }
+    
+
+    /*表格逐筆顯示區塊 START*/
     .table-rwd {
         min-width: 100%;
     }
-    /*針對tr去做隱藏*/
     tr.tr-only-hide {
         display: none !important;
     }
-    /*讓tr變成區塊主要讓他有個區塊*/
     .table-rwd tr {
         display: block;
         border: 1px solid #ddd;
@@ -1070,12 +1090,15 @@ footer {
         font-weight: bold;
         color: #006935;
     }
-    
-    /*當RWD縮小的時候.table-bordered 會有兩條線，所以針對.table-bordered去做修正*/
     .table-rwd.table-bordered td,.table-rwd.table-bordered th,
     .table-rwd.table-bordered {
         border:0;
     }
+    .btn-action {
+        background-color: #e4eee5;
+    }
+
+    /*表格逐筆顯示區塊 END*/
 }
 
 @media (max-width: 633px) {
@@ -1132,13 +1155,13 @@ footer {
     .banner_menu {
         margin-left: 0%;
     }
-    .pdt_img_area img {
+    .pdt-img-area img {
         height: 80px;
     }
 }
 
 @media (max-width: 598px) {
-    .pdt_img_area img {
+    .pdt-img-area img {
         height: 70px;
     }
 }
@@ -1150,7 +1173,7 @@ footer {
     .search-w3ls {
         width: 80%;
     }
-    .pdt_img_area img {
+    .pdt-img-area img {
         height: 65px;
     }
 }
@@ -1159,7 +1182,7 @@ footer {
     .search-w3ls {
         width: 100%;
     }
-    .pdt_img_area img {
+    .pdt-img-area img {
         height: 50px;
     }
 }

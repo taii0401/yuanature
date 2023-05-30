@@ -55,7 +55,7 @@
                             <th>配送方式</th>
                             <th>付款方式</th>
                             <th>訂購金額</th>
-                            <th>&nbsp;</th>
+                            <th width="50"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -83,14 +83,18 @@
                                     <span style="color:{{ @$data["payment_color"] }}">{{ @$data["payment_name"] }}</span>
                                 </td>
                                 <td>
-                                    <span class="td-data-span">訂購金額：</span><br>
+                                    <span class="td-data-span">訂購金額：</span>
                                     {{ @$data["total"] }}元
                                 </td>
                                 <td class="text-center">
                                     @if(@$data["cancel"] == "")
                                         <div class="btn-action">
-                                            <i class="fas fa-trash-alt tm-trash-icon dataModalBtnOrderCancel" data-bs-toggle="modal" data-bs-target="#dataModalOrderCancel" data-id="{{ @$data["uuid"] }},{{ @$data["serial"] }}">
-                                            </i>
+                                            <ul>
+                                                <li>
+                                                    <i class="fas fa-trash-alt tm-trash-icon dataModalBtnOrderCancel" data-bs-toggle="modal" data-bs-target="#dataModalOrderCancel" data-id="{{ @$data["uuid"] }},{{ @$data["serial"] }}">
+                                                    </i>
+                                                </li>
+                                            </ul>
                                         </div>
                                     @endif
                                 </td>

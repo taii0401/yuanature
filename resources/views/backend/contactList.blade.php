@@ -35,7 +35,7 @@
                         @endforeach
                     @endif
                 </div>
-                <div class="col-md-2 col-sm-12 text-right">
+                <div class="col-md-2 col-sm-12 text-right" style="margin:10px 0;">
                     <button type="button" class="btn btn-danger check_btn btn_submit" style="display:none" onclick="$('#input_modal_action_type').val('delete');adminSubmit('contact');">刪除</button>
                 </div>
             </div>
@@ -61,7 +61,7 @@
                             <th>處理狀態</th>
                             <th>訊息內容</th>
                             <th>建立時間</th>
-                            <th>&nbsp;</th>
+                            <th width="100"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -92,20 +92,24 @@
                                     <span style="color:{{ @$data["status_color"] }}">{{ @$data["status_name"] }}</span>
                                 </td>
                                 <td>
-                                    <span class="td-data-span">訊息內容：</span>
+                                    <span class="td-data-span">訊息內容：<br></span>
                                     {!! @$data["content"] !!}
                                 </td>
                                 <td>
-                                    <span class="td-data-span">建立時間：</span><br>
+                                    <span class="td-data-span">建立時間：</span>
                                     {{ @$data["created_at_format"] }}
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-action">
-                                        <i class="fas fa-edit tm-edit-icon dataModalBtn"data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["uuid"] }},{{ @$data["status"] }},{{ @$data["reply"] }}">
-                                        </i>
-                                    </div>
-                                    <div class="btn-action">
-                                        <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('contact');"></i>
+                                        <ul>
+                                            <li>
+                                                <i class="fas fa-edit tm-edit-icon dataModalBtn"data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["uuid"] }},{{ @$data["status"] }},{{ @$data["reply"] }}">
+                                                </i>
+                                            </li>
+                                            <li>
+                                                <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('contact');"></i>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </td>
                             </tr>

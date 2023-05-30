@@ -33,7 +33,7 @@
                         @endforeach
                     @endif
                 </div>
-                <div class="col-md-4 col-sm-12 text-right">
+                <div class="col-md-4 col-sm-12 text-right" style="margin:10px 0;">
                     <button type="button" class="btn btn-primary dataModalBtn" data-bs-toggle="modal" data-bs-target="#dataModal" data-id="add">新增</button>
                     <button type="button" class="btn btn-danger check_btn btn_submit" style="display:none" onclick="$('#input_modal_action_type').val('delete');adminSubmit('coupon');">刪除</button>
                 </div>
@@ -57,7 +57,7 @@
                             <th>名稱</th>
                             <th>金額</th>
                             <th>狀態</th>
-                            <th>&nbsp;</th>
+                            <th width="100"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -85,11 +85,15 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-action">
-                                        <i class="fas fa-edit tm-edit-icon dataModalBtn" data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["id"] }},{{ @$data["code"] }},{{ @$data["name"] }},{{ @$data["total"] }},{{ @$data["status"] }}">
-                                        </i>
-                                    </div>
-                                    <div class="btn-action">
-                                        <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["id"] }}');adminSubmit('coupon');"></i>
+                                        <ul>
+                                            <li>
+                                                <i class="fas fa-edit tm-edit-icon dataModalBtn" data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["id"] }},{{ @$data["code"] }},{{ @$data["name"] }},{{ @$data["total"] }},{{ @$data["status"] }}">
+                                                </i>
+                                            </li>
+                                            <li>
+                                                <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["id"] }}');adminSubmit('coupon');"></i>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </td>
                             </tr>

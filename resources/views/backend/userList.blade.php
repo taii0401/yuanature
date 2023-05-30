@@ -35,7 +35,7 @@
                         @endforeach
                     @endif
                 </div>
-                <div class="col-md-2 col-sm-12 text-right">
+                <div class="col-md-2 col-sm-12 text-right" style="margin:10px 0;">
                     <button type="button" class="btn btn-danger check_btn btn_submit" style="display:none" onclick="$('#input_modal_action_type').val('delete');adminSubmit('user');">刪除</button>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                             <th>登入方式</th>
                             <th>是否驗證</th>
                             <th>建立時間</th>
-                            <th>&nbsp;</th>
+                            <th width="100"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -96,62 +96,15 @@
                                 </td>
                                 <td class="text-center">
                                     <div class="btn-action">
-                                        <i class="fas fa-edit tm-edit-icon dataModalBtn"data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["uuid"] }},{{ @$data["name"] }},{{ @$data["email"] }},{{ @$data["phone"] }},{{ @$data["is_verified"] }}">
-                                        </i>
-                                    </div>
-                                    <div class="btn-action">
-                                        <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('user');"></i>
-                                    </div>
-                                </td>
-                            </tr>
-                            @endforeach
-                        @endif
-                    </tbody>
-                </table>
-
-                <table class="table table-hover table-striped tm-table-striped-even mt-3"  style="vertical-align: middle;">
-                    <thead>
-                        <tr class="tm-bg-gray">
-                            <th scope="col" class="text-center" style="width:1%;">
-                                <div class="custom-control custom-checkbox">
-                                    <input id="check_all" type="checkbox" value="all" onclick="checkAll()">
-                                    <label for="check_all"></label>
-                                </div>
-                            </th>
-                            <th class="text-center" scope="col">姓名</th>
-                            <th class="text-center" scope="col" style="width:20%;">EMAIL</th>
-                            <th class="text-center" scope="col" style="width:10%;">手機</th>
-                            <th class="text-center" scope="col" style="width:10%;">登入方式</th>
-                            <th class="text-center" scope="col" style="width:10%;">是否驗證</th>
-                            <th class="text-center" scope="col" style="width:10%;">建立時間</th>
-                            <th scope="col" style="width:15%;"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if(isset($datas["list_data"]) && !empty($datas["list_data"]))
-                            @foreach($datas["list_data"] as $data) 
-                            <tr>
-                                <td scope="row">
-                                    <div class="custom-control custom-checkbox">
-                                        <input id="checkbox_{{ @$data["uuid"] }}" type="checkbox" value="{{ @$data["uuid"] }}" name="check_list[]" onclick="checkId('{{ @$data["uuid"] }}')" class="check_list">
-                                        <label for="checkbox_{{ @$data["uuid"] }}"></label>
-                                    </div>
-                                </td>
-                                <td class="text-center">{{ @$data["name"] }}</td>
-                                <td class="text-center">{{ @$data["email"] }}</td>
-                                <td class="text-center">{{ @$data["phone"] }}</td>
-                                <td class="text-center" style="color:{{ @$data["register_type_color"] }}">{{ @$data["register_type_name"] }}</td>
-                                <td class="text-center">{{ @$data["is_verified_name"] }}</td>
-                                <td class="text-center">{{ @$data["created_at_format"] }}</td>
-                                <td>
-                                    <div class="col-12">
-                                        <div class="btn-action">
-                                            <i class="fas fa-edit tm-edit-icon dataModalBtn"data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["uuid"] }},{{ @$data["name"] }},{{ @$data["email"] }},{{ @$data["phone"] }},{{ @$data["is_verified"] }}">
-                                            </i>
-                                        </div>
-                                        <div class="btn-action">
-                                            <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('user');"></i>
-                                        </div>
+                                        <ul>
+                                            <li>
+                                                <i class="fas fa-edit tm-edit-icon dataModalBtn"data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["uuid"] }},{{ @$data["name"] }},{{ @$data["email"] }},{{ @$data["phone"] }},{{ @$data["is_verified"] }}">
+                                                </i>
+                                            </li>
+                                            <li>
+                                                <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('user');"></i>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </td>
                             </tr>
