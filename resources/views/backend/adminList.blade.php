@@ -47,45 +47,49 @@
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover table-striped tm-table-striped-even mt-3"  style="vertical-align: middle;">
-                    <thead>
-                        <tr class="tm-bg-gray">
-                            <th scope="col" class="text-center" style="width:1%;">
-                                <div class="custom-control custom-checkbox">
-                                    <input id="check_all" type="checkbox" value="all" onclick="checkAll()">
-                                    <label for="check_all"></label>
-                                </div>
+                <table class="table table-hover table-striped table-bordered table-rwd">
+                    <thead>    
+                        <tr class="tr-only-hide text-center">
+                            <th style="width:1%;">
+                                <input id="check_all" type="checkbox" value="all" onclick="checkAll()">
                             </th>
-                            <th scope="col" style="width:30%;">帳號</th>
-                            <th scope="col">名稱</th>
-                            <th scope="col" style="width:15%;">是否啟用</th>
-                            <th scope="col" style="width:15%;">群組</th>
-                            <th scope="col" style="width:15%;"></th>
+                            <th>帳號</th>
+                            <th>名稱</th>
+                            <th>是否啟用</th>
+                            <th>群組</th>
+                            <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
                         @if(isset($datas["list_data"]) && !empty($datas["list_data"]))
                             @foreach($datas["list_data"] as $data) 
                             <tr>
-                                <td scope="row">
-                                    <div class="custom-control custom-checkbox">
-                                        <input id="checkbox_{{ @$data["uuid"] }}" type="checkbox" value="{{ @$data["uuid"] }}" name="check_list[]" onclick="checkId('{{ @$data["uuid"] }}')" class="check_list">
-                                        <label for="checkbox_{{ @$data["uuid"] }}"></label>
-                                    </div>
-                                </td>
-                                <td>{{ @$data["account"] }}</td>
-                                <td>{{ @$data["name"] }}</td>
-                                <td>{{ @$data["status_name"] }}</td>
-                                <td>{{ @$data["admin_group_name"] }}</td>
                                 <td>
-                                    <div class="col-12">
-                                        <div class="btn-action">
-                                            <i class="fas fa-edit tm-edit-icon dataModalBtn" data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["uuid"] }},{{ @$data["account"] }},{{ @$data["name"] }},{{ @$data["status"] }},{{ @$data["admin_group_id"] }}">
-                                            </i>
-                                        </div>
-                                        <div class="btn-action">
-                                            <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('admin');"></i>
-                                        </div>
+                                    <input id="checkbox_{{ @$data["uuid"] }}" type="checkbox" value="{{ @$data["uuid"] }}" name="check_list[]" onclick="checkId('{{ @$data["uuid"] }}')" class="check_list">
+                                </td>
+                                <td>
+                                    <span class="td-data-span">帳號：</span>
+                                    {{ @$data["account"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">名稱：</span>
+                                    {{ @$data["name"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">是否啟用：</span>
+                                    {{ @$data["status_name"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">群組：</span>
+                                    {{ @$data["admin_group_name"] }}
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-action">
+                                        <i class="fas fa-edit tm-edit-icon dataModalBtn" data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["uuid"] }},{{ @$data["account"] }},{{ @$data["name"] }},{{ @$data["status"] }},{{ @$data["admin_group_id"] }}">
+                                        </i>
+                                    </div>
+                                    <div class="btn-action">
+                                        <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('admin');"></i>
                                     </div>
                                 </td>
                             </tr>

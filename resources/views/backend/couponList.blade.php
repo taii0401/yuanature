@@ -47,45 +47,49 @@
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover table-striped tm-table-striped-even mt-3"  style="vertical-align: middle;">
-                    <thead>
-                        <tr class="tm-bg-gray">
-                            <th scope="col" class="text-center" style="width:1%;">
-                                <div class="custom-control custom-checkbox">
-                                    <input id="check_all" type="checkbox" value="all" onclick="checkAll()">
-                                    <label for="check_all"></label>
-                                </div>
+                <table class="table table-hover table-hover table-striped table-bordered table-rwd">
+                    <thead>    
+                        <tr class="tr-only-hide text-center">
+                            <th style="width:1%;">
+                                <input id="check_all" type="checkbox" value="all" onclick="checkAll()">
                             </th>
-                            <th scope="col" style="width:20%;">代碼</th>
-                            <th scope="col" style="width:20%;">名稱</th>
-                            <th scope="col">金額</th>
-                            <th scope="col" style="width:15%;">狀態</th>
-                            <th scope="col" style="width:15%;"></th>
+                            <th>代碼</th>
+                            <th>名稱</th>
+                            <th>金額</th>
+                            <th>狀態</th>
+                            <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
                         @if(isset($datas["list_data"]) && !empty($datas["list_data"]))
                             @foreach($datas["list_data"] as $data) 
                             <tr>
-                                <td scope="row">
-                                    <div class="custom-control custom-checkbox">
-                                        <input id="checkbox_{{ @$data["id"] }}" type="checkbox" value="{{ @$data["id"] }}" name="check_list[]" onclick="checkId('{{ @$data["id"] }}')" class="check_list">
-                                        <label for="checkbox_{{ @$data["id"] }}"></label>
-                                    </div>
-                                </td>
-                                <td>{{ @$data["code"] }}</td>
-                                <td>{{ @$data["name"] }}</td>
-                                <td>{{ @$data["total"] }}</td>
-                                <td>{{ @$data["status_name"] }}</td>
                                 <td>
-                                    <div class="col-12">
-                                        <div class="btn-action">
-                                            <i class="fas fa-edit tm-edit-icon dataModalBtn" data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["id"] }},{{ @$data["code"] }},{{ @$data["name"] }},{{ @$data["total"] }},{{ @$data["status"] }}">
-                                            </i>
-                                        </div>
-                                        <div class="btn-action">
-                                            <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["id"] }}');adminSubmit('coupon');"></i>
-                                        </div>
+                                    <input id="checkbox_{{ @$data["id"] }}" type="checkbox" value="{{ @$data["id"] }}" name="check_list[]" onclick="checkId('{{ @$data["id"] }}')" class="check_list">
+                                </td>
+                                <td>
+                                    <span class="td-data-span">代碼：</span>
+                                    {{ @$data["code"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">名稱：</span>
+                                    {{ @$data["name"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">金額：</span>
+                                    {{ @$data["total"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">狀態：</span>
+                                    {{ @$data["status_name"] }}
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-action">
+                                        <i class="fas fa-edit tm-edit-icon dataModalBtn" data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["id"] }},{{ @$data["code"] }},{{ @$data["name"] }},{{ @$data["total"] }},{{ @$data["status"] }}">
+                                        </i>
+                                    </div>
+                                    <div class="btn-action">
+                                        <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["id"] }}');adminSubmit('coupon');"></i>
                                     </div>
                                 </td>
                             </tr>

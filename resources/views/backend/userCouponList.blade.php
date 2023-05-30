@@ -49,52 +49,65 @@
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover table-striped tm-table-striped-even mt-3"  style="vertical-align: middle;">
-                    <thead>
-                        <tr class="tm-bg-gray">
-                            <th scope="col" class="text-center" style="width:1%;">
-                                <div class="custom-control custom-checkbox">
-                                    <input id="check_all" type="checkbox" value="all" onclick="checkAll()">
-                                    <label for="check_all"></label>
-                                </div>
+                <table class="table table-hover table-striped table-bordered table-rwd">
+                    <thead>    
+                        <tr class="tr-only-hide text-center">
+                            <th style="width:1%;">
+                                <input id="check_all" type="checkbox" value="all" onclick="checkAll()">
                             </th>
-                            <th class="text-center" scope="col">會員姓名</th>
-                            <th class="text-center" scope="col" style="width:10%;">序號</th>
-                            <th class="text-center" scope="col" style="width:10%;">折價劵</th>
-                            <th class="text-center" scope="col" style="width:10%;">金額</th>
-                            <th class="text-center" scope="col" style="width:10%;">使用狀態</th>
-                            <th class="text-center" scope="col" style="width:15%;">到期時間</th>
-                            <th class="text-center" scope="col" style="width:15%;">使用時間</th>
-                            <th scope="col" style="width:8%;"></th>
+                            <th>會員姓名</th>
+                            <th>序號</th>
+                            <th>折價劵</th>
+                            <th>金額</th>
+                            <th>使用狀態</th>
+                            <th>到期時間</th>
+                            <th>使用時間</th>
+                            <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
                         @if(isset($datas["list_data"]) && !empty($datas["list_data"]))
                             @foreach($datas["list_data"] as $data) 
                             <tr>
-                                <td scope="row">
-                                    <div class="custom-control custom-checkbox">
-                                        @if(@$data["status"] == "nouse")
-                                            <input id="checkbox_{{ @$data["uuid"] }}" type="checkbox" value="{{ @$data["uuid"] }}" name="check_list[]" onclick="checkId('{{ @$data["uuid"] }}')" class="check_list">
-                                            <label for="checkbox_{{ @$data["uuid"] }}"></label>
-                                        @endif
-                                    </div>
-                                </td>
-                                <td class="text-center">{{ @$data["user_name"] }}</td>
-                                <td class="text-center">{{ @$data["serial"] }}</td>
-                                <td class="text-center">{{ @$data["coupon_name"] }}</td>
-                                <td class="text-center">{{ @$data["total"] }}元</td>
-                                <td class="text-center" style="color:{{ @$data["status_color"] }}">{{ @$data["status_name"] }}</td>
-                                <td class="text-center">{{ @$data["expire_time"] }}</td>
-                                <td class="text-center">{{ @$data["used_time"] }}</td>
                                 <td>
-                                    <div class="col-12">
-                                        @if(@$data["status"] == "nouse")
-                                            <div class="btn-action">
-                                                <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('cancel');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('user_coupon');"></i>
-                                            </div>
-                                        @endif
-                                    </div>
+                                    @if(@$data["status"] == "nouse")
+                                        <input id="checkbox_{{ @$data["uuid"] }}" type="checkbox" value="{{ @$data["uuid"] }}" name="check_list[]" onclick="checkId('{{ @$data["uuid"] }}')" class="check_list">
+                                    @endif
+                                </td>
+                                <td>
+                                    <span class="td-data-span">會員姓名：</span>
+                                    {{ @$data["user_name"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">序號：</span>
+                                    {{ @$data["serial"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">折價劵：</span>
+                                    {{ @$data["coupon_name"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">金額：</span>
+                                    {{ @$data["total"] }}元
+                                </td>
+                                <td>
+                                    <span class="td-data-span">使用狀態：</span>
+                                    <span style="color:{{ @$data["status_color"] }}">{{ @$data["status_name"] }}</span>
+                                </td>
+                                <td>
+                                    <span class="td-data-span">到期時間：</span>
+                                    {{ @$data["expire_time"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">使用時間：</span><br>
+                                    {{ @$data["used_time"] }}
+                                </td>
+                                <td class="text-center">
+                                    @if(@$data["status"] == "nouse")
+                                        <div class="btn-action">
+                                            <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('cancel');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('user_coupon');"></i>
+                                        </div>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach

@@ -46,39 +46,53 @@
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover table-striped tm-table-striped-even mt-3"  style="vertical-align: middle;">
-                    <thead>
-                        <tr class="tm-bg-gray">
-                            <th scope="col" class="text-center" style="width:15%;" height="50px">訂單編號</th>
-                            <th scope="col" class="text-center">訂購日期</th>
-                            <th scope="col" class="text-center" style="width:12%;">訂單狀態</th>
-                            <th scope="col" class="text-center" style="width:12%;">配送方式</th>
-                            <th scope="col" class="text-center" style="width:12%;">付款方式</th>
-                            <th scope="col" class="text-center" style="width:12%;">訂購金額</th>
-                            <th scope="col" style="width:8%;"></th>
+                <table class="table table-hover table-striped table-bordered table-rwd">
+                    <thead>    
+                        <tr class="tr-only-hide text-center">
+                            <th>訂單編號</th>
+                            <th>訂購日期</th>
+                            <th>訂單狀態</th>
+                            <th>配送方式</th>
+                            <th>付款方式</th>
+                            <th>訂購金額</th>
+                            <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
                         @if(isset($datas["list_data"]) && !empty($datas["list_data"]))
                             @foreach($datas["list_data"] as $data) 
                             <tr>
-                                <td class="text-center" height="50px">
+                                <td>
+                                    <span class="td-data-span">訂單編號：</span>
                                     <a href="#" onclick="changeForm('/admin/orders/detail?orders_uuid={{ @$data["uuid"] }}');">{{ @$data["serial"] }}</a>
                                 </td>
-                                <td class="text-center">{{ @$data["created_at_format"] }}</td>
-                                <td class="text-center" style="color:{{ @$data["status_color"] }}">{{ @$data["status_name"] }}</td>
-                                <td class="text-center" style="color:{{ @$data["delivery_color"] }}">{{ @$data["delivery_name"] }}</td>
-                                <td class="text-center" style="color:{{ @$data["payment_color"] }}">{{ @$data["payment_name"] }}</td>
-                                <td class="text-center">{{ @$data["total"] }}元</td>
                                 <td>
-                                    <div class="col-12">
-                                        @if(@$data["cancel"] == "")
-                                            <div class="btn-action">
-                                                <i class="fas fa-trash-alt tm-trash-icon dataModalBtnOrderCancel" data-bs-toggle="modal" data-bs-target="#dataModalOrderCancel" data-id="{{ @$data["uuid"] }},{{ @$data["serial"] }}">
-                                                </i>
-                                            </div>
-                                        @endif
-                                    </div>
+                                    <span class="td-data-span">訂購日期：</span>
+                                    {{ @$data["created_at_format"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">訂單狀態：</span>
+                                    <span style="color:{{ @$data["status_color"] }}">{{ @$data["status_name"] }}</span>
+                                </td>
+                                <td>
+                                    <span class="td-data-span">配送方式：</span>
+                                    <span style="color:{{ @$data["delivery_color"] }}">{{ @$data["delivery_name"] }}</span>
+                                </td>
+                                <td>
+                                    <span class="td-data-span">付款方式：</span>
+                                    <span style="color:{{ @$data["payment_color"] }}">{{ @$data["payment_name"] }}</span>
+                                </td>
+                                <td>
+                                    <span class="td-data-span">訂購金額：</span><br>
+                                    {{ @$data["total"] }}元
+                                </td>
+                                <td class="text-center">
+                                    @if(@$data["cancel"] == "")
+                                        <div class="btn-action">
+                                            <i class="fas fa-trash-alt tm-trash-icon dataModalBtnOrderCancel" data-bs-toggle="modal" data-bs-target="#dataModalOrderCancel" data-id="{{ @$data["uuid"] }},{{ @$data["serial"] }}">
+                                            </i>
+                                        </div>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach

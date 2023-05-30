@@ -48,51 +48,64 @@
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover table-striped tm-table-striped-even mt-3"  style="vertical-align: middle;">
-                    <thead>
-                        <tr class="tm-bg-gray">
-                            <th scope="col" class="text-center" style="width:1%;">
-                                <div class="custom-control custom-checkbox">
-                                    <input id="check_all" type="checkbox" value="all" onclick="checkAll()">
-                                    <label for="check_all"></label>
-                                </div>
+                <table class="table table-hover table-striped table-bordered table-rwd">
+                    <thead>    
+                        <tr class="tr-only-hide text-center">
+                            <th style="width:1%;">
+                                <input id="check_all" type="checkbox" value="all" onclick="checkAll()">
                             </th>
-                            <th class="text-center" scope="col" style="width:10%;">姓名</th>
-                            <th class="text-center" scope="col" style="width:15%;">電子郵件</th>
-                            <th class="text-center" scope="col" style="width:8%;">聯絡電話</th>
-                            <th class="text-center" scope="col" style="width:10%;">問題類型</th>
-                            <th class="text-center" scope="col" style="width:8%;">處理狀態</th>
-                            <th class="text-center" scope="col">訊息內容</th>
-                            <th class="text-center" scope="col" style="width:10%;">建立時間</th>
-                            <th scope="col" style="width:12%;"></th>
+                            <th>姓名</th>
+                            <th>電子郵件</th>
+                            <th>聯絡電話</th>
+                            <th>問題類型</th>
+                            <th>處理狀態</th>
+                            <th>訊息內容</th>
+                            <th>建立時間</th>
+                            <th>&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
                         @if(isset($datas["list_data"]) && !empty($datas["list_data"]))
                             @foreach($datas["list_data"] as $data) 
                             <tr>
-                                <td scope="row">
-                                    <div class="custom-control custom-checkbox">
-                                        <input id="checkbox_{{ @$data["uuid"] }}" type="checkbox" value="{{ @$data["uuid"] }}" name="check_list[]" onclick="checkId('{{ @$data["uuid"] }}')" class="check_list">
-                                        <label for="checkbox_{{ @$data["uuid"] }}"></label>
-                                    </div>
-                                </td>
-                                <td class="text-center">{{ @$data["name"] }}</td>
-                                <td class="text-center">{{ @$data["email"] }}</td>
-                                <td class="text-center">{{ @$data["phone"] }}</td>
-                                <td class="text-center" style="color:{{ @$data["type_color"] }}">{{ @$data["type_name"] }}</td>
-                                <td class="text-center" style="color:{{ @$data["status_color"] }}">{{ @$data["status_name"] }}</td>
-                                <td class="text-left">{!! @$data["content"] !!}</td>
-                                <td class="text-center">{{ @$data["created_at_format"] }}</td>
                                 <td>
-                                    <div class="col-12">
-                                        <div class="btn-action">
-                                            <i class="fas fa-edit tm-edit-icon dataModalBtn"data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["uuid"] }},{{ @$data["status"] }},{{ @$data["reply"] }}">
-                                            </i>
-                                        </div>
-                                        <div class="btn-action">
-                                            <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('contact');"></i>
-                                        </div>
+                                    <input id="checkbox_{{ @$data["uuid"] }}" type="checkbox" value="{{ @$data["uuid"] }}" name="check_list[]" onclick="checkId('{{ @$data["uuid"] }}')" class="check_list">
+                                </td>
+                                <td>
+                                    <span class="td-data-span">姓名：</span>
+                                    {{ @$data["name"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">電子郵件：</span>
+                                    {{ @$data["email"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">聯絡電話：</span>
+                                    {{ @$data["phone"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">問題類型：</span>
+                                    <span style="color:{{ @$data["type_color"] }}">{{ @$data["type_name"] }}</span>
+                                </td>
+                                <td>
+                                    <span class="td-data-span">處理狀態：</span>
+                                    <span style="color:{{ @$data["status_color"] }}">{{ @$data["status_name"] }}</span>
+                                </td>
+                                <td>
+                                    <span class="td-data-span">訊息內容：</span>
+                                    {!! @$data["content"] !!}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">建立時間：</span><br>
+                                    {{ @$data["created_at_format"] }}
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-action">
+                                        <i class="fas fa-edit tm-edit-icon dataModalBtn"data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["uuid"] }},{{ @$data["status"] }},{{ @$data["reply"] }}">
+                                        </i>
+                                    </div>
+                                    <div class="btn-action">
+                                        <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('contact');"></i>
                                     </div>
                                 </td>
                             </tr>

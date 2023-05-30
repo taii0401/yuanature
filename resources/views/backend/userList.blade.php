@@ -48,6 +48,67 @@
                 </div>
             </div>
             <div class="table-responsive">
+                <table class="table table-hover table-striped table-bordered table-rwd">
+                    <thead>    
+                        <tr class="tr-only-hide text-center">
+                            <th style="width:1%;">
+                                <input id="check_all" type="checkbox" value="all" onclick="checkAll()">
+                            </th>
+                            <th>姓名</th>
+                            <th>電子郵件</th>
+                            <th>聯絡電話</th>
+                            <th>登入方式</th>
+                            <th>是否驗證</th>
+                            <th>建立時間</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if(isset($datas["list_data"]) && !empty($datas["list_data"]))
+                            @foreach($datas["list_data"] as $data) 
+                            <tr>
+                                <td>
+                                    <input id="checkbox_{{ @$data["uuid"] }}" type="checkbox" value="{{ @$data["uuid"] }}" name="check_list[]" onclick="checkId('{{ @$data["uuid"] }}')" class="check_list">
+                                </td>
+                                <td>
+                                    <span class="td-data-span">姓名：</span>
+                                    {{ @$data["name"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">電子郵件：</span>
+                                    {{ @$data["email"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">聯絡電話：</span>
+                                    {{ @$data["phone"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">登入方式：</span>
+                                    <span style="color:{{ @$data["register_type_color"] }}">{{ @$data["register_type_name"] }}</span>
+                                </td>
+                                <td>
+                                    <span class="td-data-span">是否驗證：</span>
+                                    {{ @$data["is_verified_name"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">建立時間：</span><br>
+                                    {{ @$data["created_at_format"] }}
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-action">
+                                        <i class="fas fa-edit tm-edit-icon dataModalBtn"data-bs-toggle="modal" data-bs-target="#dataModal" data-id="edit,{{ @$data["uuid"] }},{{ @$data["name"] }},{{ @$data["email"] }},{{ @$data["phone"] }},{{ @$data["is_verified"] }}">
+                                        </i>
+                                    </div>
+                                    <div class="btn-action">
+                                        <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#input_modal_action_type').val('delete');$('#check_list').val('{{ @$data["uuid"] }}');adminSubmit('user');"></i>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
+                        @endif
+                    </tbody>
+                </table>
+
                 <table class="table table-hover table-striped tm-table-striped-even mt-3"  style="vertical-align: middle;">
                     <thead>
                         <tr class="tm-bg-gray">

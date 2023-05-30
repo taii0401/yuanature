@@ -15,27 +15,45 @@
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover table-striped tm-table-striped-even mt-3"  style="vertical-align: middle;">
-                    <thead>
-                        <tr class="tm-bg-gray">
-                            <th scope="col" class="text-center" style="width:15%;" height="50px">序號</th>
-                            <th scope="col" class="text-center" style="width:15%;">折價劵</th>
-                            <th scope="col" class="text-center" style="width:15%;">金額</th>
-                            <th scope="col" class="text-center" style="width:15%;">使用狀態</th>
-                            <th scope="col" class="text-center" style="width:20%;">到期時間</th>
-                            <th scope="col" class="text-center" style="width:20%;">使用時間</th>
+                <table class="table table-hover table-striped table-bordered table-rwd">
+                    <thead>    
+                        <tr class="tr-only-hide text-center">
+                            <th>序號</th>
+                            <th>折價劵</th>
+                            <th>金額</th>
+                            <th>使用狀態</th>
+                            <th>到期時間</th>
+                            <th>使用時間</th>
                         </tr>
                     </thead>
                     <tbody>
                         @if(isset($datas["list_data"]) && !empty($datas["list_data"]))
-                            @foreach($datas["list_data"] as $data)  
+                            @foreach($datas["list_data"] as $data) 
                             <tr>
-                                <td class="text-center" height="50px">{{ @$data["serial"] }}</td>
-                                <td class="text-center">{{ @$data["coupon_name"] }}</td>
-                                <td class="text-center">{{ @$data["total"] }}元</td>
-                                <td class="text-center" style="color:{{ @$data["status_color"] }}">{{ @$data["status_name"] }}</td>
-                                <td class="text-center">{{ @$data["expire_time"] }}</td>
-                                <td class="text-center">{{ @$data["used_time"] }}</td>
+                                <td>
+                                    <span class="td-data-span">序號：</span>
+                                    {{ @$data["serial"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">折價劵：</span>
+                                    {{ @$data["coupon_name"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">金額：</span>
+                                    {{ @$data["total"] }}元
+                                </td>
+                                <td>
+                                    <span class="td-data-span">使用狀態：</span>
+                                    <span style="color:{{ @$data["status_color"] }}">{{ @$data["status_name"] }}</span>
+                                </td>
+                                <td>
+                                    <span class="td-data-span">到期時間：</span>
+                                    {{ @$data["expire_time"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">使用時間：</span><br>
+                                    {{ @$data["used_time"] }}
+                                </td>
                             </tr>
                             @endforeach
                         @endif
