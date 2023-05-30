@@ -10,16 +10,16 @@
             <div class="row">
                 <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12">
                     <div class="row">
-                        <img id="img_box" src="{{ asset('img/product/product_sm_1.png') }}" width="100%" style="max-width:580px;max-height:500px;">
+                        <img id="img-box" src="{{ asset('img/product/product_sm_1.png') }}" width="100%" style="max-width:580px;max-height:500px;">
                     </div>
                     <div class="row" style="margin-top: 10px;margin-bottom: 10px;max-width:580px;">
-                        <div class="col-12 pdt_img_area">
+                        <div class="col-12 pdt-img-area">
                             <ul>
-                                <li class="img_item"><img src="{{ asset('img/product/product_sm_1.png') }}"></li>
-                                <li class="img_item"><img src="{{ asset('img/product/product_sm_2.png') }}"></li>
-                                <li class="img_item"><img src="{{ asset('img/product/product_sm_3.png') }}"></li>
-                                <li class="img_item"><img src="{{ asset('img/product/product_sm_4.png') }}"></li>
-                                <li class="img_item"><img src="{{ asset('img/product/product_sm_5.png') }}"></li>
+                                <li class="img-item"><img src="{{ asset('img/product/product_sm_1.png') }}"></li>
+                                <li class="img-item"><img src="{{ asset('img/product/product_sm_2.png') }}"></li>
+                                <li class="img-item"><img src="{{ asset('img/product/product_sm_3.png') }}"></li>
+                                <li class="img-item"><img src="{{ asset('img/product/product_sm_4.png') }}"></li>
+                                <li class="img-item"><img src="{{ asset('img/product/product_sm_5.png') }}"></li>
                             </ul>
                         </div>
                     </div>
@@ -100,12 +100,12 @@
 
     //切換圖片
     //獲取所有名為item的li標簽
-    var items = document.getElementsByClassName("img_item");
+    var items = document.getElementsByClassName("img-item");
     for(var i = 0; i < items.length; i++) {
         var item = items[i];
         item.index = i + 1;
         items[i].onclick = function () {
-            document.getElementById('img_box').src = 'img/product/product_sm_'+this.index+'.png';
+            document.getElementById('img-box').src = 'img/product/product_sm_'+this.index+'.png';
         }
     }
 
