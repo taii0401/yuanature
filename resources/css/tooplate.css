@@ -222,7 +222,7 @@ p {
 
 .navbar-light .navbar-nav .nav-link,
 .dropdown-item {
-    padding: 15px 20px;
+    padding: 10px 15px;
 }
 
 .navbar-light .navbar-nav .active>.nav-link,
@@ -999,7 +999,7 @@ footer {
 @media (max-width: 991px) {
     .navbar-light .navbar-nav .nav-link,
     .dropdown-item {
-        padding: 15px;
+        padding: 10px;
     }
     .tm-col-big,
     .tm-col-small {
