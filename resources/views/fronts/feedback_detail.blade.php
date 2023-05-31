@@ -9,7 +9,7 @@
                 <div class="bg-white tm-block">
                     <div class="row">
                         <div class="col-12 text-center">
-                            <h2 class="tm-block-title mt-3">{{ @$title_txt }}</h2>
+                            <h5 class="mt-3">{{ @$title_txt }}</h5>
                         </div>
                     </div>
                 
