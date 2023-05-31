@@ -1,46 +1,66 @@
 @extends('backend.base')
 @section('title') {{ @$datas["assign_data"]["title_txt"] }} @endsection
 @section('content')
-<div class="row tm-content-row tm-mt-big">
+<div class="row">
     <div class="col-xl-12 col-lg-12 tm-md-12 tm-sm-12 tm-col">
         <div class="bg-white tm-block h-100">
-            <div class="row">
-                <div class="col-12">
-                    <h2 class="tm-block-title">{{ @$datas["assign_data"]["title_txt"] }}</h2>
-                </div>
+            <div class="col-12 text-right" style="margin:10px 0;">
+                <button type="button" class="btn btn-primary" onclick="changeForm('/admin/orders')">返回</button>
             </div>
-            <div class="table-responsive">
+            <div class="table-responsive" style="margin-top: 10px;">
                 @include('tables.order')
             </div>
             <div class="table-responsive">
-                <table class="table table-hover table-striped tm-table-striped-even mt-3"  style="vertical-align: middle;">
-                    <thead>
-                        <tr class="tm-bg-gray">
-                            <th scope="col" class="text-center" height="50px">商品名稱</th>
-                            <th scope="col" class="text-center" style="width:15%;">數量</th>
-                            <th scope="col" class="text-center" style="width:15%;">售價</th>
-                            <th scope="col" class="text-center" style="width:100px;">小計</th>
+                <table class="table table-hover table-striped table-bordered table-rwd">
+                    <thead>    
+                        <tr class="tr-only-hide text-center">
+                            <th>商品名稱</th>
+                            <th>數量</th>
+                            <th>售價</th>
+                            <th>小計</th>
                         </tr>
                     </thead>
                     <tbody>
                         @if(isset($datas["detail_data"]) && !empty($datas["detail_data"]))
                             @foreach($datas["detail_data"] as $data) 
                             <tr>
-                                <td class="text-center tm-product-name" height="50px">{{ @$data["name"] }}</td>
-                                <td class="text-center">{{ @$data["amount"] }}</td>
-                                <td class="text-center">{{ @$data["price"] }}</td>
-                                <td class="text-center">{{ @$data["total"] }}元</td>
+                                <td>
+                                    <span class="td-data-span">商品名稱：</span>
+                                    {{ @$data["name"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">數量：</span>
+                                    {{ @$data["amount"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">售價：</span>
+                                    {{ @$data["price"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">小計：</span>
+                                    {{ @$data["total"] }}元
+                                </td>
                             </tr>
                             @endforeach
                         @endif
+                        
                     </tbody>
                 </table>
-                <table class="table table-hover table-striped tm-table-striped-even mt-3"  style="vertical-align: middle;">
-                    <thead>
-                        <tr class="tm-bg-gray">
-                            <th scope="col" height="50px">合計：<span id="total">{{ @$datas["assign_data"]["total"] }}</span>元</th>
-                        </tr>
-                    </thead>
+                <table class="table table-rwd">
+                    <tr class="tr-total">
+                        <td align="right">
+                            <span class="td-total-span">合計：</span>
+                            {{ @$datas["assign_data"]["product_total"] }}元<br>
+                            <span class="td-total-span">運費：</span>
+                            {{ @$datas["assign_data"]["delivery_total"] }}元<br>
+                            @if(@$datas["assign_data"]["coupon_total"] > 0)
+                                <span class="td-total-span">折價：</span>
+                                {{ @$datas["assign_data"]["coupon_total"] }}元<br>
+                            @endif
+                            <span class="td-total-span">總計：</span>
+                            {{ @$datas["assign_data"]["total"] }}元
+                        </td>
+                    </tr>
                 </table>
             </div>
             <div class="row">

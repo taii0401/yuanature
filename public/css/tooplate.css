@@ -202,7 +202,7 @@ p {
 }
 
 .tm-mt-small {
-    margin-top: 20px;
+    margin-top: 20px;    
 }
 
 .tm-block {
@@ -211,8 +211,9 @@ p {
 }
 
 .tm-block-title {
-    font-size: 1.4rem;
-    color: #333;
+    font-size: 1rem;
+    color: #3aabd0;
+    font-weight: bold;
     margin-bottom: 0px;
 }
 
@@ -446,8 +447,7 @@ label {
 }
 
 .table-hover tbody tr:hover {
-    background-color: white;
-    color: #0266c4
+    background-color: #e4eee5;
 }
 
 .tm-bg-gray {
@@ -469,6 +469,12 @@ label {
 /*table td 隱藏標題*/
 .td-data-span {
     display: none;
+}
+
+/*table td 訂單-合計*/
+.td-total-span {
+    display: inline-block;
+    line-height: 35px;
 }
 
 .page-item:first-child .page-link {
@@ -1073,7 +1079,6 @@ footer {
     .table-rwd tr {
         display: block;
         border: 1px solid #ddd;
-        margin-top: 5px;
     }
     .table-rwd td {
         text-align: left;
@@ -1081,6 +1086,10 @@ footer {
         width: 100%;
         display: block;
         padding: 6px;
+    }
+    .table-rwd.table-bordered td,.table-rwd.table-bordered th,
+    .table-rwd.table-bordered {
+        border:0;
     }
     .td-data-span {
         /*最重要的就是這串
@@ -1090,10 +1099,11 @@ footer {
         font-weight: bold;
         color: #006935;
     }
-    .table-rwd.table-bordered td,.table-rwd.table-bordered th,
-    .table-rwd.table-bordered {
-        border:0;
+    .td-total-span {
+        font-weight: bold;
+        color: #006935;
     }
+    .tr-total 
     .btn-action {
         background-color: #e4eee5;
     }
