@@ -15,6 +15,7 @@ return [
 
     //登入後轉向頁面
     "login_url" => "/product",
+    "login_url_cart" => "/orders/cart",
     
     //登出後轉向頁面
     "logout_url" => "/users",

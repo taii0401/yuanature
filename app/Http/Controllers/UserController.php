@@ -69,7 +69,11 @@ class UserController extends Controller
         if(!$login) {
             return back()->withErrors("帳號密碼錯誤或尚未驗證！");
         } else { 
-            return redirect(config("yuanature.login_url"));
+            if(session("cart") === NULL) { 
+                return redirect(config("yuanature.login_url"));
+            } else {
+                return redirect(config("yuanature.login_url_cart"));
+            }
         }
     }
 

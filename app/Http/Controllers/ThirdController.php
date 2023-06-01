@@ -88,7 +88,11 @@ class ThirdController extends Controller
             if(!$login) {
                 return back()->withErrors("LINE登入失敗！");
             } else { 
-                return redirect(config("yuanature.login_url"));
+                if(session("cart") === NULL) { 
+                    return redirect(config("yuanature.login_url"));
+                } else {
+                    return redirect(config("yuanature.login_url_cart"));
+                }
             }
         } catch (Exception $ex) {
             Log::error($ex);
@@ -186,7 +190,11 @@ class ThirdController extends Controller
             if(!$login) {
                 return back()->withErrors("FACEBOOK登入失敗！");
             } else { 
-                return redirect(config("yuanature.login_url"));
+                if(session("cart") === NULL) { 
+                    return redirect(config("yuanature.login_url"));
+                } else {
+                    return redirect(config("yuanature.login_url_cart"));
+                }
             }
         } catch (Exception $ex) {
             Log::error($ex);
