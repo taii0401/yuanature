@@ -20,7 +20,7 @@ class AuthController extends Controller
             $data["title_txt"] = "管理者登入";
             return view("backend.index",$data);
         } else { //已登入
-            return redirect("/admin/user");
+            return redirect("admin/user");
         }
     }
 

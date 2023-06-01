@@ -21,7 +21,7 @@ class AuthAdmin
         //echo "<pre>";print_r(session()->all());echo "</pre>";
         
         if(session("admin") === "") { //未登入
-            return redirect("/admin/");
+            return redirect("admin");
         } else {
             $uuid = session("admin");
 
@@ -35,7 +35,7 @@ class AuthAdmin
 
             //未成功取得資料，強制登出
             if(!$isLogIn) {
-                return redirect("/admin/");
+                return redirect("admin");
             }
         }
 

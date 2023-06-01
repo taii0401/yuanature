@@ -21,7 +21,7 @@ class AuthUser
         //echo "<pre>";print_r(session()->all());echo "</pre>";
         
         if(session("user") === "") { //未登入
-            return redirect("/users");
+            return redirect("users");
         } else {
             $uuid = session("user");
 
@@ -35,7 +35,7 @@ class AuthUser
 
             //未成功取得資料，強制登出
             if(!$isLogIn) {
-                return redirect("/users");
+                return redirect("users");
             }
         }
 
