@@ -1,3 +1,10 @@
+<form id="form_data" class="tm-signup-form" method="post">
+    @csrf
+    <input type="hidden" id="action_type" name="action_type" value="delete">
+    <input type="hidden" id="product_id" name="product_id" value="">
+    <input type="hidden" id="amount" name="amount" value="">
+</form>
+
 <table class="table table-hover table-striped table-bordered table-rwd">
     <thead>    
         <tr class="tr-only-hide text-center tm-bg-gray">
@@ -39,7 +46,7 @@
                 </td>
                 <td>
                     <span class="td-data-span">數量：</span>
-                    <input type="number" min="1" id="amount_{{ @$data["id"] }}" name="amount[]" value="{{ @$data["amount"] }}" style="width: 50px;" onchange="cartChangeTotal('{{ @$data["id"] }}');cartChangeUserCoupon();">
+                    <input type="number" min="1" id="amount_{{ @$data["id"] }}" name="amount[]" value="{{ @$data["amount"] }}" style="width: 50px;" onchange="cartChangeProductTotal('{{ @$data["id"] }}');cartChangeUserCoupon();">
                 </td>
                 <td>
                     <span class="td-data-span">售價：</span>
@@ -69,10 +76,12 @@
     <tr class="tr-total">
         <td align="right">
             <span class="td-total-span">合計：</span>
-            <span id="total">{{ @$datas["assign_data"]["product_total"] }}元</span><br>
+            <input type="hidden" id="product_total" name="product_total" value="">
+            <span id="product_total_text">{{ @$datas["assign_data"]["product_total"] }}</span>元
 
             <!-- 訂單 -->
             <span style="display: {{ @$datas["assign_data"]["order_display"]}}">
+                <br>
                 <span class="td-total-span">運費：</span>
                 {{ @$datas["assign_data"]["delivery_total"] }}元<br>
 

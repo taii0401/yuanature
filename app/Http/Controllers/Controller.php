@@ -490,11 +490,36 @@ class Controller extends BaseController
 
         //合計
         if($is_total) {
-            $datas["total"] = $total;
+            $datas["product_total"] = $total;
         }
 
         //$this->pr($datas);
         return $datas;
+    }
+
+    /**
+     * 取得購物車訂單資料
+     * @return array
+     */
+    public function getCartOrderData()
+    {
+        $data = [];
+
+        //取得購物車訂單資料
+        $data = session("cart_order");
+        if(!empty($data)) {
+            $coupon_total = 0;
+            //折價劵ID
+            $user_coupon_id = $data["user_coupon_id"];
+            //取得折價金額
+            $user_coupon_data = UserCoupon::where("id",$user_coupon_id)->where("expire_time",">=",date("Y-m-d H:i:s"))->where("status","nouse")->whereNull(["orders_id","used_time","deleted_at"])->first();
+            if(!empty($user_coupon_data)) {
+                $coupon_total = $user_coupon_data->total;
+            }
+            $data["coupon_total"] = $coupon_total;
+        }
+
+        return $data;
     }
 
     /**

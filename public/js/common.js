@@ -562,7 +562,36 @@ function userSubmit(action_type) {
     });
 }
 
-//購物車-新增、編輯、刪除、新增訂單資料
+//取得會員(可使用)折價劵
+function cartChangeUserCoupon() {
+    var csrf_token = getToken();
+    total = parseInt($('#product_total').val());
+    
+    text = '<option value="">請選擇</option>';
+    $.ajax({
+        type: 'POST',
+        url: '/common/get_user_coupon',
+        dataType: 'json',
+        async: false,
+        data: { '_token':csrf_token, 'total':total },
+        error: function(xhr) {
+            //console.log(xhr);
+            alert('傳送錯誤！');
+            returnFalseAction();
+            return false;
+        },
+        success: function(response) {
+            //console.log(response);
+            $.each(response, function(key, value) {
+                text += '<option value="'+key+'">'+value+'</option>';                    
+            });
+        }
+    });
+
+    $('#selsct_user_coupon').html(text);
+}
+
+//購物車-新增、編輯、刪除、新增折價劵資料、新增訂單資料
 function cartSubmit(action_type) {
     $('.btn_submit').attr('disabled', true);
     $('#action_type').val(action_type);
@@ -597,12 +626,17 @@ function cartSubmit(action_type) {
         }
     }
 
+    var form_name = 'form_data';
+    if (action_type == 'coupon') { //新增折價劵資料
+        form_name = 'form_data_'+action_type;
+    }
+
     $.ajax({
         type: 'POST',
         url: '/ajax/cart_data',
         dataType: 'json',
         async: false,
-        data: $('#form_data').serialize(),
+        data: $('#'+form_name).serialize(),
         error: function(xhr) {
             //console.log(xhr);
             alert('傳送錯誤！');
@@ -618,6 +652,8 @@ function cartSubmit(action_type) {
                 } else if (action_type == 'delete') { //刪除
                     alert("刪除成功！");
                     changeForm('/orders/cart');
+                } else if (action_type == 'coupon') { //新增折價劵資料
+                    changeForm('/orders/cart_user');
                 } else if (action_type == 'order') { //新增訂單資料
                     changeForm('/orders/cart_order');
                 }
@@ -639,7 +675,7 @@ function cartSubmit(action_type) {
 }
 
 //更新購物車小計、合計
-function cartChangeTotal(id) {
+function cartChangeProductTotal(id) {
     amount = parseInt($('#amount_' + id).val());
     price = parseInt($('#price_' + id).val());
 
@@ -665,36 +701,21 @@ function cartChangeTotal(id) {
     $('#product_total_text').html(total);
 }
 
-//取得會員(可使用)折價劵
-function cartChangeUserCoupon() {
-    var csrf_token = getToken();
-    total = parseInt($('#product_total').val());
+//更新總金額
+function cartChangeTotal() {
+    product_total = parseInt($('#product_total').val());
+    coupon_total = parseInt($('#coupon_total').val());
+    delivery_total = parseInt($('#delivery_total').val());
     
-    text = '<option value="">請選擇</option>';
-    $.ajax({
-        type: 'POST',
-        url: '/common/get_user_coupon',
-        dataType: 'json',
-        async: false,
-        data: { '_token':csrf_token, 'total':total },
-        error: function(xhr) {
-            //console.log(xhr);
-            alert('傳送錯誤！');
-            returnFalseAction();
-            return false;
-        },
-        success: function(response) {
-            //console.log(response);
-            $.each(response, function(key, value) {
-                text += '<option value="'+key+'">'+value+'</option>';                    
-            });
-        }
-    });
-
-    $('#selsct_user_coupon').html(text);
+    //計算總金額
+    total = 0;
+    total = product_total - coupon_total + delivery_total;
+    
+    $('#total').val(total);
+    $('#total_text').html(total);
 }
 
-//訂單-新增折價劵、新增、取消、付款
+//訂單-新增、取消、付款
 function orderSubmit(action_type) {
     $('.btn_submit').attr('disabled', true);
 

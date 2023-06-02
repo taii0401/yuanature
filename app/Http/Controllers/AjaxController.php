@@ -320,17 +320,37 @@ class AjaxController extends Controller
         return response()->json($this->returnResult());
     }
 
-    //購物車-新增、編輯、刪除、新增訂單資料
+    //購物車-新增、編輯、刪除、新增折價劵資料、新增訂單資料
     public function cart_data(Request $request)
     {
         $this->resetResult();
 
         $input = $request->all();
 
-        //表單動作類型(新增、編輯、刪除、新增訂單資料)
+        //表單動作類型(新增、編輯、刪除、新增折價劵資料、新增訂單資料)
         $action_type = $input["action_type"]??"add";
-        if($action_type == "order") {
+        if($action_type == "order") { //新增訂單資料
+            //檢查欄位、檢查訊息
+            $validator_data = $validator_message = [];
+            $validator_data["name"] = "required";
+            $validator_data["phone"] = "required";
+            $validator_data["email"] = "required|email"; 
+            $validator_message["name.required"] = "請輸入姓名！";
+            $validator_message["phone.required"] = "請輸入手機！";
+            $validator_message["email.required"] = "請輸入電子郵件！";
+            $validator_message["email.email"] = "請確認電子郵件格式！";   
+            
+            $validator = Validator::make($input,$validator_data,$validator_message);
 
+            if($validator->fails()) {
+                foreach($validator->errors()->all() as $message) {
+                    $this->message = $message;
+                }
+            }
+
+            if($this->message != "") {
+                return response()->json($this->returnResult());
+            }
         } else {
             $product_id = $input["product_id"]??1;
             $amount = $input["amount"]??1;
@@ -338,7 +358,7 @@ class AjaxController extends Controller
 
         //取得購物車資料
         $cart_data = session("cart");
-        if($action_type == "add" || $action_type == "edit") {
+        if($action_type == "add" || $action_type == "edit") { //新增、編輯
             if(isset($cart_data[$product_id]) && $cart_data[$product_id] >= 0) {
                 if($action_type == "add") {
                     $cart_data[$product_id] += $amount;
@@ -350,13 +370,13 @@ class AjaxController extends Controller
                 session(["cart" => [$product_id => $amount]]);
             }
             $this->error = false;
-        } else if($action_type == "delete") {
+        } else if($action_type == "delete") { //刪除
             if(isset($cart_data[$product_id])) {
                 unset($cart_data[$product_id]);
                 session(["cart" => $cart_data]);
             }
             $this->error = false;
-        } else if($action_type == "order") {
+        } else if($action_type == "coupon" || $action_type == "order") { //新增折價劵資料、新增訂單資料
             if(isset($input["_token"])) {
                 unset($input["_token"]);
             }

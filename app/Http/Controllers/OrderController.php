@@ -189,15 +189,20 @@ class OrderController extends Controller
         //取得購物車資料
         $cart_data = $this->getCartData(true);
         //合計
-        $total = 0;
-        if(isset($cart_data["total"])) {
-            $total = $cart_data["total"];
-            unset($cart_data["total"]);
+        $product_total = 0;
+        if(isset($cart_data["product_total"])) {
+            $product_total = $cart_data["product_total"];
+            unset($cart_data["product_total"]);
         }
-        $assign_data["product_total"] = $total;
+        $assign_data["product_total"] = $product_total;
 
         //取得會員折價劵
-        $user_coupon_data = $this->getUserCouponData(0,$total);
+        $user_coupon_data = $this->getUserCouponData(0,$product_total);
+        //已選取的折價劵
+        $cart_order_data = $this->getCartOrderData();
+        if(isset($cart_order_data["user_coupon_id"]) && $cart_order_data["user_coupon_id"] > 0) {
+            $assign_data["user_coupon_id"] = $cart_order_data["user_coupon_id"];
+        }
 
         $datas["assign_data"] = $assign_data;
         $datas["detail_data"] = $cart_data;
@@ -209,6 +214,8 @@ class OrderController extends Controller
     //購物車-收件人資料
     public function cartUser(Request $request)
     {
+        $this->pr(session("cart"));
+        $this->pr(session("cart_order"));
         $datas = $assign_data = $option_data = [];
 
         //取得會員資料
@@ -226,17 +233,26 @@ class OrderController extends Controller
         
         //取得購物車資料
         $cart_data = $this->getCartData(true);
-        //合計
-        $total = 0;
-        if(isset($cart_data["total"])) {
-            $total = $cart_data["total"];
-            unset($cart_data["total"]);
+        //商品合計
+        $product_total = 0;
+        if(isset($cart_data["product_total"])) {
+            $product_total = $cart_data["product_total"];
+            unset($cart_data["product_total"]);
         }
-        $assign_data["total"] = $total;
+        $assign_data["product_total"] = $product_total;
+
+        //取得折價劵金額
+        $coupon_total = 0;
+        $cart_order_data = $this->getCartOrderData();
+        if(isset($cart_order_data["coupon_total"]) && $cart_order_data["coupon_total"] > 0) {
+            $coupon_total = $cart_order_data["coupon_total"];
+        }
+        $assign_data["coupon_total"] = $coupon_total;
+        $assign_data["delivery_total"] = 0;
 
         //2萬元以上只可選擇宅配
         $assign_data["delivery_disabled"] = "";
-        if($total > 20000) {
+        if($product_total > 20000) {
             $assign_data["delivery_disabled"] = "disabled";
             $assign_data["delivery"] = "home";
         }
