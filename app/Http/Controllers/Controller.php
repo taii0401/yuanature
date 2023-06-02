@@ -535,8 +535,8 @@ class Controller extends BaseController
                     if(isset($user_coupon_data["coupon_code"])) {
                         //購物金
                         if($user_coupon_data["coupon_code"] == "M") {
-                            if($total >= 1000) {
-                                $datas[$user_coupon_data["id"]] = $user_coupon_data["coupon_name"]."(".$user_coupon_data["serial"].") - ".$user_coupon_data["total"]."元";
+                            if($total >= 1000) { //滿1000元才可折抵
+                                $datas[$user_coupon_data["id"]] = $user_coupon_data["coupon_name"]."(".$user_coupon_data["serial"].")-".$user_coupon_data["total"]."元";
                             }
                         }
                     }

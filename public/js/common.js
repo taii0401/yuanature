@@ -661,19 +661,22 @@ function cartChangeTotal(id) {
         }
     });
     //console.log(total);
-    $('#total').html(total);
+    $('#product_total').val(total);
+    $('#product_total_text').html(total);
 }
 
-//更新會員(可使用)折價劵
+//取得會員(可使用)折價劵
 function cartChangeUserCoupon() {
-    total = parseInt($('#total').val());
-
+    var csrf_token = getToken();
+    total = parseInt($('#product_total').val());
+    
+    text = '<option value="">請選擇</option>';
     $.ajax({
         type: 'POST',
-        url: '/ajax/get_user_coupon',
+        url: '/common/get_user_coupon',
         dataType: 'json',
         async: false,
-        data: { 'total':total },
+        data: { '_token':csrf_token, 'total':total },
         error: function(xhr) {
             //console.log(xhr);
             alert('傳送錯誤！');
@@ -682,12 +685,16 @@ function cartChangeUserCoupon() {
         },
         success: function(response) {
             //console.log(response);
-            
+            $.each(response, function(key, value) {
+                text += '<option value="'+key+'">'+value+'</option>';                    
+            });
         }
     });
+
+    $('#selsct_user_coupon').html(text);
 }
 
-//訂單-新增、取消、付款
+//訂單-新增折價劵、新增、取消、付款
 function orderSubmit(action_type) {
     $('.btn_submit').attr('disabled', true);
 
@@ -714,11 +721,11 @@ function orderSubmit(action_type) {
         }
     }
 
-    var form_name = 'form_data';
-    if(action_type == 'cancel') {
-        form_name = 'form_data_cancel';
-    } else if(action_type == 'pay') {
-        form_name = 'form_data_pay';
+    var form_name = '';
+    if(action_type == 'add') { //新增
+        form_name = 'form_data';
+    } else {
+        form_name = 'form_data_'+action_type;
     }
 
     $('.form-control').attr('disabled', false);
@@ -739,7 +746,9 @@ function orderSubmit(action_type) {
         success: function(response) {
             //console.log(response);
             if (response.error == false) {
-                if (action_type == 'add') {
+                if (action_type == 'add_coupon') { //新增折價劵
+                    changeForm('/orders/cart_user');
+                } else if (action_type == 'add') { //新增
                     changeForm('/orders/cart_order');
                 }
 

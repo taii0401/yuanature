@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\CommonController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AjaxController;
@@ -61,8 +63,9 @@ Route::controller(FrontController::class)->group(function() {
 Route::group([
     "prefix" => "common"
 ], function($router) {    
-    Route::controller(Controller::class)->group(function() { 
-        
+    Route::controller(CommonController::class)->group(function() { 
+        //取得會員(可使用)折價劵
+        Route::post("get_user_coupon","getUserCoupon");
     });
 });
 
@@ -208,9 +211,6 @@ $ajaxs[] = "cart_data"; //購物車-新增、編輯、刪除、新增訂單資�
 $ajaxs[] = "orders_data"; //訂單-新增、編輯、取消
 $ajaxs[] = "contact_data"; //聯絡我們-新增
 $ajaxs[] = "feedback_data"; //使用者回饋-新增
-
-$ajaxs[] = "get_user_coupon"; //取得會員(可使用)折價劵
-
 foreach($ajaxs as $ajax) {
     Route::post("/ajax/".$ajax,[AjaxController::class,$ajax]); 
 }
