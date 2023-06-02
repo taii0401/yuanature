@@ -562,10 +562,32 @@ function userSubmit(action_type) {
     });
 }
 
-//購物車-新增、編輯、刪除
+//購物車-新增、編輯、刪除、新增訂單資料
 function cartSubmit(action_type) {
     $('.btn_submit').attr('disabled', true);
     $('#action_type').val(action_type);
+
+    if (action_type == 'order') { //新增訂單資料
+        //檢查必填
+        if (checkRequiredClass('require', true) == false) {
+            returnFalseAction();
+            return false;
+        }
+        //檢查手機號碼
+        if ($('#phone').val() != '') {
+            if (checkFormat('phone', $('#phone').val(), 0, true) == false) {
+                returnFalseAction();
+                return false;
+            }
+        }
+        //檢查電子郵件
+        if ($('#email').val() != '') {
+            if (checkFormat('email', $('#email').val(), 0, true) == false) {
+                returnFalseAction();
+                return false;
+            }
+        }
+    }
 
     if (action_type == 'delete') { //刪除
         var yes = confirm("你確定要刪除嗎？");
@@ -596,6 +618,8 @@ function cartSubmit(action_type) {
                 } else if (action_type == 'delete') { //刪除
                     alert("刪除成功！");
                     changeForm('/orders/cart');
+                } else if (action_type == 'order') { //新增訂單資料
+                    changeForm('/orders/cart_order');
                 }
             } else if (response.error == true) {
                 if (action_type == 'add') { //新增
@@ -638,6 +662,29 @@ function cartChangeTotal(id) {
     });
     //console.log(total);
     $('#total').html(total);
+}
+
+//更新會員(可使用)折價劵
+function cartChangeUserCoupon() {
+    total = parseInt($('#total').val());
+
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/get_user_coupon',
+        dataType: 'json',
+        async: false,
+        data: { 'total':total },
+        error: function(xhr) {
+            //console.log(xhr);
+            alert('傳送錯誤！');
+            returnFalseAction();
+            return false;
+        },
+        success: function(response) {
+            //console.log(response);
+            
+        }
+    });
 }
 
 //訂單-新增、取消、付款
@@ -692,16 +739,21 @@ function orderSubmit(action_type) {
         success: function(response) {
             //console.log(response);
             if (response.error == false) {
-                if (action_type == 'add' || action_type == 'pay') { //新增、付款
+                if (action_type == 'add') {
+                    changeForm('/orders/cart_order');
+                }
+
+
+                /*if (action_type == 'add' || action_type == 'pay') { //新增、付款
                     uuid = response.message;
-                    changeForm('/orders/pay_check?orders_uuid=' + uuid);
+                    changeForm('/orders/cart_pay?orders_uuid=' + uuid);
 
                     //alert("購買成功！");
                     //changeForm('/orders/detail?orders_uuid='+uuid);
                 } else if (action_type == 'cancel') { //取消
                     alert("取消成功！");
                     changeForm('/orders');
-                }
+                }*/
             } else if (response.error == true) {
                 showMsg('msg_error', response.message, false);
                 returnFalseAction();

@@ -20,6 +20,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Storage;
 //使用者權限
 use App\Libraries\AdminAuth;
+use App\Libraries\UserAuth;
 //Model
 use App\Models\LogRecord;
 use App\Models\Product;
@@ -493,6 +494,56 @@ class Controller extends BaseController
         }
 
         //$this->pr($datas);
+        return $datas;
+    }
+
+    /**
+     * 取得會員(可使用)折價劵
+     * @param  user_id：會員ID
+     * @param  total：金額
+     * @return array
+     */
+    public function getUserCouponData($user_id=0,$total=0)
+    {
+        $datas = [];
+
+        if($user_id == 0) {
+            //取得會員資料
+            $user_data = UserAuth::userdata();
+            if(!empty($user_data)) {
+                $user_data_arr = $user_data->toArray();
+                $user_id = $user_data_arr["id"]??0;
+            }
+        }
+        
+        if($user_id > 0) {
+            //取得會員所有折價劵
+            $user_coupon_datas = UserCoupon::select([
+                "user_coupon.*",
+                "coupon.code as coupon_code",
+                "coupon.name as coupon_name",
+                "coupon.status as coupon_status",
+            ])
+            ->leftJoin("coupon","coupon.id","user_coupon.coupon_id")
+            ->where("user_id",$user_id)->where("expire_time",">=",date("Y-m-d H:i:s"))
+            ->where("user_coupon.status","nouse")->whereNull(["orders_id","used_time","user_coupon.deleted_at"])
+            ->get()->toArray();
+            
+            //取得可使用的折價劵
+            if(!empty($user_coupon_datas)) {
+                foreach($user_coupon_datas as $user_coupon_data) {
+                    if(isset($user_coupon_data["coupon_code"])) {
+                        //購物金
+                        if($user_coupon_data["coupon_code"] == "M") {
+                            if($total >= 1000) {
+                                $datas[$user_coupon_data["id"]] = $user_coupon_data["coupon_name"]."(".$user_coupon_data["serial"].") - ".$user_coupon_data["total"]."元";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         return $datas;
     }
 

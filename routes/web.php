@@ -120,9 +120,13 @@ Route::group([
         //訂單明細
         Route::get("/detail","detail");
         //購物車-收件人資料
-        Route::get("/pay_user","payUser");
-        //購物車結帳
-        Route::get("/pay_check","payCheck");
+        Route::get("/cart_user","cartUser");
+        //購物車-訂單資料
+        Route::get("/cart_order","cartOrder");
+        //購物車-訂單取消
+        Route::get("/cart_cancel","cartCancel");
+        //購物車-結帳
+        Route::get("/cart_pay","cartPay");
     });
 });
 
@@ -200,10 +204,13 @@ $ajaxs[] = "delete_file"; //檔案-刪除檔案實際路徑
 $ajaxs[] = "user_exist"; //會員資料-檢查帳號是否存在
 $ajaxs[] = "user_forget"; //會員資料-忘記密碼
 $ajaxs[] = "user_data"; //會員資料-新增、編輯、刪除
-$ajaxs[] = "cart_data"; //購物車-新增、編輯、刪除
+$ajaxs[] = "cart_data"; //購物車-新增、編輯、刪除、新增訂單資料
 $ajaxs[] = "orders_data"; //訂單-新增、編輯、取消
 $ajaxs[] = "contact_data"; //聯絡我們-新增
 $ajaxs[] = "feedback_data"; //使用者回饋-新增
+
+$ajaxs[] = "get_user_coupon"; //取得會員(可使用)折價劵
+
 foreach($ajaxs as $ajax) {
     Route::post("/ajax/".$ajax,[AjaxController::class,$ajax]); 
 }

@@ -1,17 +1,17 @@
 @extends('layouts.frontBase')
 @section('title') {{ @$datas["assign_data"]["title_txt"] }} @endsection
-@section('banner_menu_txt') {{ @$datas["assign_data"]["title_txt"] }} @endsection
+@section('banner_menu_txt') 購物車 > {{ @$datas["assign_data"]["title_txt"] }} @endsection
 @section('content')
 <div class="row tm-mt-big">
     <div class="col-12 mx-auto tm-login">
         <div class="bg-white tm-block">
             <form id="form_data" class="tm-signup-form" method="post">
                 @csrf
-                <input type="hidden" id="action_type" name="action_type" value="add">
+                <input type="hidden" id="action_type" name="action_type" value="order">
                 <input type="hidden" id="total" name="total" value="{{ @$datas["assign_data"]["total"] }}">
                 <div class="row">
                     <div class="col-12">
-                        <h4 class="tm-block-title mb-4">{{ @$datas["assign_data"]["title_txt"] }} - 總金額：{{ @$datas["assign_data"]["total"] }}</h4>
+                        <h5 class="mt-3">總金額：{{ @$datas["assign_data"]["total"] }}元 運費：元</h5>
                     </div>
                 </div>
                 <div class="row">
@@ -85,7 +85,7 @@
                             <div class="col-12 col-sm-6"></div>
                             <div class="col-12 col-sm-6 tm-btn-right">
                                 <button type="button" class="btn btn-primary btn_submit" onclick="changeForm('/orders/cart');">上一步</button>
-                                <button type="button" class="btn btn-danger btn_submit" onclick="orderSubmit('add')">結帳</button>
+                                <button type="button" class="btn btn-danger btn_submit" onclick="cartSubmit('order');">下一步</button>
                             </div>
                         </div>
                     </div>

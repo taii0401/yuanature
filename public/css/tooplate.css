@@ -253,7 +253,7 @@ p {
 .tm-col {
     padding-left: 20px;
     padding-right: 20px;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
 }
 
 .tm-col-big {
@@ -452,6 +452,10 @@ label {
 
 .tm-bg-gray {
     background-color: rgba(0, 0, 0, 0.05);
+}
+
+.tm-bg-white {
+    background-color: white;
 }
 
 .tm-table-striped-even.table-striped tbody tr:nth-of-type(even) {

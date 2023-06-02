@@ -183,36 +183,31 @@ class OrderController extends Controller
     {
         $datas = $assign_data = [];
         $assign_data["title_txt"] = "購物車";
-        //顯示欄位
-        $assign_data["danger_none"] = $assign_data["success_none"] = "none"; //顯示訊息
-        $assign_data["order_none"] = "";
-        $assign_data["cart_none"] = "none";
-        //隱藏按鈕-結帳
-        $assign_data["btn_none"] = "none";
+        //隱藏訂單
+        $assign_data["order_display"] = "none";
 
-        $total = 0; //合計
         //取得購物車資料
         $cart_data = $this->getCartData(true);
         //合計
+        $total = 0;
         if(isset($cart_data["total"])) {
             $total = $cart_data["total"];
             unset($cart_data["total"]);
         }
+        $assign_data["product_total"] = $total;
 
-        //顯示結帳按鈕
-        if(!empty($cart_data)) {
-            $assign_data["btn_none"] = "";
-        }
-        $assign_data["total"] = $total;
+        //取得會員折價劵
+        $user_coupon_data = $this->getUserCouponData(0,$total);
 
         $datas["assign_data"] = $assign_data;
-        $datas["cart_data"] = $cart_data;
+        $datas["detail_data"] = $cart_data;
+        $datas["user_coupon_data"] = $user_coupon_data;
         
-        return view("orders.data",["datas" => $datas]);
+        return view("orders.cart",["datas" => $datas]);
     }
 
     //購物車-收件人資料
-    public function payUser(Request $request)
+    public function cartUser(Request $request)
     {
         $datas = $assign_data = $option_data = [];
 
@@ -229,10 +224,10 @@ class OrderController extends Controller
         $assign_data["payment"] = array_key_first($option_data["payment"]);
         $assign_data["delivery"] = array_key_first($option_data["delivery"]);
         
-        $total = 0; //合計
         //取得購物車資料
         $cart_data = $this->getCartData(true);
         //合計
+        $total = 0;
         if(isset($cart_data["total"])) {
             $total = $cart_data["total"];
             unset($cart_data["total"]);
@@ -248,13 +243,38 @@ class OrderController extends Controller
 
         $datas["assign_data"] = $assign_data;
         $datas["option_data"] = $option_data;
-        $datas["cart_data"] = $cart_data;
         
-        return view("orders.payUser",["datas" => $datas]);
+        return view("orders.cartUser",["datas" => $datas]);
     }
 
-    //購物車結帳
-    public function payCheck(Request $request)
+    //購物車-訂單資料
+    public function cartOrder(Request $request)
+    {
+        $datas = $assign_data = $option_data = [];
+
+        $assign_data["title_txt"] = "確認訂單";
+
+        //取得購物車資料
+        $cart_data = $this->getCartData(true);
+        //取得購物車-訂單資料
+        $cart_order_data = session("cart_order");
+        dd($cart_order_data);
+
+        return view("orders.cartOrder",["datas" => $datas]);
+    }
+
+    //購物車-訂單取消
+    public function cartCancel(Request $request)
+    {
+        session()->forget("cart");
+        session()->forget("cart_order");
+
+        //會員中心
+        return redirect("users");
+    }
+
+    //購物車-結帳
+    public function cartPay(Request $request)
     {
         //付款方式
         $orders_payment_datas = config("yuanature.orders_payment");
@@ -359,10 +379,10 @@ class OrderController extends Controller
             $assign_data["MpgAction"] = env("MPG_ACTION","");
         } else { //資料有誤，無法串接
             //訂單列表
-            return redirect("orders/");
+            return redirect("orders");
         }  
 
-        return view("orders.payCheck",["assign_data" => $assign_data]);
+        return view("orders.cartPay",["assign_data" => $assign_data]);
     }
 
     //檢查串接金流回傳結果

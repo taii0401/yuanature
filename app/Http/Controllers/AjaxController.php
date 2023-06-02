@@ -320,17 +320,21 @@ class AjaxController extends Controller
         return response()->json($this->returnResult());
     }
 
-    //購物車-新增、編輯、刪除
+    //購物車-新增、編輯、刪除、新增訂單資料
     public function cart_data(Request $request)
     {
         $this->resetResult();
 
         $input = $request->all();
 
-        //表單動作類型(新增、刪除)
+        //表單動作類型(新增、編輯、刪除、新增訂單資料)
         $action_type = $input["action_type"]??"add";
-        $product_id = $input["product_id"]??1;
-        $amount = $input["amount"]??1;
+        if($action_type == "order") {
+
+        } else {
+            $product_id = $input["product_id"]??1;
+            $amount = $input["amount"]??1;
+        }
 
         //取得購物車資料
         $cart_data = session("cart");
@@ -352,13 +356,21 @@ class AjaxController extends Controller
                 session(["cart" => $cart_data]);
             }
             $this->error = false;
+        } else if($action_type == "order") {
+            if(isset($input["_token"])) {
+                unset($input["_token"]);
+            }
+            if(isset($input["action_type"])) {
+                unset($input["action_type"]);
+            }
+            session(["cart_order" => $input]);
+            $this->error = false;
         } else {
             $this->message = "操作失敗";
         }
         
         return response()->json($this->returnResult());
     }
-
     
     //訂單-新增、取消、付款
     public function orders_data(Request $request)
@@ -465,7 +477,7 @@ class AjaxController extends Controller
                                 $detail_data["product_id"] = $cart_data["id"]??0;
                                 $detail_data["amount"] = $cart_data["amount"]??0;
                                 $detail_data["price"] = $cart_data["sales"]??0;
-                                $detail_data["total"] = $cart_data["subtotal"]??0;
+                                $detail_data["product_total"] = $cart_data["subtotal"]??0;
         
                                 try {
                                     OrdersDetail::create($detail_data);

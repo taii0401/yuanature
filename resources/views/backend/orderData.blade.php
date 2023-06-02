@@ -9,59 +9,10 @@
             </div>
             <div class="table-responsive" style="margin-top: 10px;">
                 @include('tables.order')
+                @include('tables.orderUser')
             </div>
             <div class="table-responsive">
-                <table class="table table-hover table-striped table-bordered table-rwd">
-                    <thead>    
-                        <tr class="tr-only-hide text-center">
-                            <th>商品名稱</th>
-                            <th>數量</th>
-                            <th>售價</th>
-                            <th>小計</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if(isset($datas["detail_data"]) && !empty($datas["detail_data"]))
-                            @foreach($datas["detail_data"] as $data) 
-                            <tr>
-                                <td>
-                                    <span class="td-data-span">商品名稱：</span>
-                                    {{ @$data["name"] }}
-                                </td>
-                                <td>
-                                    <span class="td-data-span">數量：</span>
-                                    {{ @$data["amount"] }}
-                                </td>
-                                <td>
-                                    <span class="td-data-span">售價：</span>
-                                    {{ @$data["price"] }}
-                                </td>
-                                <td>
-                                    <span class="td-data-span">小計：</span>
-                                    {{ @$data["total"] }}元
-                                </td>
-                            </tr>
-                            @endforeach
-                        @endif
-                        
-                    </tbody>
-                </table>
-                <table class="table table-rwd">
-                    <tr class="tr-total">
-                        <td align="right">
-                            <span class="td-total-span">合計：</span>
-                            {{ @$datas["assign_data"]["product_total"] }}元<br>
-                            <span class="td-total-span">運費：</span>
-                            {{ @$datas["assign_data"]["delivery_total"] }}元<br>
-                            @if(@$datas["assign_data"]["coupon_total"] > 0)
-                                <span class="td-total-span">折價：</span>
-                                {{ @$datas["assign_data"]["coupon_total"] }}元<br>
-                            @endif
-                            <span class="td-total-span">總計：</span>
-                            {{ @$datas["assign_data"]["total"] }}元
-                        </td>
-                    </tr>
-                </table>
+                @include('tables.orderCart')
             </div>
             <div class="row">
                 <div class="col-12 col-sm-6"></div>
