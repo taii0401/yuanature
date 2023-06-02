@@ -507,7 +507,7 @@ class Controller extends BaseController
 
         //取得購物車訂單資料
         $data = session("cart_order");
-        if(!empty($data)) {
+        if(!empty($data) && isset($data["user_coupon_id"]) && $data["user_coupon_id"] > 0) {
             $coupon_total = 0;
             //折價劵ID
             $user_coupon_id = $data["user_coupon_id"];

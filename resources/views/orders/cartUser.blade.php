@@ -8,6 +8,7 @@
             <form id="form_data" class="tm-signup-form" method="post">
                 @csrf
                 <input type="hidden" id="action_type" name="action_type" value="order">
+                <input type="hidden" id="user_coupon_id" name="user_coupon_id" value="{{ @$datas["assign_data"]["user_coupon_id"] }}">
                 <div class="row">
                     <div class="table-responsive">
                         @include('tables.orderTotal')
@@ -90,7 +91,7 @@
                         <div class="row" style="margin-top:20px;">
                             <div class="col-12">
                                 <label>備註</label>
-                                <textarea id="order_remark" name="order_remark" class="form-control"></textarea>
+                                <textarea id="order_remark" name="order_remark" class="form-control">{!! @$datas["assign_data"]["order_remark"] !!}</textarea>
                             </div>
                         </div>
                         <div class="row">

@@ -222,6 +222,8 @@ class OrderController extends Controller
             $assign_data = $user_data->toArray();
         }
         $assign_data["title_txt"] = "收件人資料";
+        //折價劵金額、運費
+        $assign_data["coupon_total"] = $assign_data["delivery_total"] = 0;
 
         //取得付款方式、配送方式、台灣本島或離島
         $option_data["payment"] = $this->getConfigOptions("orders_payment",false);
@@ -241,13 +243,13 @@ class OrderController extends Controller
         }
         $assign_data["product_total"] = $product_total;
 
-        //取得折價劵金額
-        $coupon_total = 0;
+        //取得購物車訂單資料
         $cart_order_data = $this->getCartOrderData();
-        if(isset($cart_order_data["coupon_total"]) && $cart_order_data["coupon_total"] > 0) {
-            $coupon_total = $cart_order_data["coupon_total"];
+        if(!empty($cart_order_data)) {
+            foreach($cart_order_data as $cart_order_key => $cart_order_val) {
+                $assign_data[$cart_order_key] = $cart_order_val;
+            }
         }
-        $assign_data["coupon_total"] = $coupon_total;
 
         //2萬元以上只可選擇宅配
         $assign_data["delivery_disabled"] = "";
@@ -255,18 +257,18 @@ class OrderController extends Controller
             $assign_data["delivery_disabled"] = "disabled";
             $assign_data["delivery"] = "home";
         }
-        //運費
-        $assign_data["delivery_total"] = 0;
 
         $datas["assign_data"] = $assign_data;
         $datas["option_data"] = $option_data;
-        
+        //dd($assign_data);
         return view("orders.cartUser",["datas" => $datas]);
     }
 
     //購物車-訂單資料
     public function cartOrder(Request $request)
     {
+        $this->pr(session("cart"));
+        $this->pr(session("cart_order"));
         $datas = $assign_data = $option_data = [];
 
         $assign_data["title_txt"] = "確認訂單";
@@ -275,7 +277,7 @@ class OrderController extends Controller
         $cart_data = $this->getCartData(true);
         //取得購物車-訂單資料
         $cart_order_data = session("cart_order");
-        dd($cart_order_data);
+        //dd($cart_order_data);
 
         return view("orders.cartOrder",["datas" => $datas]);
     }
