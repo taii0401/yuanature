@@ -248,7 +248,6 @@ class OrderController extends Controller
             $coupon_total = $cart_order_data["coupon_total"];
         }
         $assign_data["coupon_total"] = $coupon_total;
-        $assign_data["delivery_total"] = 0;
 
         //2萬元以上只可選擇宅配
         $assign_data["delivery_disabled"] = "";
@@ -256,6 +255,8 @@ class OrderController extends Controller
             $assign_data["delivery_disabled"] = "disabled";
             $assign_data["delivery"] = "home";
         }
+        //運費
+        $assign_data["delivery_total"] = 0;
 
         $datas["assign_data"] = $assign_data;
         $datas["option_data"] = $option_data;
