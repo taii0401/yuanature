@@ -50,8 +50,14 @@ return [
 
     //配送方式
     "orders_delivery" => [
-        "store" => ["name" => "超商取貨","color" => "#B87800"],
-        "home" => ["name" => "宅配配送","color" => "#008A8A"]
+        "home" => ["name" => "宅配配送","color" => "#008A8A"],
+        "store" => ["name" => "超商取貨","color" => "#B87800"]
+    ],
+
+    //台灣本島或離島
+    "orders_island" => [
+        "main" => ["name" => "台灣本島","color" => "#B87800"],
+        "outlying" => ["name" => "台灣離島","color" => "#008A8A"]
     ],
 
     //取消原因

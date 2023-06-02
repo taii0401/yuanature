@@ -33,6 +33,7 @@ class CreateOrderTable extends Migration
             $table->integer('total')->default(0)->comment('總價');
             $table->string('payment',10)->nullable()->comment('付款方式：config.orders_payment');
             $table->string('delivery',10)->nullable()->comment('配送方式：config.orders_delivery');
+            $table->string('island',10)->nullable()->comment('台灣本島或離島：config.orders_island');
             $table->string('status',10)->nullable()->comment('訂單狀態：config.orders_status');
             $table->string('cancel',10)->nullable()->comment('取消原因：config.orders_cancel');
             $table->longText('cancel_remark')->nullable()->comment('取消備註');

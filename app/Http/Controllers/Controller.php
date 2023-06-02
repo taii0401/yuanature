@@ -573,6 +573,39 @@ class Controller extends BaseController
     }
 
     /**
+     * 取得運費
+     * 台灣本島：滿1500免運費，宅配：100元，超商取貨：70元
+     * 台灣離島：滿2000免運費，宅配：150元，超商取貨：110元
+     * @param  product_total：商品金額
+     * @param  orders_delivery：配送方式-store 超商取貨、home 宅配配送
+     * @param  orders_island：台灣本島或離島-main 台灣本島、outlying 台灣離島
+     * @return int
+     */
+    public function getDeliveryTotalData($product_total=0,$orders_delivery="home",$orders_island="main")
+    {
+        $delivery_total = 0;
+        if($orders_island == "main") {
+            if($product_total < 1500) {
+                if($orders_delivery == "home") {
+                    $delivery_total = 100;
+                } else  {
+                    $delivery_total = 70;
+                }
+            }
+        } else {
+            if($product_total < 2000) {
+                if($orders_delivery == "home") {
+                    $delivery_total = 150;
+                } else  {
+                    $delivery_total = 110;
+                }
+            }
+        }
+
+        return $delivery_total;
+    }
+
+    /**
      * 送折價劵
      * @param  type：註冊(user_register)
      * @param  user_id：會員ID

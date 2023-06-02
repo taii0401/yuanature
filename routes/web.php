@@ -66,6 +66,8 @@ Route::group([
     Route::controller(CommonController::class)->group(function() { 
         //取得會員(可使用)折價劵
         Route::post("get_user_coupon","getUserCoupon");
+        //取得運費
+        Route::post("get_delivery_total","getDeliveryTotal");
     });
 });
 

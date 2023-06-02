@@ -10,40 +10,7 @@
                 <input type="hidden" id="action_type" name="action_type" value="order">
                 <div class="row">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-rwd" style="background-color: #F2FFFF;">
-                            <thead>    
-                                <tr class="tr-only-hide text-center">
-                                    <th>商品金額</th>
-                                    <th>折價金額</th>
-                                    <th>運費</th>
-                                    <th>總金額</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <span class="td-data-span">商品金額：</span>
-                                        <input type="hidden" id="product_total" name="product_total" value="{{ @$datas["assign_data"]["product_total"] }}">
-                                        {{ @$datas["assign_data"]["product_total"] }}元
-                                    </td>            
-                                    <td>
-                                        <span class="td-data-span">折價金額：</span>
-                                        <input type="hidden" id="coupon_total" name="coupon_total" value="{{ @$datas["assign_data"]["coupon_total"] }}">
-                                        {{ @$datas["assign_data"]["coupon_total"] }}元
-                                    </td>
-                                    <td>
-                                        <span class="td-data-span">運費：</span>
-                                        <input type="hidden" id="delivery_total" name="delivery_total" value="{{ @$datas["assign_data"]["delivery_total"] }}">
-                                        {{ @$datas["assign_data"]["delivery_total"] }}元
-                                    </td>
-                                    <td>
-                                        <span class="td-data-span">總金額：</span>
-                                        <input type="hidden" id="total" name="total" value="">
-                                        <span id="total_text">{{ @$datas["assign_data"]["total"] }}</span>元
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        @include('tables.orderTotal')
                     </div>
                 </div>
                 <div class="row">
@@ -84,7 +51,20 @@
                                 @if(isset($datas["option_data"]["delivery"]) && !empty($datas["option_data"]["delivery"]))    
                                     @foreach($datas["option_data"]["delivery"] as $key => $val) 
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="delivery" id="delivery_{{ @$key }}" value="{{ @$key }}" {{ @$datas["assign_data"]["delivery_disabled"] }} @if($key == $datas["assign_data"]["delivery"]) checked @endif onclick="changeDataDisplay('checked','delivery','address','home',true);">
+                                            <input class="form-check-input" type="radio" name="delivery" id="delivery_{{ @$key }}" value="{{ @$key }}" {{ @$datas["assign_data"]["delivery_disabled"] }} @if($key == $datas["assign_data"]["delivery"]) checked @endif onclick="changeDataDisplay('checked','delivery','address','home',true);changeDeliveryTotal();">
+                                            <label class="form-check-label">{{ @$val }}</label>
+                                        </div>
+                                    @endforeach
+                                @endif
+                                </div>                  
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
+                                <label><span class="star">* </span>台灣本島或離島</label>
+                                <div class="col-12">
+                                @if(isset($datas["option_data"]["island"]) && !empty($datas["option_data"]["island"]))    
+                                    @foreach($datas["option_data"]["island"] as $key => $val) 
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="island" id="island_{{ @$key }}" value="{{ @$key }}" @if($key == $datas["assign_data"]["island"]) checked @endif onclick="changeDeliveryTotal();">
                                             <label class="form-check-label">{{ @$val }}</label>
                                         </div>
                                     @endforeach
@@ -95,7 +75,7 @@
                                 <input type="hidden" data-role="zipcode" id="address_zip" name="address_zip" class="form-control" value="{{ @$datas["assign_data"]["address_zip"] }}">
                                 <div class="col-xl-2 col-lg-2 col-md-3 col-sm-12">
                                     <label><span class="star">* </span>地址</label>
-                                    <select class="custom-select " data-role="county" id="county" name="address_county"></select>
+                                    <select class="custom-select " data-role="county" id="county" name="address_county" onclick="changeIsland()"></select>
                                 </div>
                                 <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
                                     <label><br/></label>
@@ -135,11 +115,24 @@
     twzipcode.set("{{ @$datas["assign_data"]["address_zip"] }}");
 
     $(function () {
-        //計算總金額
-        cartChangeTotal();
-
         //配送方式-宅配配送顯示收件人地址
         changeDataDisplay('checked','delivery','address','home',true);
+        //依宅配地址切換台灣本島或離島
+        changeIsland()
+        //計算運費、總金額
+        changeDeliveryTotal();
     });
+
+    //宅配地址選擇後，切換台灣本島或離島選單
+    function changeIsland() {
+        address_zip = $('#address_zip').val();
+        //台灣離島郵遞區號
+        island_outlying = ['209','210','211','212','880','881','882','883','884','885','890','891','892','893','894','896'];
+        if(island_outlying.includes(address_zip)) {
+            $('#island_outlying').prop('checked',true);
+        } else {
+            $('#island_main').prop('checked',true);
+        }
+    }
 </script>
 @endsection

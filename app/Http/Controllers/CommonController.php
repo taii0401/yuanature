@@ -20,4 +20,18 @@ class CommonController extends Controller
 
         return response()->json($data); 
     }
+
+    //取得運費
+    public function getDeliveryTotal(Request $request)
+    {
+        $input = $request->all();
+
+        $product_total = $input["product_total"]??0;
+        $delivery = $input["delivery"]??"home";
+        $island = $input["island"]??"main";
+        
+        $delivery_total = $this->getDeliveryTotalData($product_total,$delivery,$island);
+
+        return $delivery_total; 
+    }
 }

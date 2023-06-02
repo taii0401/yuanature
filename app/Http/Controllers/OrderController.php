@@ -214,8 +214,6 @@ class OrderController extends Controller
     //購物車-收件人資料
     public function cartUser(Request $request)
     {
-        $this->pr(session("cart"));
-        $this->pr(session("cart_order"));
         $datas = $assign_data = $option_data = [];
 
         //取得會員資料
@@ -225,11 +223,13 @@ class OrderController extends Controller
         }
         $assign_data["title_txt"] = "收件人資料";
 
-        //取得付款方式、配送方式
+        //取得付款方式、配送方式、台灣本島或離島
         $option_data["payment"] = $this->getConfigOptions("orders_payment",false);
         $option_data["delivery"] = $this->getConfigOptions("orders_delivery",false);
+        $option_data["island"] = $this->getConfigOptions("orders_island",false);
         $assign_data["payment"] = array_key_first($option_data["payment"]);
         $assign_data["delivery"] = array_key_first($option_data["delivery"]);
+        $assign_data["island"] = array_key_first($option_data["island"]);
         
         //取得購物車資料
         $cart_data = $this->getCartData(true);

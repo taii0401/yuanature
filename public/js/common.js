@@ -565,7 +565,11 @@ function userSubmit(action_type) {
 //取得會員(可使用)折價劵
 function cartChangeUserCoupon() {
     var csrf_token = getToken();
-    total = parseInt($('#product_total').val());
+    product_total = 0;
+    //商品金額
+    if(!isNaN(parseInt($('#product_total').val()))) {
+        product_total = parseInt($('#product_total').val());
+    }
     
     text = '<option value="">請選擇</option>';
     $.ajax({
@@ -573,7 +577,7 @@ function cartChangeUserCoupon() {
         url: '/common/get_user_coupon',
         dataType: 'json',
         async: false,
-        data: { '_token':csrf_token, 'total':total },
+        data: { '_token':csrf_token, 'total':product_total },
         error: function(xhr) {
             //console.log(xhr);
             alert('傳送錯誤！');
@@ -676,8 +680,13 @@ function cartSubmit(action_type) {
 
 //更新購物車小計、合計
 function cartChangeProductTotal(id) {
-    amount = parseInt($('#amount_' + id).val());
-    price = parseInt($('#price_' + id).val());
+    amount = price = 0;
+    if(!isNaN(parseInt($('#amount_' + id).val()))) {
+        amount = parseInt($('#amount_' + id).val());
+    }
+    if(!isNaN(parseInt($('#price_' + id).val()))) {
+        price = parseInt($('#price_' + id).val());
+    }
 
     //更新購物車數量
     $('#amount').val(amount);
@@ -701,16 +710,62 @@ function cartChangeProductTotal(id) {
     $('#product_total_text').html(total);
 }
 
+//更新運費
+function changeDeliveryTotal() {
+    var csrf_token = getToken();
+    product_total = total = 0;
+    //商品金額
+    if(!isNaN(parseInt($('#product_total').val()))) {
+        product_total = parseInt($('#product_total').val());
+    }
+    //配送方式
+    delivery = $('input[name="delivery"]:checked').val();
+    //台灣本島或離島
+    island = $('input[name="island"]:checked').val();
+
+    $.ajax({
+        type: 'POST',
+        url: '/common/get_delivery_total',
+        dataType: 'json',
+        async: false,
+        data: { '_token':csrf_token, 'product_total':product_total, 'delivery':delivery, 'island':island },
+        error: function(xhr) {
+            //console.log(xhr);
+            alert('傳送錯誤！');
+            returnFalseAction();
+            return false;
+        },
+        success: function(response) {
+            //console.log(response);
+            total = response;
+        }
+    });
+    //console.log(total);
+    $('#delivery_total').val(total);
+    $('#delivery_total_text').html(total);
+    //更新總金額
+    cartChangeTotal();
+}
+
 //更新總金額
 function cartChangeTotal() {
-    product_total = parseInt($('#product_total').val());
-    coupon_total = parseInt($('#coupon_total').val());
-    delivery_total = parseInt($('#delivery_total').val());
+    total = product_total = coupon_total = delivery_total = 0;
+    //商品金額
+    if(!isNaN(parseInt($('#product_total').val()))) {
+        product_total = parseInt($('#product_total').val());
+    } 
+    //折價金額
+    if(!isNaN(parseInt($('#coupon_total').val()))) {
+        coupon_total = parseInt($('#coupon_total').val());
+    } 
+    //運費
+    if(!isNaN(parseInt($('#delivery_total').val()))) {
+        delivery_total = parseInt($('#delivery_total').val());
+    } 
     
     //計算總金額
-    total = 0;
     total = product_total - coupon_total + delivery_total;
-    
+    //console.log(total);
     $('#total').val(total);
     $('#total_text').html(total);
 }
