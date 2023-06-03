@@ -1,4 +1,4 @@
-<form id="form_data" class="tm-signup-form" method="post">
+<form id="form_data_cart" class="tm-signup-form" method="post">
     @csrf
     <input type="hidden" id="action_type" name="action_type" value="delete">
     <input type="hidden" id="product_id" name="product_id" value="">
@@ -35,7 +35,7 @@
                 </td>
                 <td>
                     <span class="td-data-span">小計：</span>
-                    {{ @$data["total"] }}元
+                    {{ @$data["subtotal"] }}元
                 </td>
             </tr>
             <!-- 購物車 -->
@@ -46,7 +46,7 @@
                 </td>
                 <td>
                     <span class="td-data-span">數量：</span>
-                    <input type="number" min="1" id="amount_{{ @$data["id"] }}" name="amount[]" value="{{ @$data["amount"] }}" style="width: 50px;" onchange="cartChangeProductTotal('{{ @$data["id"] }}');cartChangeUserCoupon();">
+                    <input type="number" min="1" id="amount_{{ @$data["id"] }}" name="amount[]" value="{{ @$data["amount"] }}" style="width: 50px;" onchange="cartChangeOriginTotal('{{ @$data["id"] }}');cartChangeUserCoupon();">
                 </td>
                 <td>
                     <span class="td-data-span">售價：</span>
@@ -76,19 +76,19 @@
     <tr class="tr-total">
         <td align="right">
             <span class="td-total-span">合計：</span>
-            <input type="hidden" id="product_total" name="product_total" value="">
-            <span id="product_total_text">{{ @$datas["assign_data"]["product_total"] }}</span>元
+            <input type="hidden" id="origin_total" name="origin_total" value="{{ @$datas["assign_data"]["origin_total"] }}">
+            <span id="origin_total_text">{{ @$datas["assign_data"]["origin_total"] }}</span>元
 
             <!-- 訂單 -->
             <span style="display: {{ @$datas["assign_data"]["order_display"]}}">
                 <br>
-                <span class="td-total-span">運費：</span>
-                {{ @$datas["assign_data"]["delivery_total"] }}元<br>
-
                 @if(@$datas["assign_data"]["coupon_total"] > 0)
                     <span class="td-total-span">折價：</span>
                     {{ @$datas["assign_data"]["coupon_total"] }}元<br>
                 @endif
+
+                <span class="td-total-span">運費：</span>
+                {{ @$datas["assign_data"]["delivery_total"] }}元<br>
 
                 <span class="td-total-span">總計：</span>
                 {{ @$datas["assign_data"]["total"] }}元

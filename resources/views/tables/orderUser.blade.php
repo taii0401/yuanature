@@ -5,7 +5,8 @@
             <th>收件人手機</th>
             <th>收件人信箱</th>
             <th>配送方式</th>
-            <th>付款方式</th>
+            <!-- 訂單明細 -->
+            <th style="display: {{ @$datas["assign_data"]["order_detail_display"]}}">付款方式</th>
         </tr>
     </thead>
     <tbody>
@@ -26,7 +27,8 @@
                 <span class="td-data-span">配送方式：</span>
                 <span style="color:{{ @$datas["assign_data"]["delivery_color"] }}">{{ @$datas["assign_data"]["delivery_name"] }}</span>
             </td>
-            <td>
+            <!-- 訂單明細 -->
+            <td style="display: {{ @$datas["assign_data"]["order_detail_display"]}}">
                 <span class="td-data-span">付款方式：</span>
                 <span style="color:{{ @$datas["assign_data"]["payment_color"] }}">{{ @$datas["assign_data"]["payment_name"] }}</span>
             </td>

@@ -46,7 +46,7 @@
                     </div>
                     <div class="row" style="margin-top: 15px;">
                         <div class="col-12">
-                            <form id="form_data" class="tm-signup-form" method="post">
+                            <form id="form_data_cart" class="tm-signup-form" method="post">
                                 @csrf
                                 <input type="hidden" id="action_type" name="action_type" value="add">
                                 <input type="hidden" id="product_id" name="product_id" value="{{ @$id }}">

@@ -330,6 +330,11 @@ class Controller extends BaseController
                     $isSendUser = $isSendAdmin = true;
                     $title = "訂單通知";
 
+                    //稍後付款
+                    if(isset($data["isPayWait"]) && $data["isPayWait"]) {
+                        $text .= "<br>請於七日內付款成功，若未付款，訂單將會自動取消。會員中心 > 訂單查詢 > 付款。";
+                    }
+
                     //若選擇ATM轉帳，則顯示轉帳提示文字
                     if(isset($data["isPayAtm"]) && $data["isPayAtm"]) {
                         $text .= "<br>轉帳成功後，請發信至客服信箱，並附上您的訂單編號及匯款帳號後五碼，以利我們確認您的付款資訊。";
@@ -490,7 +495,7 @@ class Controller extends BaseController
 
         //合計
         if($is_total) {
-            $datas["product_total"] = $total;
+            $datas["origin_total"] = $total;
         }
 
         //$this->pr($datas);
@@ -576,16 +581,16 @@ class Controller extends BaseController
      * 取得運費
      * 台灣本島：滿1500免運費，宅配：100元，超商取貨：70元
      * 台灣離島：滿2000免運費，宅配：150元，超商取貨：110元
-     * @param  product_total：商品金額
+     * @param  origin_total：商品金額
      * @param  orders_delivery：配送方式-store 超商取貨、home 宅配配送
      * @param  orders_island：台灣本島或離島-main 台灣本島、outlying 台灣離島
      * @return int
      */
-    public function getDeliveryTotalData($product_total=0,$orders_delivery="home",$orders_island="main")
+    public function getDeliveryTotalData($origin_total=0,$orders_delivery="home",$orders_island="main")
     {
         $delivery_total = 0;
         if($orders_island == "main") {
-            if($product_total < 1500) {
+            if($origin_total < 1500) {
                 if($orders_delivery == "home") {
                     $delivery_total = 100;
                 } else  {
@@ -593,7 +598,7 @@ class Controller extends BaseController
                 }
             }
         } else {
-            if($product_total < 2000) {
+            if($origin_total < 2000) {
                 if($orders_delivery == "home") {
                     $delivery_total = 150;
                 } else  {

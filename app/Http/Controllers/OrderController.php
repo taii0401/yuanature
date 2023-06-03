@@ -181,30 +181,42 @@ class OrderController extends Controller
     //購物車
     public function cart(Request $request)
     {
-        $datas = $assign_data = [];
+        $this->pr(session("cart"));
+        $this->pr(session("cart_order"));
+
+        $datas = $assign_data = $option_data = [];
         $assign_data["title_txt"] = "購物車";
         //隱藏訂單
         $assign_data["order_display"] = "none";
 
+        //取得配送方式、台灣本島或離島
+        $option_data["delivery"] = $this->getConfigOptions("orders_delivery",false);
+        $option_data["island"] = $this->getConfigOptions("orders_island",false);
+        $assign_data["delivery"] = array_key_first($option_data["delivery"]);
+        $assign_data["island"] = array_key_first($option_data["island"]);
+
         //取得購物車資料
         $cart_data = $this->getCartData(true);
-        //合計
-        $product_total = 0;
-        if(isset($cart_data["product_total"])) {
-            $product_total = $cart_data["product_total"];
-            unset($cart_data["product_total"]);
+        //商品合計
+        $origin_total = 0;
+        if(isset($cart_data["origin_total"])) {
+            $origin_total = $cart_data["origin_total"];
+            unset($cart_data["origin_total"]);
         }
-        $assign_data["product_total"] = $product_total;
+        $assign_data["origin_total"] = $origin_total;
 
         //取得會員折價劵
-        $user_coupon_data = $this->getUserCouponData(0,$product_total);
-        //已選取的折價劵
+        $user_coupon_data = $this->getUserCouponData(0,$origin_total);
+        //取得購物車訂單資料
         $cart_order_data = $this->getCartOrderData();
-        if(isset($cart_order_data["user_coupon_id"]) && $cart_order_data["user_coupon_id"] > 0) {
-            $assign_data["user_coupon_id"] = $cart_order_data["user_coupon_id"];
+        if(!empty($cart_order_data)) {
+            foreach($cart_order_data as $cart_order_key => $cart_order_val) {
+                $assign_data[$cart_order_key] = $cart_order_val;
+            }
         }
 
         $datas["assign_data"] = $assign_data;
+        $datas["option_data"] = $option_data;
         $datas["detail_data"] = $cart_data;
         $datas["user_coupon_data"] = $user_coupon_data;
         
@@ -214,6 +226,9 @@ class OrderController extends Controller
     //購物車-收件人資料
     public function cartUser(Request $request)
     {
+        $this->pr(session("cart"));
+        $this->pr(session("cart_order"));
+
         $datas = $assign_data = $option_data = [];
 
         //取得會員資料
@@ -222,26 +237,20 @@ class OrderController extends Controller
             $assign_data = $user_data->toArray();
         }
         $assign_data["title_txt"] = "收件人資料";
+        //隱藏地址
+        $assign_data["address_display"] = "none";
         //折價劵金額、運費
         $assign_data["coupon_total"] = $assign_data["delivery_total"] = 0;
-
-        //取得付款方式、配送方式、台灣本島或離島
-        $option_data["payment"] = $this->getConfigOptions("orders_payment",false);
-        $option_data["delivery"] = $this->getConfigOptions("orders_delivery",false);
-        $option_data["island"] = $this->getConfigOptions("orders_island",false);
-        $assign_data["payment"] = array_key_first($option_data["payment"]);
-        $assign_data["delivery"] = array_key_first($option_data["delivery"]);
-        $assign_data["island"] = array_key_first($option_data["island"]);
         
         //取得購物車資料
         $cart_data = $this->getCartData(true);
         //商品合計
-        $product_total = 0;
-        if(isset($cart_data["product_total"])) {
-            $product_total = $cart_data["product_total"];
-            unset($cart_data["product_total"]);
+        $origin_total = 0;
+        if(isset($cart_data["origin_total"])) {
+            $origin_total = $cart_data["origin_total"];
+            unset($cart_data["origin_total"]);
         }
-        $assign_data["product_total"] = $product_total;
+        $assign_data["origin_total"] = $origin_total;
 
         //取得購物車訂單資料
         $cart_order_data = $this->getCartOrderData();
@@ -251,33 +260,71 @@ class OrderController extends Controller
             }
         }
 
-        //2萬元以上只可選擇宅配
-        $assign_data["delivery_disabled"] = "";
-        if($product_total > 20000) {
-            $assign_data["delivery_disabled"] = "disabled";
-            $assign_data["delivery"] = "home";
+        //台灣本島或離島
+        $island = $assign_data["delivery"]??"main";
+        //配送方式
+        $delivery = $assign_data["delivery"]??"home";
+        //選擇宅配顯示地址
+        if($delivery == "home") {
+            $assign_data["address_display"] = "";
         }
+        //計算運費
+        $delivery_total = $this->getDeliveryTotalData($origin_total,$delivery,$island);
+        $assign_data["delivery_total"] = $delivery_total;
+        //計算總金額
+        $assign_data["total"] = $assign_data["origin_total"]-$assign_data["coupon_total"]+$assign_data["delivery_total"];
 
         $datas["assign_data"] = $assign_data;
         $datas["option_data"] = $option_data;
+        $datas["detail_data"] = $cart_data;
         //dd($assign_data);
         return view("orders.cartUser",["datas" => $datas]);
     }
 
-    //購物車-訂單資料
+    //購物車-確認訂單資料
     public function cartOrder(Request $request)
     {
         $this->pr(session("cart"));
         $this->pr(session("cart_order"));
-        $datas = $assign_data = $option_data = [];
 
+        //付款方式
+        $orders_payment_datas = config("yuanature.orders_payment");
+        //配送方式
+        $orders_delivery_datas = config("yuanature.orders_delivery");
+
+        $datas = $assign_data = $option_data = [];
         $assign_data["title_txt"] = "確認訂單";
+        //隱藏按鈕
+        $assign_data["danger_none"] = $assign_data["success_none"] = "none";
+        //隱藏購物車、訂單明細
+        $assign_data["cart_display"] = $assign_data["order_detail_display"] = "none";
 
         //取得購物車資料
         $cart_data = $this->getCartData(true);
-        //取得購物車-訂單資料
-        $cart_order_data = session("cart_order");
-        //dd($cart_order_data);
+        //商品合計
+        $origin_total = 0;
+        if(isset($cart_data["origin_total"])) {
+            $origin_total = $cart_data["origin_total"];
+            unset($cart_data["origin_total"]);
+        }
+        $assign_data["origin_total"] = $origin_total;
+
+        //取得購物車訂單資料
+        $cart_order_data = $this->getCartOrderData();
+        if(!empty($cart_order_data)) {
+            foreach($cart_order_data as $cart_order_key => $cart_order_val) {
+                $assign_data[$cart_order_key] = $cart_order_val;
+            }
+        }
+
+        //配送方式
+        if(isset($assign_data["delivery"])) {
+            $assign_data["delivery_name"] = $orders_delivery_datas[$assign_data["delivery"]]["name"]??"";
+            $assign_data["delivery_color"] = $orders_delivery_datas[$assign_data["delivery"]]["color"]??"";
+        }
+        
+        $datas["assign_data"] = $assign_data;
+        $datas["detail_data"] = $cart_data;
 
         return view("orders.cartOrder",["datas" => $datas]);
     }
@@ -289,7 +336,7 @@ class OrderController extends Controller
         session()->forget("cart_order");
 
         //會員中心
-        return redirect("users");
+        return redirect("orders/cart");
     }
 
     //購物車-結帳

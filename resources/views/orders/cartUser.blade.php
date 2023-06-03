@@ -5,10 +5,12 @@
 <div class="row tm-mt-big">
     <div class="col-12 mx-auto tm-login">
         <div class="bg-white tm-block">
-            <form id="form_data" class="tm-signup-form" method="post">
+            <form id="form_data_cart" class="tm-signup-form" method="post">
                 @csrf
                 <input type="hidden" id="action_type" name="action_type" value="order">
                 <input type="hidden" id="user_coupon_id" name="user_coupon_id" value="{{ @$datas["assign_data"]["user_coupon_id"] }}">
+                <input type="hidden" id="delivery" name="delivery" value="{{ @$datas["assign_data"]["delivery"] }}">
+                <input type="hidden" id="island" name="island" value="{{ @$datas["assign_data"]["island"] }}">
                 <div class="row">
                     <div class="table-responsive">
                         @include('tables.orderTotal')
@@ -32,47 +34,8 @@
                                 <input type="text" id="email" name="email" class="form-control require" value="{{ @$datas["assign_data"]["email"] }}">
                             </div>
                         </div> 
-                        <div class="row">
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                <label><span class="star">* </span>付款方式</label>
-                                <div class="col-12">
-                                @if(isset($datas["option_data"]["payment"]) && !empty($datas["option_data"]["payment"]))    
-                                    @foreach($datas["option_data"]["payment"] as $key => $val) 
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="payment" id="payment_{{ @$key }}" value="{{ @$key }}" @if($key == $datas["assign_data"]["payment"]) checked @endif>
-                                            <label class="form-check-label">{{ @$val }}</label>
-                                        </div>
-                                    @endforeach
-                                @endif
-                                </div>                  
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                <label><span class="star">* </span>配送方式<span style="color:red;font-size:x-small"> (2萬元以上只可選擇宅配)</span></label>
-                                <div class="col-12">
-                                @if(isset($datas["option_data"]["delivery"]) && !empty($datas["option_data"]["delivery"]))    
-                                    @foreach($datas["option_data"]["delivery"] as $key => $val) 
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="delivery" id="delivery_{{ @$key }}" value="{{ @$key }}" {{ @$datas["assign_data"]["delivery_disabled"] }} @if($key == $datas["assign_data"]["delivery"]) checked @endif onclick="changeDataDisplay('checked','delivery','address','home',true);changeDeliveryTotal();">
-                                            <label class="form-check-label">{{ @$val }}</label>
-                                        </div>
-                                    @endforeach
-                                @endif
-                                </div>                  
-                            </div>
-                            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                                <label><span class="star">* </span>台灣本島或離島</label>
-                                <div class="col-12">
-                                @if(isset($datas["option_data"]["island"]) && !empty($datas["option_data"]["island"]))    
-                                    @foreach($datas["option_data"]["island"] as $key => $val) 
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="island" id="island_{{ @$key }}" value="{{ @$key }}" @if($key == $datas["assign_data"]["island"]) checked @endif onclick="changeDeliveryTotal();">
-                                            <label class="form-check-label">{{ @$val }}</label>
-                                        </div>
-                                    @endforeach
-                                @endif
-                                </div>                  
-                            </div>
-                            <div id="div_address" class="row input-group twzipcode" style="display:none;margin-top:10px;">
+                        <div class="row" style="display:{{ @$datas["assign_data"]["address_display"] }};">
+                            <div id="div_address" class="row input-group twzipcode" style="margin-top:10px;">
                                 <input type="hidden" data-role="zipcode" id="address_zip" name="address_zip" class="form-control" value="{{ @$datas["assign_data"]["address_zip"] }}">
                                 <div class="col-xl-2 col-lg-2 col-md-3 col-sm-12">
                                     <label><span class="star">* </span>地址</label>
@@ -114,26 +77,5 @@
     //縣市、鄉鎮市區、郵遞區號
     const twzipcode = new TWzipcode();
     twzipcode.set("{{ @$datas["assign_data"]["address_zip"] }}");
-
-    $(function () {
-        //配送方式-宅配配送顯示收件人地址
-        changeDataDisplay('checked','delivery','address','home',true);
-        //依宅配地址切換台灣本島或離島
-        changeIsland()
-        //計算運費、總金額
-        changeDeliveryTotal();
-    });
-
-    //宅配地址選擇後，切換台灣本島或離島選單
-    function changeIsland() {
-        address_zip = $('#address_zip').val();
-        //台灣離島郵遞區號
-        island_outlying = ['209','210','211','212','880','881','882','883','884','885','890','891','892','893','894','896'];
-        if(island_outlying.includes(address_zip)) {
-            $('#island_outlying').prop('checked',true);
-        } else {
-            $('#island_main').prop('checked',true);
-        }
-    }
 </script>
 @endsection

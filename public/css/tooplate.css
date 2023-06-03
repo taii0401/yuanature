@@ -478,7 +478,7 @@ label {
 /*table td 訂單-合計*/
 .td-total-span {
     display: inline-block;
-    line-height: 35px;
+    line-height: 25px;
 }
 
 .page-item:first-child .page-link {

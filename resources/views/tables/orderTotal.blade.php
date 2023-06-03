@@ -11,8 +11,8 @@
         <tr>
             <td>
                 <span class="td-data-span">商品金額：</span>
-                <input type="hidden" id="product_total" name="product_total" value="{{ @$datas["assign_data"]["product_total"] }}">
-                {{ @$datas["assign_data"]["product_total"] }}元
+                <input type="hidden" id="origin_total" name="origin_total" value="{{ @$datas["assign_data"]["origin_total"] }}">
+                {{ @$datas["assign_data"]["origin_total"] }}元
             </td>            
             <td>
                 <span class="td-data-span">折價金額：</span>
@@ -26,7 +26,7 @@
             </td>
             <td>
                 <span class="td-data-span">總金額：</span>
-                <input type="hidden" id="total" name="total" value="">
+                <input type="hidden" id="total" name="total" value="{{ @$datas["assign_data"]["total"] }}">
                 <span id="total_text">{{ @$datas["assign_data"]["total"] }}</span>元
             </td>
         </tr>

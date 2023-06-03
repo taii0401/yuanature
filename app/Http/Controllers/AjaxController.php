@@ -23,6 +23,7 @@ use App\Models\Orders;
 use App\Models\OrdersDetail;
 use App\Models\Contact;
 use App\Models\Feedback;
+use App\Models\UserCoupon;
 
 class AjaxController extends Controller
 {
@@ -326,6 +327,12 @@ class AjaxController extends Controller
         $this->resetResult();
 
         $input = $request->all();
+        //去除空白
+        foreach($input as $key => $val) {
+            if(in_array($key,["name","phone","email"])) {
+                $input[$key] = trim($val);
+            }
+        }
 
         //表單動作類型(新增、編輯、刪除、新增折價劵資料、新增訂單資料)
         $action_type = $input["action_type"]??"add";
@@ -392,28 +399,23 @@ class AjaxController extends Controller
         return response()->json($this->returnResult());
     }
     
-    //訂單-新增、取消、付款
+    //訂單-新增(立即結帳、稍後付款)、取消、付款
     public function orders_data(Request $request)
     {
         $this->resetResult();
 
         $input = $request->all();
-        //去除空白
-        foreach($input as $key => $val) {
-            if(in_array($key,["name","address","email"])) {
-                $input[$key] = trim($val);
-            }
-        }
 
-        //表單動作類型(新增、取消)
+        //表單動作類型(新增(立即結帳、稍後付款)、取消、付款)
         $action_type = $input["action_type"]??"add";
 
         //檢查欄位、檢查訊息
         $validator_data = $validator_message = [];
-        if($action_type == "add") { //新增
-            $validator_data["name"] = "required"; //姓名
-            $validator_data["phone"] = "required"; //手機
-            $validator_data["total"] = "required|integer"; //總價
+        if($action_type == "add" || $action_type == "add_pay") { //新增
+            $validator_data["name"] = "required";
+            $validator_data["total"] = "required";
+            $validator_message["name.required"] = "請返回上一步填寫收件人姓名！";
+            $validator_message["total.required"] = "請返回上一步確認購物車是否有商品！";
         } else if($action_type == "cancel") { //取消
             $validator_data["cancel"] = "required"; //取消原因
         }
@@ -426,7 +428,8 @@ class AjaxController extends Controller
             }
         }
 
-        if($action_type == "add" && $input["total"] <= 0) {
+        $total = $input["total"]??0;
+        if(($action_type == "add" || $action_type == "add_pay") && $total <= 0) {
             $this->message = "請返回上一步確認購物車是否有商品！";
         }
 
@@ -453,23 +456,27 @@ class AjaxController extends Controller
                 $add_data["serial_code"] = "YO";
                 $add_data["serial_num"] = $serial_num;
                 $add_data["serial"] = $serial;
-                $add_data["name"] = $input["name"];
-                $add_data["phone"] = $input["phone"];
+                $add_data["name"] = $input["name"]??NULL;
+                $add_data["phone"] = $input["phone"]??NULL;
                 $add_data["email"] = $input["email"]??NULL;
+                $add_data["origin_total"] = $input["origin_total"];
+                $add_data["coupon_total"] = $input["coupon_total"]??0;
+                $add_data["delivery_total"] = $input["delivery_total"]??0;
+                $add_data["total"] = $input["total"];
+                $add_data["payment"] = $input["payment"]??NULL;
+                $add_data["delivery"] = $input["delivery"]??NULL;
+                $add_data["island"] = $input["island"]??NULL;
+                $add_data["status"] = "nopaid";
                 //配送方式選擇宅配配送才紀錄地址
                 if($input["delivery"] == "home" && isset($input["address"]) && $input["address"] != "") {
                     $add_data["address_zip"] = $input["address_zip"]??NULL;
                     $add_data["address_county"] = $input["address_county"]??NULL;
                     $add_data["address_district"] = $input["address_district"]??NULL;
                     $add_data["address"] = $input["address"];
-                }
-                $add_data["payment"] = $input["payment"]??NULL;
-                $add_data["delivery"] = $input["delivery"]??NULL;
-                $add_data["status"] = "nopaid";
-                $add_data["total"] = $input["total"];
+                }                
                 //訂單備註
-                if(isset($input["order_remark"]) && $input["order_remark"] != "") {
-                    $add_data["order_remark"] = $input["order_remark"];
+                if(isset($cart_order_data["order_remark"]) && $cart_order_data["order_remark"] != "") {
+                    $add_data["order_remark"] = $cart_order_data["order_remark"];
                 }
                 $add_data["created_id"] = $user_id;
                 
@@ -485,7 +492,6 @@ class AjaxController extends Controller
                 //新增成功
                 if($orders_data->exists("id")) {
                     $orders_id = $orders_data->id;
-
                     if($orders_id > 0) {
                         //取得購物車資料
                         $cart_datas = $this->getCartData();
@@ -497,7 +503,7 @@ class AjaxController extends Controller
                                 $detail_data["product_id"] = $cart_data["id"]??0;
                                 $detail_data["amount"] = $cart_data["amount"]??0;
                                 $detail_data["price"] = $cart_data["sales"]??0;
-                                $detail_data["product_total"] = $cart_data["subtotal"]??0;
+                                $detail_data["total"] = $cart_data["subtotal"]??0;
         
                                 try {
                                     OrdersDetail::create($detail_data);
@@ -508,18 +514,39 @@ class AjaxController extends Controller
                                 }
                             }
                         }
+
+                        //折價劵紀錄
+                        if(isset($input["user_coupon_id"]) && $input["user_coupon_id"] > 0) {
+                            try {
+                                $user_coupon_data = UserCoupon::where("id",$input["user_coupon_id"])->where("user_id",$user_id)->where("expire_time",">=",date("Y-m-d H:i:s"))->where("status","nouse")->whereNull(["orders_id","used_time","deleted_at"])->first();
+                                if(!empty($user_coupon_data)) {
+                                    $user_coupon_data->status = "used";
+                                    $user_coupon_data->orders_id = $orders_id;
+                                    $user_coupon_data->used_time = date("Y-m-d H:i:s");
+                                    $user_coupon_data->save();
+                                } else {
+                                    $this->message = "請確認折價劵的有效時間！";
+                                    $isSuccess = false;
+                                }
+                            }
+                            catch(QueryException $e) {
+                                Log::Info("前台建立訂單折價劵失敗：會員ID - ".$user_id);
+                                Log::error($e);
+                                $isSuccess = false;
+                            }
+                        } 
                     }
                 }
 
                 if($isSuccess) {
                     try {
                         session()->forget("cart");
+                        session()->forget("cart_order");
                         $this->error = false;
 
-                        //若選擇ATM轉帳，則顯示轉帳提示文字
-                        $isPayAtm = false;
-                        if($add_data["payment"] == "atm") {
-                            $isPayAtm = true;
+                        $isPayWait = false;
+                        if($action_type == "add") { //稍後付款
+                            $isPayWait = true;
                         }
 
                         //寄送通知信
@@ -527,7 +554,7 @@ class AjaxController extends Controller
                             "email" => $input["email"]??"",
                             "serial" => $serial,
                             "uuid" => $uuid,
-                            "isPayAtm" => $isPayAtm
+                            "isPayWait" => $isPayWait
                         ];
                         $this->sendMail("orders_add",$mail_data);
                         //LINE通知
@@ -597,6 +624,22 @@ class AjaxController extends Controller
                         $data->save();
                         
                         $this->error = false;
+
+                        //若選擇ATM轉帳，則顯示轉帳提示文字
+                        /*$isPayAtm = false;
+                        if($add_data["payment"] == "atm") {
+                            $isPayAtm = true;
+                        }
+
+                        //寄送通知信
+                        $mail_data = [
+                            "email" => $input["email"]??"",
+                            "serial" => $serial,
+                            "uuid" => $uuid,
+                            "isPayAtm" => $isPayAtm
+                        ];
+                        $this->sendMail("orders_add",$mail_data);*/
+
                         $this->message = $uuid;
                     } catch(QueryException $e) {
                         Log::Info("前台訂單付款失敗：訂單UUID - ".$uuid);

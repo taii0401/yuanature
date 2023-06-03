@@ -26,11 +26,11 @@ class CommonController extends Controller
     {
         $input = $request->all();
 
-        $product_total = $input["product_total"]??0;
+        $origin_total = $input["origin_total"]??0;
         $delivery = $input["delivery"]??"home";
         $island = $input["island"]??"main";
         
-        $delivery_total = $this->getDeliveryTotalData($product_total,$delivery,$island);
+        $delivery_total = $this->getDeliveryTotalData($origin_total,$delivery,$island);
 
         return $delivery_total; 
     }
