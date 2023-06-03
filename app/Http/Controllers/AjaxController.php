@@ -475,8 +475,8 @@ class AjaxController extends Controller
                     $add_data["address"] = $input["address"];
                 }                
                 //訂單備註
-                if(isset($cart_order_data["order_remark"]) && $cart_order_data["order_remark"] != "") {
-                    $add_data["order_remark"] = $cart_order_data["order_remark"];
+                if(isset($input["order_remark"]) && $input["order_remark"] != "") {
+                    $add_data["order_remark"] = $input["order_remark"];
                 }
                 $add_data["created_id"] = $user_id;
                 
