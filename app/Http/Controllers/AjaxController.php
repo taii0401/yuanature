@@ -585,6 +585,11 @@ class AjaxController extends Controller
                         $data->cancel_id = $user_id;
                         $data["status"] = "cancel";
                         $data->save();
+
+                        //退回折價劵
+                        $orders_id = $data->id;
+                        $user_id = $data->user_id;
+                        UserCoupon::where("orders_id",$orders_id)->where("user_id",$user_id)->update(["status" => "nouse","orders_id" => NULL,"used_time" => NULL]);
                         
                         $this->error = false;
                         //寄送通知信

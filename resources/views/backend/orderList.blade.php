@@ -64,7 +64,7 @@
                             <tr>
                                 <td>
                                     <span class="td-data-span">訂單編號：</span>
-                                    <a href="#" onclick="changeForm('/admin/orders/detail?orders_uuid={{ @$data["uuid"] }}');">{{ @$data["serial"] }}</a>
+                                    <a href="#" onclick="changeForm('/admin/orders/detail?orders_uuid={{ @$data["uuid"] }}');"><u>{{ @$data["serial"] }}</u></a>
                                 </td>
                                 <td>
                                     <span class="td-data-span">訂購日期：</span>

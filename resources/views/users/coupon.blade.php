@@ -51,7 +51,7 @@
                                     {{ @$data["expire_time"] }}
                                 </td>
                                 <td>
-                                    <span class="td-data-span">使用時間：</span><br>
+                                    <span class="td-data-span">使用時間：</span>
                                     {{ @$data["used_time"] }}
                                 </td>
                             </tr>

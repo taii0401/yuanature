@@ -45,43 +45,60 @@
                 </div>
             </div>
             <div class="table-responsive">
-                <table class="table table-hover table-striped tm-table-striped-even mt-3"  style="vertical-align: middle;">
-                    <thead>
-                        <tr class="tm-bg-gray">
-                            <th scope="col" class="text-center" height="50px">訂單編號</th>
-                            <th scope="col" class="text-center" style="width:150px;">訂購日期</th>
-                            <th scope="col" class="text-center" style="width:100px;">訂單狀態</th>
-                            <!--<th scope="col" class="text-center" style="width:12%;">配送方式</th>
-                            <th scope="col" class="text-center" style="width:12%;">付款方式</th>-->
-                            <th scope="col" class="text-center" style="width:100px;">訂購金額</th>
-                            <th scope="col" style="width:45px;"></th>
+                <table class="table table-hover table-striped table-bordered table-rwd">
+                    <thead>    
+                        <tr class="tr-only-hide text-center">
+                            <th>訂單編號</th>
+                            <th>訂購日期</th>
+                            <th>訂單狀態</th>
+                            <th>配送方式</th>
+                            <th>付款方式</th>
+                            <th>訂購金額</th>
+                            <th width="100"></th>
                         </tr>
                     </thead>
                     <tbody>
                         @if(isset($datas["list_data"]) && !empty($datas["list_data"]))
-                            @foreach($datas["list_data"] as $data)  
+                            @foreach($datas["list_data"] as $data) 
                             <tr>
-                                <td class="text-center" height="50px">
-                                    <a href="#" onclick="changeForm('/orders/detail?orders_uuid={{ @$data["uuid"] }}');">{{ @$data["serial"] }}</a>
-                                </td>
-                                <td class="text-center">{{ @$data["created_at_format"] }}</td>
-                                <td class="text-center" style="color:{{ @$data["status_color"] }}">{{ @$data["status_name"] }}</td>
-                                <!--<td class="text-center" style="color:{{ @$data["delivery_color"] }}">{{ @$data["delivery_name"] }}</td>
-                                <td class="text-center" style="color:{{ @$data["payment_color"] }}">{{ @$data["payment_name"] }}</td>-->
-                                <td class="text-center">{{ @$data["total"] }}元</td>
                                 <td>
-                                    <div class="col-12">
-                                        @if($data["status"] == "nopaid")
-                                            <!--<div class="btn-action">
-                                                <i class="fas fa-edit tm-edit-icon dataModalOrderPayBtn" data-bs-toggle="modal" data-bs-target="#dataModalOrderPay" data-id="{{ @$data["uuid"] }},{{ @$data["serial"] }},{{ @$data["payment"] }},{{ @$data["delivery"] }},{{ @$data["address_zip"] }},{{ @$data["address"] }}">
-                                                </i>
-                                            </div>-->
-                                            <div class="btn-action">
-                                                <i class="fas fa-trash-alt tm-trash-icon dataModalOrderCancelBtn" data-bs-toggle="modal" data-bs-target="#dataModalOrderCancel" data-id="{{ @$data["uuid"] }},{{ @$data["serial"] }}">
-                                                </i>
-                                            </div>
-                                        @endif
-                                    </div>
+                                    <span class="td-data-span">訂單編號：</span>
+                                    <a href="#" onclick="changeForm('/orders/detail?orders_uuid={{ @$data["uuid"] }}');"><u>{{ @$data["serial"] }}</u></a>
+                                </td>
+                                <td>
+                                    <span class="td-data-span">訂購日期：</span>
+                                    {{ @$data["created_at_format"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">訂單狀態：</span>
+                                    <span style="color:{{ @$data["status_color"] }}">{{ @$data["status_name"] }}</span>
+                                </td>
+                                <td>
+                                    <span class="td-data-span">配送方式：</span>
+                                    <span style="color:{{ @$data["delivery_color"] }}">{{ @$data["delivery_name"] }}</span>
+                                </td>
+                                <td>
+                                    <span class="td-data-span">付款方式：</span>
+                                    <span style="color:{{ @$data["payment_color"] }}">{{ @$data["payment_name"] }}</span>
+                                </td>
+                                <td>
+                                    <span class="td-data-span">訂購金額：</span>
+                                    {{ @$data["total"] }}元
+                                </td>
+                                <td class="text-center">
+                                    @if(@$data["status"] == "nopaid")
+                                        <div class="btn-action">
+                                            <ul>
+                                                <li>
+                                                    <a href="#" target="_blank" onclick="changeForm('/orders/cart_pay?orders_uuid={{ @$data["uuid"] }}');"><i class="fas fa-donate tm-edit-icon" ></i></a>
+                                                </li>
+                                                <li>
+                                                    <i class="fas fa-trash-alt tm-trash-icon dataModalBtnOrderCancel" data-bs-toggle="modal" data-bs-target="#dataModalOrderCancel" data-id="{{ @$data["uuid"] }},{{ @$data["serial"] }}">
+                                                    </i>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach
@@ -103,29 +120,11 @@
 @endsection
 
 @include('forms.orderCancel')
-@include('forms.orderPay')
 
 @section('script')
 <script>
-    //訂單付款
-    $('.dataModalOrderPayBtn').click(function () {
-        var input_modal_keys = ['pay_uuid','pay_serial','payment','delivery','address_zip','address'];
-        var switch_modal_keys = [];
-        var radio_modal_keys = ['payment','delivery'];
-        setModalInput($(this).data('id'),input_modal_keys,switch_modal_keys,radio_modal_keys);
-
-        $('#pay_serial_text').text($('#input_modal_pay_serial').val());
-        $('#input_modal_pay_source').val('user');
-
-        //配送方式-宅配配送顯示收件人地址
-        changeDataDisplay('checked','delivery','input_modal_address','home',true);
-        //縣市、鄉鎮市區、郵遞區號
-        const twzipcode = new TWzipcode();
-        twzipcode.set($('#input_modal_address_zip').val());
-    });
-
     //取消訂單
-    $('.dataModalOrderCancelBtn').click(function () {
+    $('.dataModalBtnOrderCancel').click(function () {
         var input_modal_keys = ['uuid','serial'];
         var switch_modal_keys = radio_modal_keys = [];
         setModalInput($(this).data('id'),input_modal_keys,switch_modal_keys,radio_modal_keys);
