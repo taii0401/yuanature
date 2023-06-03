@@ -1,6 +1,6 @@
 @extends('layouts.frontBase')
 @section('title') {{ @$datas["assign_data"]["title_txt"] }} @endsection
-@section('banner_menu_txt') {{ @$datas["assign_data"]["banner_menu_txt"] }} {{ @$datas["assign_data"]["title_txt"] }} @endsection
+@section('banner_menu_txt') 購物車 > {{ @$datas["assign_data"]["title_txt"] }} @endsection
 @section('content')
 <form id="form_data" class="tm-signup-form" method="post">
     @csrf
