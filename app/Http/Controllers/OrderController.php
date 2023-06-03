@@ -131,10 +131,6 @@ class OrderController extends Controller
 
         //模組視窗選項-取消原因
         $datas["modal_data"]["cancel"] = $this->getConfigOptions("orders_cancel",false);
-        //付款方式
-        $datas["modal_data"]["payment"] = $this->getConfigOptions("orders_payment",false);
-        //配送方式
-        $datas["modal_data"]["delivery"] = $this->getConfigOptions("orders_delivery",false);
         
         $datas["assign_data"] = $assign_data;
         $datas["option_data"] = $option_data;
@@ -149,7 +145,7 @@ class OrderController extends Controller
         $input = $request->all();
         $orders_uuid = $input["orders_uuid"]??"";
 
-        $datas = $assign_data = [];
+        $datas = $assign_data = $detail_data = [];
 
         //取得會員資料
         $user_id = 0;
@@ -159,21 +155,21 @@ class OrderController extends Controller
         }
         //取得訂單資料
         if($user_id > 0 && $orders_uuid != "") {
-            $order_data = Orders::getDataByUuid($orders_uuid,$user_id);
+            $orders_data = Orders::getDataByUuid($orders_uuid,$user_id);
+            $assign_data = $orders_data;
         }
-        $assign_data = $order_data;
         //標題
         $assign_data["action_type"] = "detail";
         $assign_data["title_txt"] = "訂單明細";
-        $assign_data["banner_menu_txt"] = "會員中心 > 訂單查詢 > ";
-        //顯示欄位
-        $assign_data["danger_none"] = $assign_data["success_none"] = "none"; //顯示訊息
-        $assign_data["order_none"] = "none";
-        $assign_data["cart_none"] = "";
-    
-        $datas["assign_data"] = $assign_data;
+        //隱藏購物車
+        $assign_data["cart_display"] = "none";
         //訂單明細資料
-        $datas["cart_data"] = OrdersDetail::getDataByOrderid($assign_data["id"]);
+        if(isset($orders_data["id"]) && $orders_data["id"] > 0) {
+            $detail_data = OrdersDetail::getDataByOrderid($orders_data["id"]);
+        }
+
+        $datas["assign_data"] = $assign_data;
+        $datas["detail_data"] = $detail_data;
         
         return view("orders.data",["datas" => $datas]);
     }
@@ -327,7 +323,7 @@ class OrderController extends Controller
         session()->forget("cart");
         session()->forget("cart_order");
 
-        //會員中心
+        //購物車
         return redirect("orders/cart");
     }
 
@@ -348,12 +344,12 @@ class OrderController extends Controller
         //取得訂單資料
         if($uuid != "") {
             $order_data = Orders::getDataByUuid($uuid);
+            $assign_data = $order_data;
             //訂單編號
             $order_number = $order_data["serial"]??"";
             //訂單金額
             $order_total = $order_data["total"]??0;
         }
-        $assign_data = $order_data;
         $assign_data["title_txt"] = "結帳";
 
         if($order_total > 0 && $order_number != "") {

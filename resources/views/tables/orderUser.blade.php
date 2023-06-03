@@ -26,6 +26,7 @@
             <td>
                 <span class="td-data-span">配送方式：</span>
                 <span style="color:{{ @$datas["assign_data"]["delivery_color"] }}">{{ @$datas["assign_data"]["delivery_name"] }}</span>
+                <br>{!! @$datas["assign_data"]["address_format"] !!}
             </td>
             <!-- 訂單明細 -->
             <td style="display: {{ @$datas["assign_data"]["order_detail_display"]}}">

@@ -96,22 +96,22 @@ class OrderController extends Controller
         $input = $request->all();
         $orders_uuid = $input["orders_uuid"]??"";
 
-        $datas = $assign_data = [];
+        $datas = $assign_data = $detail_data = [];
 
         //取得訂單資料
-        $orders_data = [];
         if($orders_uuid != "") {
             $orders_data = Orders::getDataByUuid($orders_uuid);
+            $assign_data = $orders_data;
         }
-        $assign_data = $orders_data;
         //標題
         $assign_data["title_txt"] = "訂單明細";
         //隱藏購物車
         $assign_data["cart_display"] = "none";
-    
-        $datas["assign_data"] = $assign_data;
         //訂單明細資料
-        $datas["detail_data"] = OrdersDetail::getDataByOrderid($orders_data["id"]);
+        if(isset($orders_data["id"]) && $orders_data["id"] > 0) {
+            $detail_data = OrdersDetail::getDataByOrderid($orders_data["id"]);
+        }
+
         //選項-訂單狀態、配送方式
         $datas["modal_data"]["status"] = $this->getConfigOptions("orders_status",false);
         $datas["modal_data"]["delivery"] = $this->getConfigOptions("orders_delivery",false);
@@ -119,6 +119,9 @@ class OrderController extends Controller
         if(isset($datas["modal_data"]["status"]["cancel"])) {
             unset($datas["modal_data"]["status"]["cancel"]);
         }
+
+        $datas["assign_data"] = $assign_data;
+        $datas["detail_data"] = $detail_data;
         
         return view("backend.orderData",["datas" => $datas]);
     }

@@ -21,7 +21,7 @@
                 <span style="color:{{ @$datas["assign_data"]["status_color"] }}">{{ @$datas["assign_data"]["status_name"] }}</span>
                 @if(@$datas["assign_data"]["status"] == "cancel")
                     <span>
-                        取消原因：{{ @$datas["assign_data"]["cancel_name"] }}<br>
+                        <br>取消原因：{{ @$datas["assign_data"]["cancel_name"] }}<br>
                         @if(@$datas["assign_data"]["cancel"] == "other" && @$datas["assign_data"]["cancel_remark"] != "")
                             取消備註：{!! @$datas["assign_data"]["cancel_remark_format"] !!}
                         @endif
