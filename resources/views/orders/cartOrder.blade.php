@@ -26,8 +26,6 @@
             <div class="table-responsive">
                 <div id="msg_error" class="col-12 alert alert-danger" role="alert" style="display:none;"></div>
                 <div id="msg_success" class="col-12 alert alert-success" role="alert" style="display:none;"></div>
-                <!--<div id="msg_error" class="col-12 alert alert-danger" role="alert" style="display:{{ @$datas["assign_data"]["danger_none"] }};">交易失敗</div>
-                <div id="msg_success" class="col-12 alert alert-success" role="alert" style="display:{{ @$datas["assign_data"]["success_none"] }};">交易成功</div>-->
                 @include('tables.orderUser')
             </div>
             <div class="table-responsive">
@@ -36,10 +34,9 @@
             <div class="row">
                 <div class="col-12 col-sm-6"></div>
                 <div class="col-12 col-sm-6 tm-btn-right">
-                    <button type="button" class="btn btn-primary" onclick="changeForm('/orders/cart_user')">上一步</button>
-                    <button type="button" class="btn btn-cart" onclick="orderSubmit('add_pay')">立即結帳</button>
-                    <button type="button" class="btn btn-primary" onclick="orderSubmit('add');">稍後付款</button>
-                    <button type="button" class="btn btn-danger" onclick="changeForm('/orders/cart_cancel')">取消</button>
+                    <button type="button" class="btn btn-cart" style="display:{{ @$datas["assign_data"]["btn_display"] }}" onclick="orderSubmit('add_pay')">立即結帳</button>
+                    <button type="button" class="btn btn-primary" style="display:{{ @$datas["assign_data"]["btn_display"] }}" onclick="orderSubmit('add');">稍後付款</button>
+                    <button type="button" class="btn btn-danger" style="display:{{ @$datas["assign_data"]["btn_display"] }}" onclick="changeForm('/orders/cart_cancel')">取消</button>
                 </div>
             </div>
         </div>

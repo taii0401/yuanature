@@ -321,7 +321,7 @@ class AjaxController extends Controller
         return response()->json($this->returnResult());
     }
 
-    //購物車-新增、編輯、刪除、新增折價劵資料、新增訂單資料
+    //購物車-新增、編輯、刪除、新增購物車-訂單資料、新增購物車-收件人資料
     public function cart_data(Request $request)
     {
         $this->resetResult();
@@ -334,9 +334,9 @@ class AjaxController extends Controller
             }
         }
 
-        //表單動作類型(新增、編輯、刪除、新增折價劵資料、新增訂單資料)
+        //表單動作類型(新增、編輯、刪除、新增購物車-訂單資料、新增購物車-收件人資料)
         $action_type = $input["action_type"]??"add";
-        if($action_type == "order") { //新增訂單資料
+        if($action_type == "cart_user") { //新增購物車-收件人資料
             //檢查欄位、檢查訊息
             $validator_data = $validator_message = [];
             $validator_data["name"] = "required";
@@ -383,7 +383,7 @@ class AjaxController extends Controller
                 session(["cart" => $cart_data]);
             }
             $this->error = false;
-        } else if($action_type == "coupon" || $action_type == "order") { //新增折價劵資料、新增訂單資料
+        } else if($action_type == "cart_order" || $action_type == "cart_user") { //新增購物車-訂單資料、新增購物車-收件人資料
             if(isset($input["_token"])) {
                 unset($input["_token"]);
             }

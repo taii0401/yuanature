@@ -13,9 +13,9 @@
             <div class="table-responsive">
                 @include('tables.orderCart')
 
-                <form id="form_data_coupon" class="tm-signup-form" method="post">
+                <form id="form_data_cart_order" class="tm-signup-form" method="post">
                     @csrf
-                    <input type="hidden" id="action_type" name="action_type" value="coupon">
+                    <input type="hidden" id="action_type" name="action_type" value="cart_order">
                     <div class="row">
                         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
                             <label class="col-form-label">使用折價劵</label>
@@ -69,7 +69,7 @@
                 <div class="col-12 tm-btn-right" style="display:{{ @$datas["assign_data"]["cart_display"] }};">
                     <button type="button" class="btn btn-primary" onclick="changeForm('/product')">繼續購買</button>
                     @if(UserAuth::isLoggedIn())
-                        <button type="button" class="btn btn-danger" onclick="cartSubmit('coupon');">下一步</button>
+                        <button type="button" class="btn btn-danger" onclick="cartSubmit('cart_order');">下一步</button>
                     @else
                         <button type="button" class="btn btn-danger" onclick="alert('請先登入會員！');changeForm('/users')">下一步</button>
                     @endif

@@ -294,8 +294,8 @@ class OrderController extends Controller
 
         $datas = $assign_data = $option_data = [];
         $assign_data["title_txt"] = "確認訂單";
-        //隱藏按鈕
-        $assign_data["danger_none"] = $assign_data["success_none"] = "none";
+        //顯示按鈕
+        $assign_data["btn_display"] = "";
         //隱藏購物車、訂單明細
         $assign_data["cart_display"] = $assign_data["order_detail_display"] = "none";
 
@@ -315,6 +315,9 @@ class OrderController extends Controller
             foreach($cart_order_data as $cart_order_key => $cart_order_val) {
                 $assign_data[$cart_order_key] = $cart_order_val;
             }
+        } else {
+            //隱藏按鈕
+            $assign_data["btn_display"] = "none";
         }
 
         //配送方式

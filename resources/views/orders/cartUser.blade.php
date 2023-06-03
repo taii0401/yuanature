@@ -61,7 +61,7 @@
                             <div class="col-12 col-sm-6"></div>
                             <div class="col-12 col-sm-6 tm-btn-right">
                                 <button type="button" class="btn btn-primary btn_submit" onclick="changeForm('/orders/cart');">上一步</button>
-                                <button type="button" class="btn btn-danger btn_submit" onclick="cartSubmit('order');">下一步</button>
+                                <button type="button" class="btn btn-danger btn_submit" onclick="cartSubmit('cart_user');">下一步</button>
                             </div>
                         </div>
                     </div>

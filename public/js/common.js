@@ -595,12 +595,25 @@ function cartChangeUserCoupon() {
     $('#selsct_user_coupon').html(text);
 }
 
-//購物車-新增、編輯、刪除、新增折價劵資料、新增訂單資料
+//購物車-新增、編輯、刪除、新增購物車-訂單資料、新增購物車-收件人資料
 function cartSubmit(action_type) {
     $('.btn_submit').attr('disabled',true);
     $('#action_type').val(action_type);
 
-    if(action_type == 'order') { //新增訂單資料
+    if(action_type == 'cart_order') { //新增購物車-訂單資料
+        //檢查購物車是否有資料
+        isCheck = false;
+        $("input[name='subtotal[]']").each(function() {
+            if(parseInt(this.value) > 0) {
+                isCheck = true;
+            }
+        });
+
+        if(!isCheck) {
+            alert('請先選擇商品加入購物車！');
+            return false;
+        }
+    } else if(action_type == 'cart_user') { //新增購物車-收件人資料
         //檢查必填
         if(checkRequiredClass('require',true) == false) {
             returnFalseAction();
@@ -631,7 +644,7 @@ function cartSubmit(action_type) {
     }
 
     var form_name = 'form_data_cart';
-    if(action_type == 'coupon') { //新增折價劵資料
+    if(action_type == 'cart_order') { //新增購物車-訂單資料
         form_name = 'form_data_'+action_type;
     }
 
@@ -659,9 +672,9 @@ function cartSubmit(action_type) {
                 } else if(action_type == 'delete') { //刪除
                     alert("刪除成功！");
                     changeForm('/orders/cart');
-                } else if(action_type == 'coupon') { //新增折價劵資料
+                } else if(action_type == 'cart_order') { //新增購物車-訂單資料
                     changeForm('/orders/cart_user');
-                } else if(action_type == 'order') { //新增訂單資料
+                } else if(action_type == 'cart_user') { //新增購物車-收件人資料
                     changeForm('/orders/cart_order');
                 }
             } else if(response.error == true) {
