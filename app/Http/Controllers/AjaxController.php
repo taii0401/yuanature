@@ -441,7 +441,7 @@ class AjaxController extends Controller
 
         $user_id = UserAuth::userdata()->user_id??0;
         if($user_id > 0) {
-            if($action_type == "add") { //新增
+            if($action_type == "add" || $action_type == "add_pay") { //新增
                 $isSuccess = false;
                 //UUID
                 $uuid = Str::uuid()->toString();

@@ -181,9 +181,6 @@ class OrderController extends Controller
     //購物車
     public function cart(Request $request)
     {
-        $this->pr(session("cart"));
-        $this->pr(session("cart_order"));
-
         $datas = $assign_data = $option_data = [];
         $assign_data["title_txt"] = "購物車";
         //隱藏訂單
@@ -226,9 +223,6 @@ class OrderController extends Controller
     //購物車-收件人資料
     public function cartUser(Request $request)
     {
-        $this->pr(session("cart"));
-        $this->pr(session("cart_order"));
-
         $datas = $assign_data = $option_data = [];
 
         //取得會員資料
@@ -261,7 +255,7 @@ class OrderController extends Controller
         }
 
         //台灣本島或離島
-        $island = $assign_data["delivery"]??"main";
+        $island = $assign_data["island"]??"main";
         //配送方式
         $delivery = $assign_data["delivery"]??"home";
         //選擇宅配顯示地址
@@ -284,11 +278,6 @@ class OrderController extends Controller
     //購物車-確認訂單資料
     public function cartOrder(Request $request)
     {
-        $this->pr(session("cart"));
-        $this->pr(session("cart_order"));
-
-        //付款方式
-        $orders_payment_datas = config("yuanature.orders_payment");
         //配送方式
         $orders_delivery_datas = config("yuanature.orders_delivery");
 
@@ -387,7 +376,11 @@ class OrderController extends Controller
             } else if($payment == "linepay") {
                 //$MPG_LINEPAY = 1;
                 $MPG_TAIWANPAY = 1;
+            } else if($payment == "card") {
+                $MPG_CREDIT = 1;
             } else {
+                $MPG_VACC = 1;
+                $MPG_TAIWANPAY = 1;
                 $MPG_CREDIT = 1;
             }
             //配送方式
@@ -549,6 +542,28 @@ class OrderController extends Controller
                 }
 
                 try {
+                    //更新付款方式
+                    $payment = "";
+                    switch($PaymentType) {
+                        case "CREDIT":
+                            $payment = "card";
+                            break;
+                        case "LINEPAY":
+                        case "TAIWANPAY":
+                            $payment = "linepay";
+                            break;
+                        case "VACC":
+                        case "CVS":
+                        case "BARCODE":
+                            $payment = "atm";
+                            break;
+                        default:
+                            break;
+                    }
+                    if($payment != "") {
+                        Orders::where(["serial" => $MerchantOrderNo])->update(["payment" => $payment]);
+                    }
+
                     //更新付款狀態
                     $isPaid = false;
                     if($type == "return" && in_array($PaymentType,["CREDIT","LINEPAY","TAIWANPAY"])) {

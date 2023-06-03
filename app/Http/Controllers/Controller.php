@@ -332,7 +332,7 @@ class Controller extends BaseController
 
                     //稍後付款
                     if(isset($data["isPayWait"]) && $data["isPayWait"]) {
-                        $text .= "<br>請於七日內付款成功，若未付款，訂單將會自動取消。會員中心 > 訂單查詢 > 付款。";
+                        $text .= "<br>請於七日內付款成功，若未付款，訂單將會自動取消。";
                     }
 
                     //若選擇ATM轉帳，則顯示轉帳提示文字
