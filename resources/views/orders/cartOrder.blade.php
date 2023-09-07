@@ -7,7 +7,7 @@
     <input type="hidden" id="action_type" name="action_type" value="add">
     @if(isset($datas["assign_data"]))
         @foreach($datas["assign_data"] as $key => $val)
-            @if(in_array($key,["user_coupon_id","delivery","island","origin_total","coupon_total","delivery_total","total","name","phone","email","address_zip","address_county","address_district","address"]))
+            @if(in_array($key,["user_coupon_id","delivery","island","origin_total","coupon_total","delivery_total","total","name","phone","email","address_zip","address_county","address_district","address","store","store_code","store_name","store_address"]))
                 <input type="hidden" id="{{ $key }}" name="{{ $key }}" value="{{ $val }}">
             @elseif($key == "order_remark")
                 <textarea id="{{ $key }}" name="{{ $key }}" style="display:none">{!! $val !!}</textarea>
@@ -34,9 +34,10 @@
             <div class="row">
                 <div class="col-12 col-sm-6"></div>
                 <div class="col-12 col-sm-6 tm-btn-right">
-                    <button type="button" class="btn btn-cart" style="display:{{ @$datas["assign_data"]["btn_display"] }}" onclick="orderSubmit('add_pay')">立即結帳</button>
-                    <button type="button" class="btn btn-primary" style="display:{{ @$datas["assign_data"]["btn_display"] }}" onclick="orderSubmit('add');">稍後付款</button>
-                    <button type="button" class="btn btn-danger" style="display:{{ @$datas["assign_data"]["btn_display"] }}" onclick="changeForm('/orders/cart_cancel')">取消</button>
+                    <button type="button" class="btn btn-primary btn_submit" onclick="changeForm('/orders/cart_user');">上一步</button>
+                    <button type="button" class="btn btn-cart btn_submit" style="display:{{ @$datas["assign_data"]["btn_display"] }}" onclick="orderSubmit('add_pay')">立即結帳</button>
+                    <button type="button" class="btn btn-danger btn_submit" style="display:{{ @$datas["assign_data"]["btn_display"] }}" onclick="orderSubmit('add');">稍後付款</button>
+                    <button type="button" class="btn btn-danger btn_submit" style="display:{{ @$datas["assign_data"]["btn_display"] }}" onclick="changeForm('/orders/cart_cancel')">取消</button>
                 </div>
             </div>
         </div>

@@ -86,19 +86,21 @@
                                     {{ @$data["total"] }}元
                                 </td>
                                 <td class="text-center">
-                                    @if(@$data["status"] == "nopaid")
-                                        <div class="btn-action">
-                                            <ul>
+                                    <div class="btn-action">
+                                        <ul>
+                                            @if($data["isPay"])
                                                 <li>
-                                                    <a href="#" target="_blank" onclick="changeForm('/orders/cart_pay?orders_uuid={{ @$data["uuid"] }}');"><i class="fas fa-donate tm-edit-icon" ></i></a>
+                                                    <a href="#" target="_blank" onclick="changeForm('/orders/cart_payment?orders_uuid={{ @$data["uuid"] }}');"><i class="fas fa-donate tm-edit-icon" ></i></a>
                                                 </li>
+                                            @endif
+                                            @if($data["isDelete"])
                                                 <li>
                                                     <i class="fas fa-trash-alt tm-trash-icon dataModalBtnOrderCancel" data-bs-toggle="modal" data-bs-target="#dataModalOrderCancel" data-id="{{ @$data["uuid"] }},{{ @$data["serial"] }}">
                                                     </i>
                                                 </li>
-                                            </ul>
-                                        </div>
-                                    @endif
+                                            @endif
+                                        </ul>
+                                    </div>
                                 </td>
                             </tr>
                             @endforeach
@@ -117,9 +119,9 @@
         </div>
     </div>
 </div>
-@endsection
 
 @include('forms.orderCancel')
+@endsection
 
 @section('script')
 <script>

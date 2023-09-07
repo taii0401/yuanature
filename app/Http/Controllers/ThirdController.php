@@ -14,7 +14,11 @@ use App\Services\LineService;
 use App\Libraries\UserAuth;
 //Model
 use App\Models\User;
+use App\Models\UserCoupon;
 use App\Models\WebUser;
+use App\Models\Orders;
+use App\Models\OrdersPayment;
+
 
 class ThirdController extends Controller
 {
@@ -94,8 +98,8 @@ class ThirdController extends Controller
                     return redirect(config("yuanature.login_url_cart"));
                 }
             }
-        } catch (Exception $ex) {
-            Log::error($ex);
+        } catch (Exception $e) {
+            Log::error($e);
         }
     }
 
@@ -196,8 +200,152 @@ class ThirdController extends Controller
                     return redirect(config("yuanature.login_url_cart"));
                 }
             }
-        } catch (Exception $ex) {
-            Log::error($ex);
+        } catch (Exception $e) {
+            Log::error($e);
+        }
+    }
+
+    //LinePay付款
+    public function linePay($orders_data=[])
+    {
+        $orders_id = $orders_data["id"]??0;
+        //訂單編號
+        $orders_number = $orders_data["serial"]??"";
+        //訂單金額
+        $orders_total = $orders_data["total"]??0;
+
+        $uri = "/v3/payments/request";
+        $nonce = date("Y-m-d H:i:s.u");
+        $fields = [
+            "amount" => $orders_total, //價錢
+            "currency" => "TWD", //幣值
+            "orderId" => $orders_number,
+            "packages" => [
+                [
+                    "id" => $orders_number,
+                    "amount" => $orders_total,
+                    "name" => env("APP_NAME"),
+                    "products" => [
+                        [
+                            "name" => env("ECPAY_ItemName"),
+                            "quantity" => 1,
+                            "price" => $orders_total
+                        ],
+                    ],
+                ],
+            ],
+            "redirectUrls" => [
+                "confirmUrl" => env("APP_URL")."/orders/line_pay_confirm", //使用者授權付款後，跳轉到該商家URL
+                "cancelUrl" => env("APP_URL")."/orders", //使用者通過LINE付款頁，取消付款後跳轉到該URL
+            ]
+        ];
+        //數位簽章
+        $signature = env("LINE_PAY_SECRET").$uri.json_encode($fields).$nonce;
+
+        //cUrl
+        $post_data = [];
+        $post_data["url"] = env("LINE_PAY_ACTION").$uri;
+        $post_data["fields"] = json_encode($fields);
+        $post_data["header"] = [
+            "Content-Type:application/json;",
+            "X-LINE-ChannelId:".env("LINE_PAY_CHANNEL_ID"),
+            "X-LINE-Authorization-Nonce:".$nonce,
+            "X-LINE-Authorization:".base64_encode(hash_hmac("sha256",$signature,env("LINE_PAY_SECRET"),true))
+        ];
+        $response = json_decode($this->curlPost($post_data),true);
+        
+        $web_url = "orders";
+        //回傳成功
+        if(isset($response["returnCode"]) && $response["returnCode"] == "0000") {
+            //連結
+            if(isset($response["info"]["paymentUrl"]["web"]) && $response["info"]["paymentUrl"]["web"] != "") {
+                $web_url = $response["info"]["paymentUrl"]["web"];
+            }                    
+        } else {
+            //LINE通知
+            $this->lineNotify("LinePay付款傳送失敗：訂單編號 - ".$orders_number);
+            Log::Info("LinePay付款傳送失敗：訂單編號 - ".$orders_number);
+        }
+
+        //付款紀錄
+        $pay_data = [];
+        $pay_data["orders_id"] = $orders_id;
+        $pay_data["payment"] = "linepay";
+        OrdersPayment::create($pay_data);
+        
+        return $web_url;
+    }
+
+    //LinePay付款確認
+    public function linePayConfirm(Request $request)
+    {
+        $input = $request->all();
+        $transactionId = $input["transactionId"]??"";
+        $orderId = $input["orderId"]??"";
+
+        $orders_uuid = "";
+        //取得付款資訊
+        if($transactionId != "" && $orderId != "") {
+            //取得訂單資料
+            $orders_data = Orders::getDataBySerial($orderId);
+            $orders_id = $orders_data["id"]??0; 
+            $orders_uuid = $orders_data["uuid"]??""; 
+            $orders_total = $orders_data["total"]??0;
+            //自動登入
+            $user_id = $orders_data["user_id"]??0;
+            UserAuth::userLogIn($user_id);
+
+            //更新資料
+            $update_data = []; 
+            //付款狀態
+            $update_data["status"] = "failpaid"; //付款失敗
+            
+            //cUrl
+            $uri = "/v3/payments/".$transactionId."/confirm";
+            $nonce = date("Y-m-d H:i:s.u");
+            $fields = [
+                "amount" => $orders_total, //價錢
+                "currency" => "TWD", //幣值
+            ];
+            //數位簽章
+            $signature = env("LINE_PAY_SECRET").$uri.json_encode($fields).$nonce;
+
+            $post_data = [];
+            $post_data["url"] = env("LINE_PAY_ACTION").$uri;
+            $post_data["fields"] = json_encode($fields);
+            $post_data["header"] = [
+                "Content-Type:application/json;",
+                "X-LINE-ChannelId:".env("LINE_PAY_CHANNEL_ID"),
+                "X-LINE-Authorization-Nonce:".$nonce,
+                "X-LINE-Authorization:".base64_encode(hash_hmac("sha256",$signature,env("LINE_PAY_SECRET"),true))
+            ];
+            $response = json_decode($this->curlPost($post_data),true);
+            //dd($response);
+
+            //回傳成功
+            if(isset($response["returnCode"]) && $response["returnCode"] == "0000") {
+                //付款狀態
+                $update_data["status"] = "paid"; //付款成功
+                if(isset($response["info"]["payInfo"][0]["amount"])) {
+                    //付款金額
+                    $update_data["pay_total"] = $response["info"]["payInfo"][0]["amount"];
+                }             
+            } else { //付款失敗
+                //退還折價劵
+                UserCoupon::cancelUserCoupon($user_id,$orders_id);
+            } 
+
+            //更新付款資訊
+            if(!empty($update_data)) {
+                $orders_data = Orders::getDataById($orders_id);
+                $this->updatePayData($orders_data,$update_data);
+            }
+        }
+
+        if($orders_uuid != "") {
+            return redirect("orders/detail?orders_uuid=$orders_uuid");
+        } else {
+            return redirect("orders");
         }
     }
 }

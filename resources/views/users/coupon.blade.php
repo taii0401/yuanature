@@ -24,6 +24,7 @@
                             <th>使用狀態</th>
                             <th>到期時間</th>
                             <th>使用時間</th>
+                            <th>訂單編號</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -53,6 +54,10 @@
                                 <td>
                                     <span class="td-data-span">使用時間：</span>
                                     {{ @$data["used_time"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">訂單編號：</span>
+                                    <a href="#" onclick="changeForm('/orders/detail?orders_uuid={{ @$data["orders_uuid"] }}');"><u>{{ @$data["orders_serial"] }}</u></a>
                                 </td>
                             </tr>
                             @endforeach

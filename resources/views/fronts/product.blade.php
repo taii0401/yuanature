@@ -3,16 +3,16 @@
 @section('banner_menu_txt') {{ @$title_txt }} @endsection
 @section('content')
 <div class="row">
-    <div class="col-xl-10 col-lg-10 col-md-12 col-sm-12 mx-auto">
+    <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 mx-auto">
         <div class="row tm-block">
             <div id="msg_error" class="col-12 alert alert-danger" role="alert" style="display:none;"></div>
             <div id="msg_success" class="col-12 alert alert-success" role="alert" style="display:none;"></div>
             <div class="row">
                 <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12">
                     <div class="row">
-                        <img id="img-box" src="{{ asset('img/product/product_sm_1.png') }}" width="100%" style="max-width:580px;max-height:500px;">
+                        <img id="img-box" src="{{ asset('img/product/product_sm_1.png') }}" width="100%" style="max-width:500px;max-height:500px;">
                     </div>
-                    <div class="row" style="margin-top: 10px;margin-bottom: 10px;max-width:580px;">
+                    <div class="row" style="margin-top: 10px;margin-bottom: 10px;max-width:500px;">
                         <div class="col-12 pdt-img-area">
                             <ul>
                                 <li class="img-item"><img src="{{ asset('img/product/product_sm_1.png') }}"></li>

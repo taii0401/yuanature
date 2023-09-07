@@ -52,9 +52,9 @@
                             <th style="width:1%;">
                                 <input id="check_all" type="checkbox" value="all" onclick="checkAll()">
                             </th>
-                            <th>名稱</th>
-                            <th>年齡</th>
-                            <th>居住地</th>
+                            <th width="100">名稱</th>
+                            <!--<th>年齡</th>
+                            <th>居住地</th>-->
                             <th>使用者回饋及感想</th>
                             <th>建立時間</th>
                             <th width="50"></th>
@@ -71,14 +71,14 @@
                                     <span class="td-data-span">名稱：</span>
                                     {{ @$data["name"] }}
                                 </td>
-                                <td>
+                                <!--<td>
                                     <span class="td-data-span">年齡：</span>
                                     {{ @$data["age"] }}
                                 </td>
                                 <td>
                                     <span class="td-data-span">居住地：</span>
                                     {{ @$data["address_county"] }}{{ @$data["address_district"] }}
-                                </td>
+                                </td>-->
                                 <td>
                                     <span class="td-data-span">使用者回饋及感想：<br></span>
                                     {!! @$data["content"] !!}

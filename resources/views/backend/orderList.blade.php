@@ -3,7 +3,7 @@
 @section('content')
 <div class="row">
     <div class="col-xl-12 col-lg-12 tm-md-12 tm-sm-12 tm-col">
-        <div class="bg-white tm-block h-100">
+        <div class="bg-white tm-block">
             <div class="row">
                 <div class="form-group col-md-4 col-sm-12">
                     <div class="input-group">
@@ -87,7 +87,7 @@
                                     {{ @$data["total"] }}元
                                 </td>
                                 <td class="text-center">
-                                    @if(@$data["cancel"] == "")
+                                    @if(@$data["isDelete"])
                                         <div class="btn-action">
                                             <ul>
                                                 <li>
@@ -115,9 +115,9 @@
         </div>
     </div>
 </div>
-@endsection
 
 @include('forms.orderCancel')
+@endsection
 
 @section('script')
 <script>

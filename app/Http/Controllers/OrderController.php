@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Validator,DB;
 use Illuminate\Http\Request;
+//Controller
+use App\Http\Controllers\ThirdController;
+use App\Http\Controllers\EcpayController;
 //LOG
 use Illuminate\Support\Facades\Log;
 //例外處理
@@ -15,46 +18,12 @@ use App\Models\WebUser;
 use App\Models\Orders;
 use App\Models\OrdersDetail;
 use App\Models\OrdersStore;
-use App\Models\OrdersPaymentLog;
+use App\Models\OrdersPayment;
+use App\Models\UserCoupon;
 
 
 class OrderController extends Controller
 {
-    //交易資料 AES 加密
-    private function createMpgAesEncrypt($parameter=[],$key="",$iv="") {
-        $return_str = "";
-        if(!empty($parameter)) {
-            //將參數經過URL ENCODED QUERY STRING
-            $return_str = http_build_query($parameter);
-        }
-        return trim(bin2hex(openssl_encrypt($this->addpadding($return_str),"AES-256-CBC",$key, OPENSSL_RAW_DATA|OPENSSL_ZERO_PADDING,$iv)));
-    }
-
-    private function addpadding($string,$blocksize=32) {
-        $len = strlen($string);
-        $pad = $blocksize-($len%$blocksize);
-        $string .= str_repeat(chr($pad),$pad);
-        return $string;
-    }
-
-    //交易資料 AES 解密
-    private function createAesDecrypt($parameter="",$key="",$iv="") {
-        return $this->strippadding(openssl_decrypt(hex2bin($parameter),"AES-256-CBC",
-        $key,OPENSSL_RAW_DATA|OPENSSL_ZERO_PADDING,$iv));
-    }
-
-    private function strippadding($string) {
-        $slast = ord(substr($string,-1));
-        $slastc = chr($slast);
-        $pcheck = substr($string,-$slast);
-        if (preg_match("/$slastc{" . $slast . "}/",$string)) {
-            $string = substr($string,0,strlen($string)-$slast);
-            return $string;
-        } else {
-            return false;
-        }
-    }
-
     //訂單列表
     public function index(Request $request) 
     {
@@ -126,6 +95,15 @@ class OrderController extends Controller
                 //取消原因
                 $list_data[$key]["cancel_name"] = $orders_cancel_datas[$val["cancel"]]["name"]??"";
                 $list_data[$key]["cancel_color"] = $orders_cancel_datas[$val["cancel"]]["color"]??"";
+
+                $get_data = [];
+                $get_data["orders"] = $val;
+                if($val["status"] == "nopaid" && $val["pay_time"] == "" && $val["cancel_time"] == "") {
+                    $pay_data = OrdersPayment::getLatestDataByOrdersId($val["id"]);
+                    $get_data["pay"] = $pay_data;
+                }
+                $list_data[$key]["isPay"] = $this->isPayOrder($get_data);
+                $list_data[$key]["isDelete"] = $this->isDeleteOrder($get_data);
             }
         }
 
@@ -158,11 +136,16 @@ class OrderController extends Controller
             $orders_data = Orders::getDataByUuid($orders_uuid,$user_id);
             $assign_data = $orders_data;
         }
+
         //標題
         $assign_data["action_type"] = "detail";
         $assign_data["title_txt"] = "訂單明細";
         //隱藏購物車
         $assign_data["cart_display"] = "none";
+        //若已選擇ATM付款且未超過繳費期限，則以繳費期限時間為主
+        if(isset($orders_data["pay_expire_time"]) && $orders_data["pay_expire_time"] != "" && strtotime($orders_data["pay_expire_time"]) >= strtotime(date("Y-m-d H:i:s"))) {
+            $assign_data["expire_time"] = $orders_data["pay_expire_time"];
+        }
         //訂單明細資料
         if(isset($orders_data["id"]) && $orders_data["id"] > 0) {
             $detail_data = OrdersDetail::getDataByOrderid($orders_data["id"]);
@@ -177,16 +160,13 @@ class OrderController extends Controller
     //購物車
     public function cart(Request $request)
     {
+        //$this->pr(session("cart"));
+        //$this->pr(session("cart_order"));
+
         $datas = $assign_data = $option_data = [];
         $assign_data["title_txt"] = "購物車";
         //隱藏訂單
         $assign_data["order_display"] = "none";
-
-        //取得配送方式、台灣本島或離島
-        $option_data["delivery"] = $this->getConfigOptions("orders_delivery",false);
-        $option_data["island"] = $this->getConfigOptions("orders_island",false);
-        $assign_data["delivery"] = array_key_first($option_data["delivery"]);
-        $assign_data["island"] = array_key_first($option_data["island"]);
 
         //取得購物車資料
         $cart_data = $this->getCartData(true);
@@ -219,6 +199,9 @@ class OrderController extends Controller
     //購物車-收件人資料
     public function cartUser(Request $request)
     {
+        //$this->pr(session("cart"));
+        //$this->pr(session("cart_order"));
+
         $datas = $assign_data = $option_data = [];
 
         //取得會員資料
@@ -231,6 +214,12 @@ class OrderController extends Controller
         $assign_data["address_display"] = "none";
         //折價劵金額、運費
         $assign_data["coupon_total"] = $assign_data["delivery_total"] = 0;
+
+        //取得配送方式、台灣本島或離島
+        $option_data["delivery"] = $this->getConfigOptions("orders_delivery",false);
+        $option_data["island"] = $this->getConfigOptions("orders_island",false);
+        $assign_data["delivery"] = array_key_first($option_data["delivery"]);
+        $assign_data["island"] = array_key_first($option_data["island"]);
         
         //取得購物車資料
         $cart_data = $this->getCartData(true);
@@ -250,19 +239,25 @@ class OrderController extends Controller
             }
         }
 
-        //台灣本島或離島
-        $island = $assign_data["island"]??"main";
-        //配送方式
-        $delivery = $assign_data["delivery"]??"home";
-        //選擇宅配顯示地址
-        if($delivery == "home") {
-            $assign_data["address_display"] = "";
+        //取得購物車超商資料
+        $cart_store_data = session("cart_store");
+        if(!empty($cart_store_data)) {
+            foreach($cart_store_data as $cart_store_key => $cart_store_val) {
+                $assign_data[$cart_store_key] = $cart_store_val;
+            }
+            $assign_data["delivery"] = "store";
         }
+
         //計算運費
-        $delivery_total = $this->getDeliveryTotalData($origin_total,$delivery,$island);
-        $assign_data["delivery_total"] = $delivery_total;
+        $assign_data["delivery_total"] = $this->getDeliveryTotalData($origin_total,$assign_data["delivery"],$assign_data["island"]);
         //計算總金額
         $assign_data["total"] = $assign_data["origin_total"]-$assign_data["coupon_total"]+$assign_data["delivery_total"];
+        //超過2萬元，只能宅配，並重新計算運費
+        if($assign_data["total"] >= 20000) {
+            $assign_data["delivery"] = "home";
+            $assign_data["delivery_total"] = $this->getDeliveryTotalData($origin_total,$assign_data["delivery"],$assign_data["island"]);
+            $assign_data["total"] = $assign_data["origin_total"]-$assign_data["coupon_total"]+$assign_data["delivery_total"];
+        }
 
         $datas["assign_data"] = $assign_data;
         $datas["option_data"] = $option_data;
@@ -274,6 +269,9 @@ class OrderController extends Controller
     //購物車-確認訂單資料
     public function cartOrder(Request $request)
     {
+        //$this->pr(session("cart"));
+        //$this->pr(session("cart_order"));
+
         //配送方式
         $orders_delivery_datas = config("yuanature.orders_delivery");
 
@@ -283,6 +281,7 @@ class OrderController extends Controller
         $assign_data["btn_display"] = "";
         //隱藏購物車、訂單明細
         $assign_data["cart_display"] = $assign_data["order_detail_display"] = "none";
+
 
         //取得購物車資料
         $cart_data = $this->getCartData(true);
@@ -305,11 +304,31 @@ class OrderController extends Controller
             $assign_data["btn_display"] = "none";
         }
 
+        //地址
+        $addr = "";
         //配送方式
         if(isset($assign_data["delivery"])) {
             $assign_data["delivery_name"] = $orders_delivery_datas[$assign_data["delivery"]]["name"]??"";
             $assign_data["delivery_color"] = $orders_delivery_datas[$assign_data["delivery"]]["color"]??"";
+           
+            if($assign_data["delivery"] == "home") {
+                $addr .= "地址：".$assign_data["address_zip"]." ".$assign_data["address_county"].$assign_data["address_district"].$assign_data["address"];
+            } else if($assign_data["delivery"] == "store") {
+                //超商類型
+                $orders_store_datas = config("yuanature.orders_store");
+                //取得超商出貨資料
+                $cart_store_data = session("cart_store");
+                if(!empty($cart_store_data)) {
+                    foreach($cart_store_data as $cart_store_key => $cart_store_val) {
+                        $assign_data[$cart_store_key] = $cart_store_val;
+                    }
+                }
+                $addr .= "[".$orders_store_datas[$assign_data["store"]]["name"]."]"??"";
+                $addr .= $assign_data["store_name"];
+                $addr .= "(".$assign_data["store_address"].")";
+            }
         }
+        $assign_data["address_format"] = $addr;
         
         $datas["assign_data"] = $assign_data;
         $datas["detail_data"] = $cart_data;
@@ -320,293 +339,115 @@ class OrderController extends Controller
     //購物車-訂單取消
     public function cartCancel(Request $request)
     {
-        session()->forget("cart");
-        session()->forget("cart_order");
+        $this->clearSessionCart();
 
         //購物車
         return redirect("orders/cart");
     }
 
+    //購物車-付款方式
+    public function cartPayment(Request $request)
+    {
+        $input = $request->all();
+        $orders_uuid = $input["orders_uuid"]??"";
+
+        $datas = $assign_data = $option_data = [];
+        //取得會員資料
+        $user_id = 0;
+        $user_data = UserAuth::userdata();
+        if(!empty($user_data)) {
+            $user_id = $user_data->user_id;
+        }
+        //取得訂單資料
+        if($user_id > 0 && $orders_uuid != "") {
+            $orders_data = Orders::getDataByUuid($orders_uuid,$user_id);
+            $assign_data = $orders_data;
+        }
+
+        $get_data = [];
+        $get_data["orders"] = $orders_data;
+        //dd($orders_data);
+        if($orders_data["status"] == "nopaid" && $orders_data["pay_time"] == "" && $orders_data["cancel_time"] == "") {
+            $pay_data = OrdersPayment::getLatestDataByOrdersId($orders_data["id"]);
+            $get_data["pay"] = $pay_data;
+        }
+        $isPay = $this->isPayOrder($get_data);
+        if($isPay) {
+            //標題
+            $assign_data["title_txt"] = "付款";
+            //隱藏購物車、訂單明細
+            $assign_data["cart_display"] = $assign_data["order_detail_display"] = "none";
+
+            //取得付款方式
+            $option_data["payment"] = $this->getConfigOptions("orders_payment",false);
+            $assign_data["payment"] = array_key_first($option_data["payment"]);
+            
+            //訂單明細資料
+            if(isset($orders_data["id"]) && $orders_data["id"] > 0) {
+                $detail_data = OrdersDetail::getDataByOrderid($orders_data["id"]);
+            }
+            
+            $datas["assign_data"] = $assign_data;
+            $datas["option_data"] = $option_data;
+            $datas["detail_data"] = $detail_data;
+
+            return view("orders.cartPayment",["datas" => $datas]);
+        } else {
+            return redirect("orders/detail?orders_uuid=".$orders_uuid);
+        }
+    }
+
     //購物車-結帳
     public function cartPay(Request $request)
     {
-        //付款方式
-        $orders_payment_datas = config("yuanature.orders_payment");
-        //配送方式
-        $orders_delivery_datas = config("yuanature.orders_delivery");
-
         $input = $request->all();
         $uuid = $input["orders_uuid"]??"";
+
+        //取得會員資料
+        $user_id = 0;
+        $user_data = UserAuth::userdata();
+        if(!empty($user_data)) {
+            $user_id = $user_data->user_id;
+        }
         
-        $assign_data = [];
-        $order_number = "";
-        $order_total = 0;
+        $assign_data = $orders_data = [];
+        $orders_number = "";
+        $orders_total = 0;
         //取得訂單資料
         if($uuid != "") {
-            $order_data = Orders::getDataByUuid($uuid);
-            $assign_data = $order_data;
+            $orders_data = Orders::getDataByUuid($uuid,$user_id);
+            $assign_data = $orders_data;
             //訂單編號
-            $order_number = $order_data["serial"]??"";
+            $orders_number = $orders_data["serial"]??"";
             //訂單金額
-            $order_total = $order_data["total"]??0;
+            $orders_total = $orders_data["total"]??0;
         }
         $assign_data["title_txt"] = "結帳";
 
-        if($order_total > 0 && $order_number != "") {
-            $assign_data["MerchantID"] = env("MPG_MerchantID",""); //商店代號
-            $assign_data["Version"] = env("MPG_Version",""); //串接程式版本
-            $assign_data["MerchantOrderNo"] = $order_number; //商店訂單編號
-            $assign_data["Amt"] = $order_total; //訂單金額
-            $assign_data["Email"] = $order_data["email"]??""; //付款人電子信箱
+        //付款方式
+        $payment = $orders_data["payment"]??"";
+        $linepay = false;
+        if($payment == "linepay") {
+            $linepay = true;
+        } else if($payment == "atm") {
+            $assign_data["ChoosePayment"] = "ATM";
+        } else if($payment == "card") {
+            $assign_data["ChoosePayment"] = "Credit";
+        }
 
-            $MPG_CREDIT = env("MPG_CREDIT",""); //信用卡㇐次付清啟用
-            $MPG_LINEPAY = env("MPG_LINEPAY",""); //LINE Pay啟用
-            $MPG_VACC = env("MPG_VACC",""); //ATM 轉帳啟用
-            $MPG_TAIWANPAY = env("MPG_TAIWANPAY",""); //台灣Pay
-            $MPG_CVSCOM = env("MPG_CVSCOM",""); //物流啟用
+        if($orders_total > 0 && $orders_number != "") {
+            if($linepay) {
+                $ThirdController = new ThirdController();
+                $url = $ThirdController->linePay($orders_data);
+                return redirect($url);
 
-            //付款方式
-            $payment = $order_data["payment"]??"";
-            if($payment == "atm") {
-                $MPG_VACC = 1;
-            } else if($payment == "linepay") {
-                //$MPG_LINEPAY = 1;
-                $MPG_TAIWANPAY = 1;
-            } else if($payment == "card") {
-                $MPG_CREDIT = 1;
             } else {
-                $MPG_VACC = 1;
-                $MPG_TAIWANPAY = 1;
-                $MPG_CREDIT = 1;
+                $EcpayController = new EcpayController();
+                $post_datas = $EcpayController->createPayOrders($orders_data);
+                return view("forms.formPost",["datas" => $post_datas]);
             }
-            //配送方式
-            $delivery = $order_data["delivery"]??"";
-            if($delivery == "store") {
-                $MPG_CVSCOM = 1;
-            }
-
-            $hashKey = env("MPG_HashKey","");
-            $hashIV = env("MPG_HashIV","");
-            $ExpireDate = env("MPG_ExpireDate","");
-            $tradeInfoAry = [
-                "MerchantID" => env("MPG_MerchantID",""), //商店代號
-                "RespondType" => env("MPG_RespondType",""), //回傳格式
-                "TimeStamp" => time(), //時間戳記
-                "Version" => env("MPG_Version",""), //串接程式版本
-                "LangType" => env("MPG_LangType",""), //語系
-                "MerchantOrderNo" => $assign_data["MerchantOrderNo"], //商店訂單編號
-                "Amt" => $assign_data["Amt"], //訂單金額
-                "ItemDesc" => env("MPG_ItemDesc",""), //商品資訊
-                "TradeLimit" => env("MPG_TradeLimit",""), //交易限制秒數
-                "ExpireDate" => date("Ymd",strtotime(date("")."+$ExpireDate days")), //繳費有效期限
-                "ReturnURL" => env("APP_URL").env("MPG_ReturnURL",""), //支付完成，返回商店網址
-                "NotifyURL" => env("APP_URL").env("MPG_NotifyURL",""), //支付通知網址
-                "CustomerURL" => env("APP_URL").env("MPG_CustomerURL",""), //商店取號網址
-                "ClientBackURL" => env("APP_URL").env("MPG_ClientBackURL",""), //返回商店網址
-                "Email" => $assign_data["Email"], //付款人電子信箱
-                "EmailModify" => env("MPG_EmailModify",""), //付款人電子信箱，是否開放修改
-                "LoginType" => env("MPG_LoginType",""), //藍新金流會員
-                "OrderComment" => env("MPG_OrderComment",""), //商店備註
-                "CREDIT" => $MPG_CREDIT, //信用卡㇐次付清啟用
-                "ANDROIDPAY" => env("MPG_ANDROIDPAY",""), //Google Pay啟用
-                "SAMSUNGPAY" => env("MPG_SAMSUNGPAY",""), //Samsung Pay啟用
-                "LINEPAY" => $MPG_LINEPAY, //LINE Pay啟用
-                "ImageUrl" => env("MPG_ImageUrl",""), //LINE PAY產品圖檔連結網址
-                "InstFlag" => env("MPG_InstFlag",""), //信用卡分期付款啟用
-                "CreditRed" => env("MPG_CreditRed",""), //信用卡紅利啟用
-                "UNIONPAY" => env("MPG_UNIONPAY",""), //信用卡銀聯卡啟用
-                "WEBATM" => env("MPG_WEBATM",""), //WEBATM 啟用
-                "VACC" => $MPG_VACC, //ATM 轉帳啟用
-                "CVS" => env("MPG_CVS",""), //超商代碼繳費啟用
-                "BARCODE" => env("MPG_BARCODE",""), //超商條碼繳費啟用
-                "ESUNWALLET" => env("MPG_ESUNWALLET",""), //玉山Walle
-                "TAIWANPAY" => $MPG_TAIWANPAY,//env("MPG_TAIWANPAY",""), //台灣Pay
-                "CVSCOM" => $MPG_CVSCOM, //物流啟用
-                "EZPAY" => env("MPG_EZPAY",""), //簡單付電子錢包
-                "EZPWECHAT" => env("MPG_EZPWECHAT",""), //簡單付微信支付
-                "EZPALIPAY" => env("MPG_EZPALIPAY",""), //簡單付支付寶
-                "LgsType" => env("MPG_LgsType",""), //物流型態
-            ];
-
-            //交易資料經AES 加密後取得tradeInfo
-            $tradeInfo = $this->createMpgAesEncrypt($tradeInfoAry,$hashKey,$hashIV);
-            $tradeSha = strtoupper(hash("sha256","HashKey={$hashKey}&{$tradeInfo}&HashIV={$hashIV}"));
-            $assign_data["tradeInfo"] = $tradeInfo;
-            $assign_data["tradeSha"] = $tradeSha;
-            //連結
-            $assign_data["MpgAction"] = env("MPG_ACTION","");
-        } else { //資料有誤，無法串接
-            //訂單列表
-            return redirect("orders");
-        }  
-
-        return view("orders.cartPay",["assign_data" => $assign_data]);
-    }
-
-    //檢查串接金流回傳結果
-    private function mpgCallbackValues($request)
-    {
-        $input = $request->all();
-
-        $hashKey = env("MPG_HashKey","");
-        $hashIV = env("MPG_HashIV","");
-
-        $status = $input["Status"]??"";
-        $merchantID = $input["MerchantID"]??"";
-        $version = $input["Version"]??"";
-        $tradeInfo = $input["TradeInfo"]??"";
-        $tradeSha = $input["TradeSha"]??"";
-        $tradeShaForTest = strtoupper(hash("sha256","HashKey={$hashKey}&{$tradeInfo}&HashIV={$hashIV}"));
-        //$this->pr($status);
-
-        $result = [];
-        $log_status = 0;
-        $json_data = "";
-        if($status == "SUCCESS" && $merchantID == env("MPG_MerchantID") && $version == env("MPG_Version") && $tradeSha == $tradeShaForTest) {
-            //交易資料 AES 解密
-            $tradeInfoJSONString = $this->createAesDecrypt($tradeInfo,$hashKey,$hashIV);
-            $tradeInfoAry = json_decode($tradeInfoJSONString,true);
-            //$this->pr($tradeInfoAry);//exit;
-
-            $result = isset($tradeInfoAry["Result"])?$tradeInfoAry["Result"]:array();
-            $result["json_data"] = $tradeInfoJSONString;
-
-            $log_status = 1;
-            $json_data = $tradeInfoJSONString;
         }
 
-        //新增付款紀錄
-        $db_log = new OrdersPaymentLog();
-        $db_log->status = $log_status;
-        $db_log->json_data = $json_data;
-        $db_log->save();
-
-        return $result;
-    }
-
-    //將回傳訊息寫入資料庫
-    private function payProcess($type="return",$result=[]) 
-    {
-        if($type == "return") {
-            $message = "直接付款";
-        } else if($type == "notify") {
-            $message = "按鈕觸發是否付款";
-        } else if($type == "customer") {
-            $message = "待客戶付款";
-        }
-
-        $orders_uuid = "";
-        //回傳訊息
-        if(!empty($result)) {
-            //訂單編號
-            $MerchantOrderNo = $result["MerchantOrderNo"]??"";
-            //付款方式
-            $PaymentType = $result["PaymentType"]??"";
-            //取得訂單資料
-            if($MerchantOrderNo != "") {
-                $order_data = Orders::getDataBySerial($MerchantOrderNo);
-                $orders_uuid = $order_data["uuid"]??"";
-                //自動登入
-                $user_id = $order_data["user_id"]??0;
-                UserAuth::userLogIn($user_id);
-            }
-
-            //更新付款狀態
-            if(!empty($order_data) && isset($result["PayTime"]) && $result["PayTime"] != "") {
-                if($type == "return") {
-                    //紀錄超商
-                    if(isset($result["StoreCode"]) && $result["StoreCode"] != "") {
-                        $db_store = new OrdersStore();
-                        $store = "";
-                        if($result["StoreType"] == "7-ELEVEN") {
-                            $store = "seven";
-                        } else if($result["StoreType"] == "全家") {
-                            $store = "family";
-                        } else {
-                            Log::Info("物流超商類型錯誤：藍新回傳訊息 - ".implode(",",$result));
-                        }
-
-                        $db_store->orders_id = $order_data["id"];
-                        $db_store->store = $store;
-                        $db_store->store_code = $result["StoreCode"];
-                        $db_store->store_name = $result["StoreName"]??NULL;
-                        $db_store->store_address = $result["StoreAddr"]??NULL;
-                        $db_store->name = $result["CVSCOMName"]??NULL;
-                        $db_store->phone = $result["CVSCOMPhone"]??NULL;
-                        $db_store->save();
-                    }
-                }
-
-                try {
-                    //更新付款方式
-                    $payment = "";
-                    switch($PaymentType) {
-                        case "CREDIT":
-                            $payment = "card";
-                            break;
-                        case "LINEPAY":
-                        case "TAIWANPAY":
-                            $payment = "linepay";
-                            break;
-                        case "VACC":
-                        case "CVS":
-                        case "BARCODE":
-                            $payment = "atm";
-                            break;
-                        default:
-                            break;
-                    }
-                    if($payment != "") {
-                        Orders::where(["serial" => $MerchantOrderNo])->update(["payment" => $payment]);
-                    }
-
-                    //更新付款狀態
-                    $isPaid = false;
-                    if($type == "return" && in_array($PaymentType,["CREDIT","LINEPAY","TAIWANPAY"])) {
-                        $isPaid = true;
-                    } else if($type == "notify" && in_array($PaymentType,["VACC","CVS","BARCODE"])) {
-                        $isPaid = true;
-                    }
-
-                    if($isPaid) {
-                        Orders::where(["serial" => $MerchantOrderNo])->update(["status" => "paid"]);
-                    }
-                } catch(QueryException $e) {
-                    Log::Info($message."失敗：訂單編號 - ".$MerchantOrderNo);
-                    Log::error($e);
-                }
-            }
-        } else {
-            return redirect("orders");
-        }
-
-        return $orders_uuid;
-    }
-
-    //購物車結帳-串接金流-回傳是否成功
-    public function payMpgReturn(Request $request)
-    {
-        $result = $this->mpgCallbackValues($request);
-        $orders_uuid = $this->payProcess("return",$result);
-
-        return redirect("orders/detail?orders_uuid=$orders_uuid");
-    }
-
-    //購物車結帳-串接金流-按鈕觸發是否付款
-    public function payNotify(Request $request)
-    {
-        $result = $this->mpgCallbackValues($request);
-        $orders_uuid = $this->payProcess("notify",$result);
-        
-        return;
-    }
-
-    //購物車結帳-串接金流-待客戶付款
-    public function payCustomer(Request $request)
-    {
-        $result = $this->mpgCallbackValues($request);
-        $orders_uuid = $this->payProcess("customer",$result);
-        
-        return redirect("orders/detail?orders_uuid=$orders_uuid");
+        Log::Info("前台傳送訂單資料至綠界失敗：訂單UUID - ".$uuid);
     }
 }

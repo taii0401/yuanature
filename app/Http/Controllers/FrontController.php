@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Feedback;
 use App\Models\WebFileData;
+//Controller
+use App\Http\Controllers\CommonController;
 
 class FrontController extends Controller
 {
@@ -17,6 +19,14 @@ class FrontController extends Controller
         $data = [];
         $data["title_txt"] = "廣志足白浴露";
         return view("fronts.index",$data);
+    }
+
+    //首頁
+    public function front(Request $request)
+    {
+        $data = [];
+        $data["title_txt"] = "廣志足白浴露";
+        return view("fronts.front",$data);
     }
 
     //購買商品
@@ -127,7 +137,7 @@ class FrontController extends Controller
             foreach($list_data as $key => $val) {
                 //使用者回饋及感想
                 $list_data[$key]["content"] = nl2br($val["content"]);
-                //取得檔案
+                //取得照片
                 $conds_file = [];
                 $conds_file["data_id"] = $list_data[$key]["id"];
                 $conds_file["data_type"] = "feedback";
@@ -137,11 +147,16 @@ class FrontController extends Controller
                         $list_data[$key]["file_data"] = $get_file_data;
                     }
                 }
+                //取得使用者心得照片
+                $conds_file = [];
+                $conds_file["data_id"] = $list_data[$key]["id"];
+                $conds_file["data_type"] = "feedback_used";
+                $list_data[$key]["file_used_data"] = WebFileData::getFileData($conds_file,true);
             }
         }
 
         $datas["assign_data"] = $assign_data;
-        $datas["list_data"] = $list_data;
+        $datas["list_data"] = $list_data; 
 
         return view("fronts.feedback",["datas" => $datas,"page_data" => $page_data]);
     }
@@ -170,5 +185,12 @@ class FrontController extends Controller
         $data = [];
         $data["title_txt"] = "服務條款";
         return view("fronts.terms",$data);
+    }
+
+    //排程-確認綠界訂單資料
+    public function cronEcpayOrders(Request $request)
+    {
+        $CommonController = new CommonController();
+        $CommonController->cronCheckEcpayOrders();
     }
 }

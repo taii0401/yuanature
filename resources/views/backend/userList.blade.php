@@ -91,7 +91,7 @@
                                     {{ @$data["is_verified_name"] }}
                                 </td>
                                 <td>
-                                    <span class="td-data-span">建立時間：</span><br>
+                                    <span class="td-data-span">建立時間：</span>
                                     {{ @$data["created_at_format"] }}
                                 </td>
                                 <td class="text-center">

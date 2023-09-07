@@ -22,9 +22,14 @@
                 @if(@$datas["assign_data"]["status"] == "cancel")
                     <span>
                         <br>取消原因：{{ @$datas["assign_data"]["cancel_name"] }}<br>
-                        @if(@$datas["assign_data"]["cancel"] == "other" && @$datas["assign_data"]["cancel_remark"] != "")
+                        @if(@$datas["assign_data"]["cancel_remark"] != "")
                             取消備註：{!! @$datas["assign_data"]["cancel_remark_format"] !!}
                         @endif
+                    </span>
+                @endif
+                @if($datas["assign_data"]["status"] == "nopaid" && $datas["assign_data"]["pay_time"] == "")
+                    <span style="color:red">
+                        <br>請於{{ @$datas["assign_data"]["expire_time"] }}前付款
                     </span>
                 @endif
             </td>            

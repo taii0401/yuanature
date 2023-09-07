@@ -21,9 +21,11 @@ use App\Models\WebFile;
 use App\Models\WebFileData;
 use App\Models\Orders;
 use App\Models\OrdersDetail;
+use App\Models\OrdersStore;
 use App\Models\Contact;
 use App\Models\Feedback;
 use App\Models\UserCoupon;
+
 
 class AjaxController extends Controller
 {
@@ -416,6 +418,8 @@ class AjaxController extends Controller
             $validator_data["total"] = "required";
             $validator_message["name.required"] = "請返回上一步填寫收件人姓名！";
             $validator_message["total.required"] = "請返回上一步確認購物車是否有商品！";
+        } else if($action_type == "pay") { //付款
+            $validator_data["payment"] = "required"; //付款方式
         } else if($action_type == "cancel") { //取消
             $validator_data["cancel"] = "required"; //取消原因
         }
@@ -467,13 +471,7 @@ class AjaxController extends Controller
                 $add_data["delivery"] = $input["delivery"]??NULL;
                 $add_data["island"] = $input["island"]??NULL;
                 $add_data["status"] = "nopaid";
-                //配送方式選擇宅配配送才紀錄地址
-                if($input["delivery"] == "home" && isset($input["address"]) && $input["address"] != "") {
-                    $add_data["address_zip"] = $input["address_zip"]??NULL;
-                    $add_data["address_county"] = $input["address_county"]??NULL;
-                    $add_data["address_district"] = $input["address_district"]??NULL;
-                    $add_data["address"] = $input["address"];
-                }                
+                $add_data["expire_time"] = date("Y-m-d",strtotime("+7 days"))." 23:59:59";               
                 //訂單備註
                 if(isset($input["order_remark"]) && $input["order_remark"] != "") {
                     $add_data["order_remark"] = $input["order_remark"];
@@ -515,6 +513,27 @@ class AjaxController extends Controller
                             }
                         }
 
+                        //紀錄配送資料
+                        $db_store = new OrdersStore();
+                        $db_store->orders_id = $orders_id;
+                        $db_store->name = $input["name"]??NULL;
+                        $db_store->phone = $input["phone"]??NULL;
+                        //紀錄宅配配送地址
+                        if($input["delivery"] == "home" && isset($input["address"]) && $input["address"] != "") {
+                            $db_store->address_zip = $input["address_zip"]??NULL;
+                            $db_store->address_county = $input["address_county"]??NULL;
+                            $db_store->address_district = $input["address_district"]??NULL;
+                            $db_store->address = $input["address"];
+                        } 
+                        //紀錄超商資料
+                        if($input["delivery"] == "store" && isset($input["store"]) && $input["store"] != "" && isset($input["store_code"]) && $input["store_code"] != "") {
+                            $db_store->store = $input["store"];
+                            $db_store->store_code = $input["store_code"];
+                            $db_store->store_name = $input["store_name"]??NULL;
+                            $db_store->store_address = $input["store_address"]??NULL;
+                        }
+                        $db_store->save();
+
                         //折價劵紀錄
                         if(isset($input["user_coupon_id"]) && $input["user_coupon_id"] > 0) {
                             try {
@@ -540,10 +559,6 @@ class AjaxController extends Controller
 
                 if($isSuccess) {
                     try {
-                        session()->forget("cart");
-                        session()->forget("cart_order");
-                        $this->error = false;
-
                         $isPayWait = false;
                         if($action_type == "add") { //稍後付款
                             $isPayWait = true;
@@ -559,7 +574,11 @@ class AjaxController extends Controller
                         $this->sendMail("orders_add",$mail_data);
                         //LINE通知
                         $this->lineNotify("新訂單通知-訂單編號：".$serial."，總金額：".$add_data["total"]);
+
+                        $this->error = false;
                         $this->message = $uuid;
+
+                        $this->clearSessionCart();
                     } catch(QueryException $e) {
                         Log::Info("前台刪除購物車失敗：會員ID - ".$user_id);
                         Log::error($e);
@@ -581,15 +600,16 @@ class AjaxController extends Controller
                         if($input["cancel"] == "other" && isset($input["cancel_remark"]) && $input["cancel_remark"] != "") {
                             $data->cancel_remark = $input["cancel_remark"];
                         }
+                        $data->cancel_time = date("Y-m-d H:i:s");
                         $data->cancel_by = "user";
                         $data->cancel_id = $user_id;
                         $data["status"] = "cancel";
                         $data->save();
 
-                        //退回折價劵
-                        $orders_id = $data->id;
+                        //退還折價劵
                         $user_id = $data->user_id;
-                        UserCoupon::where("orders_id",$orders_id)->where("user_id",$user_id)->update(["status" => "nouse","orders_id" => NULL,"used_time" => NULL]);
+                        $orders_id = $data->id;
+                        UserCoupon::cancelUserCoupon($user_id,$orders_id);
                         
                         $this->error = false;
                         //寄送通知信
@@ -611,40 +631,16 @@ class AjaxController extends Controller
                 } else {
                     $this->message = "取消失敗！";
                 }
-            }  else if($action_type == "pay") { //付款
+            } else if($action_type == "pay") { //付款
                 $uuid = $input["uuid"]??"";
                 $data = Orders::where("uuid",$uuid)->where("status","nopaid")->first();
                 if(isset($data) && !empty($data)) {
                     try {
-                        //配送方式選擇宅配配送才紀錄地址
-                        if($input["delivery"] == "home" && isset($input["address"]) && $input["address"] != "") {
-                            $add_data["address_zip"] = $input["address_zip"]??NULL;
-                            $add_data["address_county"] = $input["address_county"]??NULL;
-                            $add_data["address_district"] = $input["address_district"]??NULL;
-                            $add_data["address"] = $input["address"];
-                        }
                         $data->payment = $input["payment"];
-                        $data->delivery = $input["delivery"];
                         $data->updated_id = $user_id;
                         $data->save();
                         
                         $this->error = false;
-
-                        //若選擇ATM轉帳，則顯示轉帳提示文字
-                        /*$isPayAtm = false;
-                        if($add_data["payment"] == "atm") {
-                            $isPayAtm = true;
-                        }
-
-                        //寄送通知信
-                        $mail_data = [
-                            "email" => $input["email"]??"",
-                            "serial" => $serial,
-                            "uuid" => $uuid,
-                            "isPayAtm" => $isPayAtm
-                        ];
-                        $this->sendMail("orders_add",$mail_data);*/
-
                         $this->message = $uuid;
                     } catch(QueryException $e) {
                         Log::Info("前台訂單付款失敗：訂單UUID - ".$uuid);
@@ -769,9 +765,9 @@ class AjaxController extends Controller
         $validator_data = $validator_message = [];
         if($action_type == "add") { //新增
             $validator_data["name"] = "required"; //名稱
-            $validator_data["address_zip"] = "required"; //居住地
+            //$validator_data["address_zip"] = "required"; //居住地
             $validator_message["name.required"] = "請輸入名稱！";
-            $validator_message["address_zip.required"] = "請輸入居住地！";
+            //$validator_message["address_zip.required"] = "請輸入居住地！";
         }   
         
         $validator = Validator::make($input,$validator_data,$validator_message);
@@ -783,13 +779,21 @@ class AjaxController extends Controller
         }
 
         if(!isset($input["agree"]) || (isset($input["agree"]) && $input["agree"] != 1)) {
-            $this->message = "請先勾選同意！";
+            $this->message = "請先勾選同意！"; 
         }
 
         if(isset($input["file"]) && !empty($input["file"])) {
             $file_data = $input["file"];
-            if($file_data->getSize() > 300000) {
-                $this->message = "請檢查圖片大小是否超過限制！";
+            if($file_data->getSize() > 500000) {
+                $this->message = "請檢查照片大小是否超過限制！";
+            }
+        }
+        
+        if(isset($input["file_used"]) && !empty($input["file_used"])) {
+            foreach($input["file_used"] as $file_used_data) {
+                if($file_used_data->getSize() > 500000) {
+                    $this->message = "請檢查使用心得照片大小是否超過限制！";
+                }
             }
         }
 
@@ -804,7 +808,7 @@ class AjaxController extends Controller
             $add_data = [];
             $add_data["uuid"] = $uuid;
             $add_data["name"] = $input["name"]??NULL;
-            $add_data["age"] = $input["age"]??NULL;
+            $add_data["age"] = $input["age"]??0;
             $add_data["agree"] = $input["agree"]??0;
             $add_data["address_zip"] = $input["address_zip"]??NULL;
             $add_data["address_county"] = $input["address_county"]??NULL;
@@ -812,23 +816,45 @@ class AjaxController extends Controller
             $add_data["content"] = $input["content"]??NULL;
             $data = Feedback::create($add_data);
 
-            if($data->exists("id") && isset($input["file"])) {//新增成功
+            if($data->exists("id")) {//新增成功
                 $data_id = (int)$data->id;
-                //上傳檔案
-                $result_file = WebFile::uploadFile($input);
-                if(isset($result_file["error"]) && !$result_file["error"] && isset($result_file["file_id"]) && $result_file["file_id"] > 0) {
-                    $file_data = [];
-                    $file_data["data_id"] = $data_id;
-                    $file_data["data_type"] = "feedback";
-                    $file_data["file_ids"] = [$result_file["file_id"]];
-                    $result = WebFileData::updateFileData($action_type,$file_data);
-                    if(isset($result["error"]) && !($result["error"])) {
-                        $this->error = false;
-                    } else {
-                        $this->message = isset($result["message"])?$result["message"]:"檔案儲存錯誤！";
+                $upload_datas = [];
+                if(isset($input["file"])) {
+                    $upload_file = [];
+                    $upload_file["folder_name"] = "feedback";
+                    $upload_file["file"] = $input["file"];
+
+                    $upload_datas[] = $upload_file;
+                }
+                if(isset($input["file_used"]) && !empty($input["file_used"])) {
+                    foreach($input["file_used"] as $file_used) {
+                        $upload_file = [];
+                        $upload_file["folder_name"] = "feedback_used";
+                        $upload_file["file"] = $file_used;
+
+                        $upload_datas[] = $upload_file;
                     }
-                } else {
-                    $this->message = "送出失敗！";
+                }
+
+                if(!empty($upload_datas)) {
+                    foreach($upload_datas as $upload_data) {
+                        //上傳檔案
+                        $result_file = WebFile::uploadFile($upload_data);
+                        if(isset($result_file["error"]) && !$result_file["error"] && isset($result_file["file_id"]) && $result_file["file_id"] > 0) {
+                            $file_data = [];
+                            $file_data["data_id"] = $data_id;
+                            $file_data["data_type"] = $upload_data["folder_name"];
+                            $file_data["file_ids"] = [$result_file["file_id"]];
+                            $result = WebFileData::updateFileData($action_type,$file_data);
+                            if(isset($result["error"]) && !($result["error"])) {
+                                $this->error = false;
+                            } else {
+                                $this->message = isset($result["message"])?$result["message"]:"檔案儲存錯誤！";
+                            }
+                        } else {
+                            $this->message = "送出失敗！";
+                        }
+                    }
                 }
             } else {
                 $this->error = false;

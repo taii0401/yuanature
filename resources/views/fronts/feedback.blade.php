@@ -3,13 +3,14 @@
 @section('banner_menu_txt') {{ @$datas["assign_data"]["title_txt"] }} @endsection
 @section('content')
 <div class="row">
-    <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 mx-auto">
+    <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 mx-auto">
         <div class="bg-white tm-block">
             <div class="col-12">
                 <div class="row">
                     <div class="col-xl-9 col-lg-9 col-md-8 col-sm-12">
                         <p>
-                            歡迎留下您使用過後的想法及建議事項，讓我們能有更多改進的空間，如果您同意本網站使用您的留言及上傳的照片，請為我們勾選同意。有您的支持是我們莫大的榮幸，原生學再次感謝您！
+                            感謝您對台灣原生品牌「原生學」的支持，歡迎留下您的「使用後感想」及照片，讓更多人可以認識我們。<br>
+                            有您的分享與鼓勵，我們會更努力及用心的研發更多好的產品給你們。
                         </p>
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12" style="margin-top:20px;">
@@ -34,12 +35,26 @@
                 <div class="row" style="padding:10px;">
                     <div class="col-xl-3 col-lg-3 col-md-4 col-sm-12 mx-auto">
                         @if(isset($data["file_data"]["url"]))
-                            <img src="{{ @$data["file_data"]["url"] }}" width=170px" height="170px">
+                            <img src="{{ @$data["file_data"]["url"] }}" width="150px" height="150px" style="border-radius:50%">
                         @endif
                     </div>
                     <div class="col-xl-9 col-lg-9 col-md-8 col-sm-12" style="margin-top:5px;">
-                        {{ @$data["name"] }}&nbsp;&nbsp;{{ @$data["age"] }}歲&nbsp;&nbsp;{{ @$data["address_county"] }}{{ @$data["address_district"] }}
-                        <p>{!! @$data["content"] !!}</p>
+                        {{ @$data["name"] }}&nbsp;&nbsp;
+                        <span style="color: red;">
+                            @for($i = 0; $i < 5; $i++)
+                                <i class="fa fa-heart fa-xs"></i>
+                            @endfor
+                        </span>
+                        <!--{{ @$data["age"] }}&nbsp;&nbsp;{{ @$data["address_county"] }}{{ @$data["address_district"] }}-->
+                        <p style="font-size: smaller;">{!! @$data["content"] !!}</p>
+                        <br>
+                        @if(isset($data["file_used_data"]))
+                            @foreach($data["file_used_data"] as $file_used_data)
+                                @if(isset($file_used_data["url"]))
+                                    <img src="{{ @$file_used_data["url"] }}" width="100px" height="100px">
+                                @endif
+                            @endforeach
+                        @endif
                     </div>
                 </div>
                 @endforeach

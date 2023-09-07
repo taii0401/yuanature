@@ -81,7 +81,7 @@
                             </div>
                             <div class="col-xl-7 col-lg-7 col-md-6 col-sm-12">
                                 <label><br/></label>
-                                <input type="text" id="address" name="address" class="form-control" placeholder="民族路20巷32號" value="{{ @$address }}">
+                                <input type="text" id="address" name="address" class="form-control" placeholder="民族路民族街20巷10弄32號" value="{{ @$address }}">
                             </div>
                         </div>
                         <div class="row" style="display:{{ $add_none}};">

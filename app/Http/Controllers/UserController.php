@@ -16,7 +16,7 @@ use App\Models\User;
 use App\Models\WebUser; 
 use App\Models\Coupon;
 use App\Models\UserCoupon; 
-
+use App\Models\Orders;
 
 class UserController extends Controller
 {
@@ -302,6 +302,13 @@ class UserController extends Controller
                 //使用狀態
                 $list_data[$key]["status_name"] = $coupon_status_datas[$val["status"]]["name"]??"";
                 $list_data[$key]["status_color"] = $coupon_status_datas[$val["status"]]["color"]??"";
+                //訂單編號
+                $list_data[$key]["orders_uuid"] = $list_data[$key]["orders_serial"] = "";
+                if(isset($val["orders_id"]) && $val["orders_id"] > 0) {
+                    $orders_data = Orders::getDataById($val["orders_id"])??[];
+                    $list_data[$key]["orders_uuid"] = $orders_data["uuid"]??"";
+                    $list_data[$key]["orders_serial"] = $orders_data["serial"]??"";
+                }
             }
         }
 

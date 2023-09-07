@@ -30,6 +30,8 @@ use App\Models\WebUser;
 use App\Models\User;
 use App\Models\Coupon;
 use App\Models\UserCoupon;
+use App\Models\Orders;
+use App\Models\OrdersPayment;
 
 class Controller extends BaseController
 {
@@ -45,6 +47,113 @@ class Controller extends BaseController
     {
         echo "<pre>";print_r($data,$ret);echo "</pre>";
     }
+
+    //交易資料 AES 加密
+    public function createMpgAesEncrypt($parameter=[],$key="",$iv="") 
+    {
+        $return_str = "";
+        if(!empty($parameter)) {
+            //將參數經過URL ENCODED QUERY STRING
+            $return_str = http_build_query($parameter);
+        }
+        return trim(bin2hex(openssl_encrypt($this->addpadding($return_str),"AES-256-CBC",$key, OPENSSL_RAW_DATA|OPENSSL_ZERO_PADDING,$iv)));
+    }
+
+    private function addpadding($string,$blocksize=32) 
+    {
+        $len = strlen($string);
+        $pad = $blocksize-($len%$blocksize);
+        $string .= str_repeat(chr($pad),$pad);
+        return $string;
+    }
+
+    //交易資料 AES 解密
+    public function createAesDecrypt($parameter="",$key="",$iv="") 
+    {
+        return $this->strippadding(openssl_decrypt(hex2bin($parameter),"AES-256-CBC",
+        $key,OPENSSL_RAW_DATA|OPENSSL_ZERO_PADDING,$iv));
+    }
+
+    private function strippadding($string) 
+    {
+        $slast = ord(substr($string,-1));
+        $slastc = chr($slast);
+        $pcheck = substr($string,-$slast);
+        if (preg_match("/$slastc{" . $slast . "}/",$string)) {
+            $string = substr($string,0,strlen($string)-$slast);
+            return $string;
+        } else {
+            return false;
+        }
+    }
+
+    //依綠界規則產生檢查碼
+    public function checkMacValue($type="logistic",$data=[]) 
+    {
+        if($type == "cash") {
+            $hash_key = env("ECPAY_CASH_HashKey");
+            $hash_iv = env("ECPAY_CASH_HashIV");
+        } else {
+            $hash_key = env("ECPAY_LOGISTIC_HashKey");
+            $hash_iv = env("ECPAY_LOGISTIC_HashIV");
+        }
+
+        //將傳遞參數依照第一個英文字母，由A到Z的順序來排序(遇到第一個英名字母相同時，以第二個英名字母來比較，以此類推)，並且以&方式將所有參數串連
+        uksort($data,function($first,$second) {
+            return strcasecmp($first,$second);
+        });
+
+        //整理參數，最前面加上HashKey、最後面加上HashIV
+        $str = "HashKey=".$hash_key;
+        foreach($data as $name => $value) {
+            $str .= "&".$name ."=".$value;
+        }
+        $str .= "&HashIV=".$hash_iv;
+
+        //將整串字串進行URL encode並轉成小寫，再依urlencode轉換表更換字元
+        $str = $this->toDotNetUrlEncode(strtolower(urlencode($str)));
+        
+        if($type == "cash") {
+            $hash = hash("sha256",$str);
+        } else {
+            $hash = md5($str);
+        }
+        //以MD5加密方式來產生雜凑值，並轉成大寫
+        $hash = strtoupper($hash);
+
+        return $hash;
+    }
+
+    /**
+     * 轉換為 .net URL 編碼結果
+     * @param  string $source
+     * @return string
+     */
+    public static function toDotNetUrlEncode($source)
+    {
+        $search = [
+            '%2d',
+            '%5f',
+            '%2e',
+            '%21',
+            '%2a',
+            '%28',
+            '%29',
+        ];
+        $replace = [
+            '-',
+            '_',
+            '.',
+            '!',
+            '*',
+            '(',
+            ')',
+        ];
+        $replaced = str_replace($search,$replace,$source);
+
+        return $replaced;
+    }
+
 
     /**
      * 操作紀錄
@@ -237,6 +346,11 @@ class Controller extends BaseController
         $all_datas = config("yuanature.".$type);
         if(!empty($all_datas)) {
             foreach($all_datas as $key => $val) {
+                //訂單取消原因，移除系統選項
+                if($type == "orders_cancel" && $key == "system") {
+                    continue;
+                }
+
                 $return_datas[$key] = $val["name"];
             }
         }
@@ -317,6 +431,13 @@ class Controller extends BaseController
                 $btn_url = "users";
                 $mail_data["text"] = "您的新密碼為：".$data["ran_str"];
                 break;
+            case "user_coupon": //會員折價劵到期
+                $isSendUser = true;
+                $title = "折價劵到期通知";
+                $btn_txt = "折價劵";
+                $btn_url = "users/coupon";
+                $mail_data["text"] = "您的折價劵快要到期了，請盡快使用，否則失效。";
+                break;
             case "orders_add": //建立訂單
             case "orders_cancel": //取消訂單
             case "orders_delivery": //出貨通知
@@ -332,12 +453,16 @@ class Controller extends BaseController
 
                     //稍後付款
                     if(isset($data["isPayWait"]) && $data["isPayWait"]) {
-                        $text .= "<br>請於七日內付款成功，若未付款，訂單將會自動取消。";
+                        $text .= "<br>請於".date("Y-m-d",strtotime("+7 days"))." 23:59:59"."前付款成功，若未付款，訂單將會自動取消。";
                     }
 
                     //若選擇ATM轉帳，則顯示轉帳提示文字
                     if(isset($data["isPayAtm"]) && $data["isPayAtm"]) {
-                        $text .= "<br>轉帳成功後，請發信至客服信箱，並附上您的訂單編號及匯款帳號後五碼，以利我們確認您的付款資訊。";
+                        $bank_code = $data["bank_code"]??"";
+                        $bank_account = $data["bank_account"]??"";
+                        $expire_time = $data["expire_time"]??"";
+
+                        $text .= "<br>銀行代碼：".$bank_code."<br>虛擬帳號：".$bank_account."<br>請於".$expire_time."前轉帳，若未轉帳，訂單將會自動取消。";
                     }
                 } else if($type == "orders_cancel") {
                     $title = "取消訂單通知";
@@ -408,33 +533,66 @@ class Controller extends BaseController
         }
     }
 
-    //使用line notify發通知
-    public function lineNotify($message)
-    {
+    /**
+     * cURL
+     * @param  post_data：傳送資料
+     * @param  is_response：是否回傳
+     */
+    public function curlPost($post_data=[],$is_response=true) 
+    {   
+        $url = $post_data["url"]??"";
+        $fields = $post_data["fields"]??[];
+        $header = $post_data["header"]??[];
+
         //創建一個新cURL資源 
         $curl = curl_init();
-
+        
         //設置URL和相應的選項
         curl_setopt_array($curl, array(
-          CURLOPT_URL => "https://notify-api.line.me/api/notify",
-          CURLOPT_RETURNTRANSFER => true,
-          CURLOPT_ENCODING => "",
-          CURLOPT_MAXREDIRS => 10,
-          CURLOPT_TIMEOUT => 0,
-          CURLOPT_FOLLOWLOCATION => true,
-          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-          CURLOPT_CUSTOMREQUEST => "POST",
-          CURLOPT_POSTFIELDS => array("message" => $message),
-          CURLOPT_HTTPHEADER => array(
-            "Authorization: Bearer ".env("LINE_NOTIFY_TOKEN")
-          ),
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => $fields,
+            CURLOPT_HTTPHEADER => $header,
         ));
 
         //抓取URL並把它傳遞給瀏覽器
         $response = curl_exec($curl);
+        //dd($response);
 
         //關閉cURL資源，並且釋放系統資源
         curl_close($curl);
+ 
+        if($is_response) {
+            return $response;
+        }
+    }
+
+    /**
+     * 使用line notify發通知
+     */
+    public function lineNotify($message)
+    {
+        $post_data = [];
+        $post_data["url"] = "https://notify-api.line.me/api/notify";
+        $post_data["fields"] = ["message" => $message];
+        $post_data["header"] = ["Authorization: Bearer ".env("LINE_NOTIFY_TOKEN")];
+        $this->curlPost($post_data,false);
+    }
+
+    /**
+     * 清除購物車所有資料
+     */
+    public function clearSessionCart()
+    {
+        session()->forget("cart");
+        session()->forget("cart_order");
+        session()->forget("cart_store");
     }
 
     /**
@@ -651,5 +809,105 @@ class Controller extends BaseController
                 }
             }
         }
+    }
+
+    /**
+     * 更新付款資料
+     * @param  orders_data：訂單資料
+     * @param  pay_data：付款資料
+     */
+    public function updatePayData($orders_data=[],$pay_data=[])
+    {
+        if(!empty($orders_data) && !empty($pay_data)) {
+            $orders_id = $orders_data["id"]??0;
+            $status = $pay_data["status"]??"";
+
+            //更新資料
+            $update_data = [];
+            $update_data = $pay_data;
+            //付款時間
+            $update_data["pay_time"] = $pay_data["pay_time"]??date("Y-m-d H:i:s");
+            Orders::where("id",$orders_id)->update($update_data);
+
+            $payment_status = "";
+            if($status == "paid") { //付款成功
+                $payment_status = 1; //成功
+                //物流選擇超商-建立綠界物流訂單
+                if(isset($orders_data["delivery"]) && $orders_data["delivery"] == "store") {
+                    $orders_data["status"] = $status;
+                    $orders_data["pay_time"] = $update_data["pay_time"];
+
+                    $EcpayController = new EcpayController();
+                    $EcpayController->createLogisticOrders($orders_data);
+                }
+            } else if($status == "failpaid") { //付款失敗
+                $payment_status = 2; //失敗
+            }
+
+            //付款紀錄
+            if($payment_status > 0) {
+                $pay_data = OrdersPayment::where("orders_id",$orders_id)->where("payment",$orders_data["payment"])->latest("id")->first();
+                if(!empty($pay_data)) {
+                    $pay_data->status = $payment_status;
+                    $pay_data->save();
+
+                    OrdersPayment::deletePaymentByOrdersId($pay_data->id,$orders_id);
+                }
+            }
+        }        
+    }
+
+    /**
+     * 判斷是否可以付款
+     * @param  data：訂單資料、付款資料
+     * @return boolean
+     */
+    public function isPayOrder($data=[])
+    {
+        $orders_data = $data["orders"]??[];
+        $pay_data = $data["pay"]??[];
+
+        $isPay = false;
+        if($orders_data["status"] == "nopaid" && $orders_data["pay_time"] == "" && $orders_data["cancel_time"] == "") {
+            //判斷是否可以付款
+            if(strtotime($orders_data["expire_time"]) >= strtotime(date("Y-m-d H:i:s"))) {
+                if(!empty($pay_data) && $pay_data["status"] != 1) {
+                    //若已選擇ATM付款，超過付款期限可重新選擇付款方式
+                    if($pay_data["expire_time"] != "") {
+                        if(strtotime($pay_data["expire_time"]) < strtotime(date("Y-m-d H:i:s"))) {
+                            $isPay = true;
+                        }
+                    } else {
+                        $isPay = true;
+                    }
+                } else { //尚未選擇付款方式
+                    $isPay = true;
+                }
+            }
+        }
+
+        return $isPay;
+    }
+
+    /**
+     * 判斷是否可以刪除
+     * @param  data：訂單資料、付款資料
+     * @return boolean
+     */
+    public function isDeleteOrder($data=[])
+    {
+        $orders_data = $data["orders"]??[];
+        $pay_data = $data["pay"]??[];
+
+        $isDelete = false;
+        if($orders_data["status"] == "nopaid" && $orders_data["pay_time"] == "" && $orders_data["cancel_time"] == "") {
+            //判斷是否可以刪除
+            $isDelete = true;
+            if(!empty($pay_data) && $pay_data["status"] == 1) {
+                $isDelete = false;
+            }
+        }
+
+        return $isDelete;
     }
 }

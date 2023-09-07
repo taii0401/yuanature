@@ -3,7 +3,7 @@
 @section('banner_menu_txt') 購物指南 > {{ @$title_txt }} @endsection
 @section('content')
 <div class="row">
-    <div class="content-info col-xl-7 col-lg-7 col-md-12 col-sm-12">
+    <div class="content-info col-xl-6 col-lg-6 col-md-12 col-sm-12">
         <h4 class="mb-4">｜首次購物｜</h4>
         <ul style="list-style:none">
             <li>請先註冊您的專屬會員帳號，支持Facebook或LINE註冊，或使用E-mail註冊即可。</li>
@@ -25,12 +25,12 @@
             <li>LINE Pay：可使用line point。</li>
             <li class="primary">貼心提醒：當「逾時未付款」或「付款失敗」時，系統會自動取消訂單，並補回所使用之購物金等優惠折扣，需再次重新下單。</li>
         </ul>
-        <h4 class="mb-4">｜發票說明｜</h4>
+        <!--<h4 class="mb-4">｜發票說明｜</h4>
         <ul>
             <li>本站使用電子發票，在收到款項後，系統將寄送電子發票開立通知至您的聯絡信箱。</li>
             <li>請確認選擇所需的發票類型（個人或公司統編），發票一經開立，不得要求更改。</li>
             <li>若發票中獎會以電子郵件通知您，您可以至7-11超商門市ibon機台列印。</li>
-        </ul>
+        </ul>-->
     </div>
     <div class="clearfix"> </div>
 </div>

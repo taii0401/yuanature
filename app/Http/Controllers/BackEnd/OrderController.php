@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 //Model
 use App\Models\Orders;
 use App\Models\OrdersDetail;
+use App\Models\OrdersPayment;
 
 class OrderController extends Controller
 {
@@ -76,6 +77,15 @@ class OrderController extends Controller
                 //取消原因
                 $list_data[$key]["cancel_name"] = $orders_cancel_datas[$val["cancel"]]["name"]??"";
                 $list_data[$key]["cancel_color"] = $orders_cancel_datas[$val["cancel"]]["color"]??"";
+
+                $get_data = [];
+                $get_data["orders"] = $val;
+                if($val["status"] == "nopaid" && $val["pay_time"] == "" && $val["cancel_time"] == "") {
+                    $pay_data = OrdersPayment::getLatestDataByOrdersId($val["id"]);
+                    $get_data["pay"] = $pay_data;
+                }
+                $list_data[$key]["isPay"] = $this->isPayOrder($get_data);
+                $list_data[$key]["isDelete"] = $this->isDeleteOrder($get_data);
             }
         }
 
@@ -100,13 +110,17 @@ class OrderController extends Controller
 
         //取得訂單資料
         if($orders_uuid != "") {
-            $orders_data = Orders::getDataByUuid($orders_uuid);
+            $orders_data = Orders::getDataByUuid($orders_uuid,"",true);
             $assign_data = $orders_data;
         }
         //標題
         $assign_data["title_txt"] = "訂單明細";
         //隱藏購物車
         $assign_data["cart_display"] = "none";
+        //若已選擇ATM付款且未超過繳費期限，則以繳費期限時間為主
+        if(isset($orders_data["pay_expire_time"]) && $orders_data["pay_expire_time"] != "" && strtotime($orders_data["pay_expire_time"]) >= strtotime(date("Y-m-d H:i:s"))) {
+            $assign_data["expire_time"] = $orders_data["pay_expire_time"];
+        }
         //訂單明細資料
         if(isset($orders_data["id"]) && $orders_data["id"] > 0) {
             $detail_data = OrdersDetail::getDataByOrderid($orders_data["id"]);

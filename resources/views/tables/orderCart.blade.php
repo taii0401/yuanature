@@ -31,7 +31,7 @@
                 </td>
                 <td>
                     <span class="td-data-span">售價：</span>
-                    {{ @$data["price"] }}
+                    {{ @$data["price"] }}元
                 </td>
                 <td>
                     <span class="td-data-span">小計：</span>
@@ -51,7 +51,7 @@
                 <td>
                     <span class="td-data-span">售價：</span>
                     <input type="hidden" id="price_{{ @$data["id"] }}" value="{{ @$data["price"] }}">    
-                    {{ @$data["price"] }}
+                    {{ @$data["price"] }}元
                 </td>
                 <td>
                     <span class="td-data-span">小計：</span>

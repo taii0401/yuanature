@@ -35,20 +35,32 @@
 <body>
     @include('layouts.frontHeader')
     <div class="content">
-        <div class="banner_menu">
-            <a href="/">
-                <img src="{{ asset('img/icons/home.png') }}" height="25px">
-            </a>
-            &nbsp;>&nbsp;
-            @yield('banner_menu_txt')
-        </div>
-        <hr>
-        <div style="margin-top:-0.5rem;">
+        @if(@$show_banner_menu == "N")
+            <div>
+        @else
+            <div class="banner_menu">
+                <a href="/">
+                    <img src="{{ asset('img/icons/home.png') }}" height="25px">
+                </a>
+                &nbsp;>&nbsp;
+                @yield('banner_menu_txt')
+            </div>
+            <hr>
+            <div style="margin-top:-0.5rem;">
+        @endif
             @yield('content')
         </div>
     </div>
     @include('layouts.footer')
 </body>
+<script>
+    //console.log(window.navigator);
+    if(navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)) {
+        //alert('phone');
+    } else {
+        //alert('computer');
+    }
+</script>
 <script src="{{ mix('js/jquery-3.6.0.min.js') }}"></script>
 <script src="{{ mix('js/popper.min.js') }}"></script>
 <script src="{{ mix('js/bootstrap.min.js') }}"></script>

@@ -164,6 +164,7 @@ class UserAuth
        session()->forget("user");
        session()->forget("cart");
        session()->forget("cart_order");
+       session()->forget("cart_store");
        self::$userdata = null;
     }
 }

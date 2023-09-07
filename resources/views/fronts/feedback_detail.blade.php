@@ -24,16 +24,16 @@
                                 @csrf
                                 <input type="hidden" id="action_type" name="action_type" value="add">
                                 <div class="row m-t-10" >
-                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                                        <label>名稱</label>
+                                    <div class="col-12">
+                                        <label>使用者名稱</label>
                                         <input type="text" id="name" name="name" class="form-control require" value="">
                                     </div>
-                                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                                    <!--<div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                                         <label>年齡</label>
                                         <input type="number" id="age" name="age" value="" class="form-control" width="100%;">
-                                    </div>
+                                    </div>-->
                                 </div>
-                                <div class="row input-group twzipcode" style="margin-top:10px;">
+                                <!--<div class="row input-group twzipcode" style="margin-top:10px;">
                                     <input type="hidden" data-role="zipcode" id="address_zip" name="address_zip" class="form-control" value="">
                                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                                         <label>居住地</label>
@@ -43,8 +43,8 @@
                                         <label><br/></label>
                                         <select class="custom-select require" data-role="district" id="district" name="address_district"></select>
                                     </div>
-                                </div>
-                                <div class="row m-t-10" style="margin-top:20px;">
+                                </div>-->
+                                <div class="row m-t-10">
                                     <div class="col-12">
                                         <label>使用者回饋及感想</label>
                                         <textarea id="content" name="content" rows="5" class="form-control require"></textarea>
@@ -52,9 +52,19 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <label>照片上傳<span style="color:red;font-size:x-small"> (限制大小：300KB)</span></label>
-                                        <input type="hidden" id="folder_name" name="folder_name" value="feedback" class="form-control">
+                                        <label>照片上傳<span style="color:red;font-size:x-small"> 建議裁切為正方形後上傳 (限制大小：300KB)</span></label>
                                         <input type="file" id="file" name="file" multiple="" accept="image/x-png,image/jpg,image/jpeg"/>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 20px;">
+                                    <div class="col-12">
+                                        <label>使用心得照片上傳<span style="color:red;font-size:x-small"> (限制大小：300KB)</span></label>
+                                        <br>
+                                        <input type="file" id="file_used_1" name="file_used[]" multiple="" accept="image/x-png,image/jpg,image/jpeg"/>
+                                        <br>
+                                        <input type="file" id="file_used_2" name="file_used[]" multiple="" accept="image/x-png,image/jpg,image/jpeg" style="margin-top:20px;"/>
+                                        <br>
+                                        <input type="file" id="file_used_3" name="file_used[]" multiple="" accept="image/x-png,image/jpg,image/jpeg" style="margin-top:20px;"/>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-top: 10px;">

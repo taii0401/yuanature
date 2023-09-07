@@ -63,16 +63,26 @@ return [
     //取消原因
     "orders_cancel" => [
         "wrong" => ["name" => "下錯訂單","color" => "#E00000"],
-        "rebuy" => ["name" => "重新購買","color" => "#B87800"],
-        "other" => ["name" => "其他","color" => "#00B800"]
+        "forget" => ["name" => "忘記使用優惠","color" => "#B87800"],
+        "unbuy" => ["name" => "不想購買","color" => "#B87800"],
+        "other" => ["name" => "其他","color" => "#00B800"],
+        "system" => ["name" => "系統","color" => "#696969"]
     ],
 
-    //超商
+    //超商類型
     "orders_store" => [
-        "seven" => ["name" => "7-11","color" => "#B87800"],
-        "family" => ["name" => "全家","color" => "#8100E0"],
-        "ok" => ["name" => "OK","color" => "#696969"],
-        "hilife" => ["name" => "萊爾富","color" => "#E00000"]
+        "seven" => ["name" => "7-11","color" => "#B87800","logistic" => "UNIMARTC2C"],
+        "family" => ["name" => "全家","color" => "#8100E0","logistic" => "FAMIC2C"],
+        "ok" => ["name" => "OK","color" => "#696969","logistic" => "OKMARTC2C"],
+        "hilife" => ["name" => "萊爾富","color" => "#E00000","logistic" => "HILIFEC2C"]
+    ],
+
+    //綠界超商類型
+    "ecpay_store" => [
+        "UNIMARTC2C" => "seven",
+        "FAMIC2C" => "family",
+        "OKMARTC2C" => "ok",
+        "HILIFEC2C" => "hilife"
     ],
 
     //聯絡我們-問題類型

@@ -31,6 +31,7 @@ use App\Http\Controllers\BackEnd\OrderController as BackEndOrderController;
 Route::controller(FrontController::class)->group(function() { 
     //首頁
     Route::get("/","index");
+    Route::get("/front","front");
     //商品頁(廣志足白浴露)
     Route::get("product","product");
     //關於我們
@@ -57,6 +58,9 @@ Route::controller(FrontController::class)->group(function() {
 
     //服務條款
     Route::get("terms","terms");
+
+    //排程-確認綠界訂單資料
+    Route::get("cron_ecpay_orders","cronEcpayOrders");
 });
 
 //共用

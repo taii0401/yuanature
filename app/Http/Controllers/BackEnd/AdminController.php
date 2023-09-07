@@ -112,7 +112,7 @@ class AdminController extends Controller
         $datas = $assign_data = $list_data = $page_data = $option_data = [];
 
         //選單搜尋條件-排序
-        $option_data["orderby"] = ["name" => "排序","data" => ["asc_created_at" => "建立時間 遠 ~ 近","desc_created_at" => "建立時間 近 ~ 遠","asc_age" => "年齡 小 ~ 大","desc_age" => "年齡 大 ~ 小"]];
+        $option_data["orderby"] = ["name" => "排序","data" => ["asc_created_at" => "建立時間 遠 ~ 近","desc_created_at" => "建立時間 近 ~ 遠"/*,"asc_age" => "年齡 小 ~ 大","desc_age" => "年齡 大 ~ 小"*/]];
         //取得目前頁數及搜尋條件
         $search_datas = ["page","orderby","keywords"];
         $get_search_data = $this->getSearch($search_datas,$input,"desc_created_at");

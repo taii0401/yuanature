@@ -6,51 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Models\WebUser;
-
-class UserCoupon extends Model
+class Orders extends Model
 {
     use HasFactory,SoftDeletes;
 
-    protected $table = "user_coupon"; //指定資料表名稱
+    protected $table = "orders"; //指定資料表名稱
     protected $guarded = [];
     protected $casts = [
         "created_at" => "datetime:Y-m-d H:i:s",
         "updated_at" => "datetime:Y-m-d H:i:s",
-        "deleted_at" => "datetime:Y-m-d H:i:s",
-        "expire_time" => "datetime:Y-m-d H:i:s",
-        "used_time" => "datetime:Y-m-d H:i:s"
+        "deleted_at" => "datetime:Y-m-d H:i:s"
     ];
-
-    /**
-     * 依訂單ID取得資料
-     * @param  orders_id
-     * @return array
-     */
-    public static function getDataByOrderid($orders_id)
-    {
-        $datas = [];
-        $get_data = self::where("orders_id",$orders_id)->orderByDesc("created_at")->get();
-        if(isset($get_data) && !empty($get_data)) {
-            $datas = $get_data->toArray();
-        }
-        return $datas;
-    }
-
-    /**
-     * 依使用者ID取得資料
-     * @param  user_id
-     * @return array
-     */
-    public static function getDataByUserid($user_id)
-    {
-        $datas = [];
-        $get_data = self::where("user_id",$user_id)->orderByDesc("created_at")->get();
-        if(isset($get_data) && !empty($get_data)) {
-            $datas = $get_data->toArray();
-        }
-        return $datas;
-    }
 
     /**
      * 取得資料
@@ -61,13 +27,13 @@ class UserCoupon extends Model
      */
     public static function getAllDatas($cond=[],$orderby="id",$sort="asc")
     {
-        $all_datas = $conds = $conds_in = [];
+        $all_datas = $conds = $conds_in = $conds_like = [];
         
-		//條件欄位
-		$cols = ["id","uuid","user_id","orders_id","coupon_id","serial","status","source"];
+        //條件欄位
+		$cols = ["id","uuid","user_id","serial","name","phone","payment","delivery","status"];
 		foreach($cols as $col) {
 			if(isset($cond[$col])) {
-                if(in_array($col,["serial"])) {
+                if(in_array($col,["serial","name","phone"])) {
                     $conds_like[$col] = $cond[$col];
                 } else {
                     if(is_array($cond[$col])) {
@@ -97,14 +63,11 @@ class UserCoupon extends Model
         //關鍵字
         if(isset($cond["keywords"]) && $cond["keywords"] != "") {
             $keywords = $cond["keywords"];
-            $conds_or = ["serial"];
-            //依會員姓名取得會員ID
-            $user_ids = WebUser::where("name","like","%".$keywords."%")->pluck("user_id")->toArray();
-            $all_datas = $all_datas->where(function ($query) use($conds_or,$keywords,$user_ids) {
+            $conds_or = array("serial","name","phone");
+            $all_datas = $all_datas->where(function ($query) use($conds_or,$keywords) {
                 foreach($conds_or as $value) {
                     $query->orWhere($value,"like","%".$keywords."%");
                 }
-                $query->orWhereIn("user_id",$user_ids);
             });
         }
         //排序
@@ -112,18 +75,5 @@ class UserCoupon extends Model
         //print_r($all_datas->toSql());
 
         return $all_datas;
-    }
-
-    /**
-     * 依會員ID及訂單ID退還折價劵
-     * @param  user_id
-     * @param  orders_id
-     * @return array
-     */
-    public static function cancelUserCoupon($user_id,$orders_id)
-    {
-        if($user_id > 0 && $orders_id > 0) {
-            self::where("user_id",$user_id)->where("orders_id",$orders_id)->update(["status" => "nouse","orders_id" => NULL,"used_time" => NULL]);
-        }
     }
 }

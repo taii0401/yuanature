@@ -28,32 +28,6 @@
                                 @endif
                             </select>
                         </div>
-                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                            <label><span class="star">* </span>配送方式<span style="color:red;font-size:x-small"> (2萬元以上只可選擇宅配)</span></label>
-                            <div class="col-12">
-                            @if(isset($datas["option_data"]["delivery"]) && !empty($datas["option_data"]["delivery"]))    
-                                @foreach($datas["option_data"]["delivery"] as $key => $val) 
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="delivery" id="delivery_{{ @$key }}" value="{{ @$key }}" {{ @$datas["assign_data"]["delivery_disabled"] }} @if($key == $datas["assign_data"]["delivery"]) checked @endif>
-                                        <label class="form-check-label">{{ @$val }}</label>
-                                    </div>
-                                @endforeach
-                            @endif
-                            </div>                  
-                        </div>
-                        <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12">
-                            <label><span class="star">* </span>台灣本島或離島</label>
-                            <div class="col-12">
-                            @if(isset($datas["option_data"]["island"]) && !empty($datas["option_data"]["island"]))    
-                                @foreach($datas["option_data"]["island"] as $key => $val) 
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="island" id="island_{{ @$key }}" value="{{ @$key }}" @if($key == $datas["assign_data"]["island"]) checked @endif>
-                                        <label class="form-check-label">{{ @$val }}</label>
-                                    </div>
-                                @endforeach
-                            @endif
-                            </div>                  
-                        </div>
                     </div>
                     <div class="row">
                         <div class="col-xl-8 col-lg-8 col-md-6 col-sm-12">
@@ -85,8 +59,6 @@
     $(function () {
         //選取折價劵
         $('#selsct_user_coupon').val('{{ @$datas["assign_data"]["user_coupon_id"] }}');
-        //更新配送方式
-        changeDelivery($('#origin_total').val());
     });
 </script>
 @endsection

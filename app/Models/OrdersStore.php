@@ -34,6 +34,29 @@ class OrdersStore extends Model
     }
 
     /**
+     * 依訂單ID取得交易編號
+     * @param  id
+     * @param  is_update：是否更新
+     * @return array
+     */
+    public static function getTradeNoById($id,$is_update=false)
+    {
+        $trade_no = "";
+        $data = self::where("id",$id)->first();
+        if(isset($data)) {
+            if($is_update) {
+                $trade_no = "SP".time();
+                $data->trade_no = $trade_no;
+                $data->save();
+            } else if($data->exists("trade_no")) {
+                $trade_no = $data->trade_no;
+            }
+        }
+        
+        return $trade_no;
+    }
+
+    /**
      * 取得資料
      * @param  cond：搜尋條件
      * @param  orderby：排序欄位

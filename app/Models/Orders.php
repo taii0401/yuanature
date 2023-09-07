@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\OrdersStore;
+use App\Models\OrdersPayment;
 
 class Orders extends Model
 {
@@ -39,9 +40,10 @@ class Orders extends Model
      * 依訂單UUID取得資料
      * @param  uuid
      * @param  user_id
+     * @param  isBack
      * @return array
      */
-    public static function getDataByUuid($uuid,$user_id='')
+    public static function getDataByUuid($uuid,$user_id="",$isBack=false)
     {
         //訂單狀態
         $orders_status_datas = config("yuanature.orders_status");
@@ -51,13 +53,17 @@ class Orders extends Model
         $orders_delivery_datas = config("yuanature.orders_delivery");
         //取消原因
         $orders_cancel_datas = config("yuanature.orders_cancel");
-        //超商
+        //超商類型
         $orders_store_datas = config("yuanature.orders_store");
 
         $data = [];
         $get_data = self::where("uuid",$uuid);
-        if($user_id > 0) {
-            $get_data = $get_data->where("user_id",$user_id);
+        if(!$isBack) { //前台-需要取得user_id
+            if($user_id > 0) {
+                $get_data = $get_data->where("user_id",$user_id);
+            } else {
+                return $data;
+            }
         }
         $get_data = $get_data->first();
         if(isset($get_data) && !empty($get_data)) {
@@ -82,23 +88,41 @@ class Orders extends Model
             $data["cancel_remark_format"] = nl2br($data["cancel_remark"]);
             //訂單備註
             $data["order_remark_format"] = nl2br($data["order_remark"]);
-            //出貨備註
-            $data["delivery_remark_format"] = nl2br($data["delivery_remark"]);
 
+            //取得配送資料
+            $store_data = OrdersStore::getDataByOrderid($data["id"]);
             $addr = "";
-            if($data["delivery"] == "home") {
-                $addr .= "地址：".$data["address_zip"]." ".$data["address_county"].$data["address_district"].$data["address"];
-            } else if($data["delivery"] == "store") {
-                //取得超商出貨資料
-                $store_data = OrdersStore::getDataByOrderid($data["id"]);
-                if(!empty($store_data)) {
+            if(!empty($store_data)) {
+                foreach($store_data as $store_key => $store_val) {
+                    $data["store_".$store_key] = $store_val;
+                    //出貨備註
+                    if($store_key == "delivery_remark") {
+                        $data["delivery_remark_format"] = nl2br($store_val);
+                    }
+                }
+                if($data["delivery"] == "home") {
+                    $addr .= "地址：".$store_data["address_zip"]." ".$store_data["address_county"].$store_data["address_district"].$store_data["address"];
+                } else if($data["delivery"] == "store") {
                     $addr .= $orders_store_datas[$store_data["store"]]["name"]." ".$store_data["store_name"]."店<br>";
                     $addr .= " (".$store_data["store_address"].")<br>";
                     $addr .= "取貨人姓名：".$store_data["name"]."<br>";
                     $addr .= "取貨人手機：".$store_data["phone"];
                 }
+
+                //物流單號
+                if($isBack && isset($store_data["shipment_no"]) && $store_data["shipment_no"] != "") {
+                    $data["delivery_name"] .= " (物流單號：".$store_data["shipment_no"].")";
+                }
             }
             $data["address_format"] = $addr;
+
+            //取得付款資料
+            $pay_data = OrdersPayment::getLatestDataByOrdersId($data["id"]);
+            if(!empty($pay_data)) {
+                foreach($pay_data as $pay_key => $pay_val) {
+                    $data["pay_".$pay_key] = $pay_val;
+                }
+            }
         }
         
         return $data;
@@ -106,7 +130,7 @@ class Orders extends Model
 
     /**
      * 依訂單編號取得資料
-     * @param  uuid
+     * @param  serial
      * @return array
      */
     public static function getDataBySerial($serial)
@@ -118,6 +142,61 @@ class Orders extends Model
         }
         
         return $data;
+    }
+
+    /**
+     * 依訂單ID取得訂單資料
+     * @param  id
+     * @return array
+     */
+    public static function getDataById($id)
+    {
+        $data = [];
+        $get_data = self::where("id",$id)->first();
+        if(isset($get_data) && !empty($get_data)) {
+            $data = $get_data->toArray();
+        }
+        
+        return $data;
+    }
+
+    /**
+     * 依訂單交易編號取得訂單資料
+     * @param  trade_no
+     * @return array
+     */
+    public static function getDataByTradeNo($trade_no)
+    {
+        $data = [];
+        $get_data = self::where("trade_no",$trade_no)->first();
+        if(isset($get_data) && !empty($get_data)) {
+            $data = $get_data->toArray();
+        }
+        
+        return $data;
+    }
+
+    /**
+     * 依訂單ID取得交易編號
+     * @param  id
+     * @param  is_update：是否更新
+     * @return array
+     */
+    public static function getTradeNoById($id,$is_update=false)
+    {
+        $trade_no = "";
+        $data = self::where("id",$id)->first();
+        if(isset($data)) {
+            if($is_update) {
+                $trade_no = "YO".time();
+                $data->trade_no = $trade_no;
+                $data->save();
+            } else if($data->exists("trade_no")) {
+                $trade_no = $data->trade_no;
+            }
+        }
+        
+        return $trade_no;
     }
 
     /**

@@ -4,7 +4,7 @@
 @section('content')
 <div style="background-image:url({{ asset('img/about_bg.jpg') }});background-size: auto;">
     <div class="row">
-        <div class="content-bg-about col-xl-8 col-lg-8 col-md-12 col-sm-12">
+        <div class="content-bg-about col-xl-7 col-lg-7 col-md-12 col-sm-12">
             <h4 class="mb-4">關於｜原生學</h4>
             <p class="mb-4">｜回復原生肌膚般的純淨自然保養美學｜</p>
             <p class="mb-4">肌膚保養品都提倡「減量」哲學，減去過多的添加物、保留對肌膚最友善的原料，但我們希望帶來的是「剛好」的哲學，就像想要髮質滑順，你必須用對東西；想要肌膚滋潤，你必須擦對物品。用對了，才會有效，就像我們感冒並不會只吃胃藥吧。</p>

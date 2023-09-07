@@ -59,7 +59,7 @@ class WebFileData extends Model
                 }
             }
         }
-        //$this->pr($data);
+        //echo "<pre>";print_r($data);echo "</pre>";
 
         return $data;
     }
@@ -90,24 +90,25 @@ class WebFileData extends Model
             
             if(!empty($conds) && isset($data["file_ids"]) && !empty($data["file_ids"])) {
                 $exist_file_ids = $delete_file_ids = [];
-                //取得資料內所有file_id
-                $all_datas = self::where($conds)->get()->toArray();
-                //$this->pr($all_datas);
-                if(!empty($all_datas)) {
-                    foreach($all_datas as $all_data) {
-                        $file_id = isset($all_data["file_id"])?$all_data["file_id"]:0;
-                        if($file_id > 0) {
-                            if(!in_array($file_id,$data["file_ids"])) {
-                                $delete_file_ids[] = $file_id; //取得需要刪除的file_id
-                            } else {
-                                $exist_file_ids[] = $file_id; //取得需要存在的file_id
+                if($action_type == "edit") {
+                    //取得資料內所有file_id
+                    $all_datas = self::where($conds)->get()->toArray();
+                    //$this->pr($all_datas);
+                    if(!empty($all_datas)) {
+                        foreach($all_datas as $all_data) {
+                            $file_id = isset($all_data["file_id"])?$all_data["file_id"]:0;
+                            if($file_id > 0) {
+                                if(!in_array($file_id,$data["file_ids"])) {
+                                    $delete_file_ids[] = $file_id; //取得需要刪除的file_id
+                                } else {
+                                    $exist_file_ids[] = $file_id; //取得需要存在的file_id
+                                }
                             }
                         }
                     }
+                    //$this->pr($exist_file_ids);
+                    //$this->pr($delete_file_ids);//exit;
                 }
-                //$this->pr($exist_file_ids);
-                //$this->pr($delete_file_ids);//exit;
-
                 
                 $isSuccess = true;
                 //刪除檔案

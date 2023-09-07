@@ -62,6 +62,7 @@
                             <th>使用狀態</th>
                             <th>到期時間</th>
                             <th>使用時間</th>
+                            <th>訂單編號</th>
                             <th width="50"></th>
                         </tr>
                     </thead>
@@ -99,8 +100,12 @@
                                     {{ @$data["expire_time"] }}
                                 </td>
                                 <td>
-                                    <span class="td-data-span">使用時間：</span><br>
+                                    <span class="td-data-span">使用時間：</span>
                                     {{ @$data["used_time"] }}
+                                </td>
+                                <td>
+                                    <span class="td-data-span">訂單編號：</span>
+                                    <a href="#" onclick="changeForm('/admin/orders/detail?orders_uuid={{ @$data["orders_uuid"] }}');"><u>{{ @$data["orders_serial"] }}</u></a>
                                 </td>
                                 <td class="text-center">
                                     @if(@$data["status"] == "nouse")

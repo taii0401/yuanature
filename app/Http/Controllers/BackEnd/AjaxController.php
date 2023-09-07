@@ -24,6 +24,7 @@ use App\Models\WebUser;
 use App\Models\User;
 use App\Models\UserCoupon;
 use App\Models\Orders;
+use App\Models\OrdersStore;
 use App\Models\Coupon;
 use App\Models\Contact;
 use App\Models\Feedback;
@@ -434,16 +435,10 @@ class AjaxController extends Controller
             $data = Orders::where("uuid",$uuid)->first();
             if(isset($data) && !empty($data)) {
                 try {
+                    $orders_id = $data->id;
                     $data->name = $input["name"];
                     $data->phone = $input["phone"];
                     $data->email = $input["email"]??NULL;
-                    //配送方式選擇宅配配送才紀錄地址
-                    if($input["delivery"] == "home" && isset($input["address"]) && $input["address"] != "") {
-                        $data->address_zip = $input["address_zip"]??NULL;
-                        $data->address_county = $input["address_county"]??NULL;
-                        $data->address_district = $input["address_district"]??NULL;
-                        $data->address = $input["address"];
-                    }
                     $data->delivery = $input["delivery"];
                     $data->status = $input["status"];
                     //訂單備註
@@ -454,12 +449,26 @@ class AjaxController extends Controller
                     if(isset($input["cancel_remark"]) && $input["cancel_remark"] != "") {
                         $data->cancel_remark = $input["cancel_remark"];
                     }
-                    //出貨備註
-                    if(isset($input["delivery_remark"]) && $input["delivery_remark"] != "") {
-                        $data->delivery_remark = $input["delivery_remark"];
-                    }
                     $data->updated_id = $admin_id;
                     $data->save();
+
+                    //紀錄配送資料
+                    $store_data = OrdersStore::where("id",$orders_id)->first();
+                    //紀錄宅配配送地址
+                    if($input["delivery"] == "home" && isset($input["address"]) && $input["address"] != "") {
+                        $store_data->name = $input["name"];
+                        $store_data->phone = $input["phone"];
+                        $store_data->address_zip = $input["address_zip"]??NULL;
+                        $store_data->address_county = $input["address_county"]??NULL;
+                        $store_data->address_district = $input["address_district"]??NULL;
+                        $store_data->address = $input["address"];
+                    }
+                    //出貨備註
+                    if(isset($input["delivery_remark"]) && $input["delivery_remark"] != "") {
+                        $store_data->delivery_remark = $input["delivery_remark"];
+                    }
+                    $store_data->updated_id = $admin_id;
+                    $store_data->save();
 
                     $this->error = false;
                     //寄送通知信(出貨)
@@ -495,6 +504,7 @@ class AjaxController extends Controller
                     if($input["cancel"] == "other" && isset($input["cancel_remark"]) && $input["cancel_remark"] != "") {
                         $data->cancel_remark = $input["cancel_remark"];
                     }
+                    $data->cancel_time = date("Y-m-d H:i:s");
                     $data->cancel_by = "admin";
                     $data->cancel_id = $admin_id;
                     $data["status"] = "cancel";

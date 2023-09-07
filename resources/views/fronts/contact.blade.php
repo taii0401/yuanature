@@ -3,7 +3,7 @@
 @section('banner_menu_txt') {{ @$title_txt }} @endsection
 @section('content')
 <div class="row ">
-    <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 mx-auto">
+    <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12 mx-auto">
         <div class="row">
             <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 mx-auto">
                 <p class="mb-2">
