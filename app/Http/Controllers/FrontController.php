@@ -168,7 +168,7 @@ class FrontController extends Controller
     public function terms(Request $request)
     {
         $data = [];
-        $data["title_txt"] = "服務條款";
+        $data["title_txt"] = "服務條款1";
         return view("fronts.terms",$data);
     }
 }
