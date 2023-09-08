@@ -14,7 +14,7 @@ COLOR CODES
 */
 
 html {
-    font-size: 18px;
+    font-size: 16px;
 }
 
 body {
@@ -62,7 +62,7 @@ p {
 }
 
 .banner_menu {
-    margin-left: 13%;
+    margin-left: 20%;
     padding-top: 8px;
     font-size: smaller;
 }
@@ -186,7 +186,6 @@ p {
     margin-top: 0px;
     min-height: 50px;
     background-color: #FFF;
-    font-size: 20px;
 }
 
 .tm-logout-icon {
@@ -875,6 +874,7 @@ footer {
 
 .qa {
     font-size: 18px;
+    margin-left: 22px;
 }
 
 .qa-q {
@@ -884,7 +884,7 @@ footer {
 
 .qa-a {
     font-size: 18px;
-    color: #9f1321;
+    color: #848483;
 }
 
 
@@ -898,7 +898,7 @@ footer {
 }
 
 .pdt-img-area img {
-    height: 90px;
+    height: 85px;
 }
 
 .pdt-img-area ul {
@@ -970,7 +970,7 @@ footer {
     }
 }
 
-@media (max-width: 1275px) and (min-width: 1200px) {
+@media (max-width: 1450px) and (min-width: 1200px) {
     /*.nav-item {
         margin-right: 15px;
     }*/
@@ -985,10 +985,22 @@ footer {
     }
 }
 
-@media (max-width: 1350px) {
-    /*.nav-item {
-        margin-right: 1px;
-    }*/
+@media (max-width: 1450px) {
+    .pdt-img-area img {
+        height: 80px;
+    }
+}
+
+@media (max-width: 1380px) {
+    .pdt-img-area img {
+        height: 70px;
+    }
+}
+
+@media (max-width: 1290px) {
+    .pdt-img-area img {
+        height: 65px;
+    }
 }
 
 @media (max-width: 1199px) {
@@ -1000,7 +1012,7 @@ footer {
         width: 40%;
     }
     .pdt-img-area img {
-        height: 85px;
+        height: 60px;
     }
     /*.navbar-collapse {
         background: white;
@@ -1021,9 +1033,9 @@ footer {
     }*/
 }
 
-@media (max-width: 1055px) {
+@media (max-width: 1070px) {
     .pdt-img-area img {
-        height: 80px;
+        height: 55px;
     }
 }
 
@@ -1051,7 +1063,7 @@ footer {
         width: 50%;
     }
     .pdt-img-area img {
-        height: 85px;
+        height: 100px;
     }
 }
 
@@ -1168,9 +1180,6 @@ footer {
     .banner_menu {
         margin-left: 0%;
     }
-    .pdt-img-area img {
-        height: 80px;
-    }
 }
 
 @media (max-width: 598px) {
@@ -1187,7 +1196,7 @@ footer {
         width: 80%;
     }
     .pdt-img-area img {
-        height: 65px;
+        height: 60px;
     }
 }
 
@@ -1196,6 +1205,6 @@ footer {
         width: 100%;
     }
     .pdt-img-area img {
-        height: 50px;
+        height: 55px;
     }
 }

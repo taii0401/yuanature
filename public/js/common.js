@@ -400,7 +400,7 @@ function getAddressZip(isShowCode,zipcode) {
 
     return address_zip_str;
 }
-
+ 
 //檢查帳號是否存在
 function userExist(account) {
     //取得csrf_token
@@ -633,6 +633,24 @@ function cartSubmit(action_type) {
                 return false;
             }
         }
+        //檢查收件人姓名(中文2~5個字, 英文4~10個字)
+        if($('#name').val() != '') {
+            nameLength = $('#name').val().replace(/[^\x00-\xff]/g,"OO").length;
+            if(nameLength < 4 || nameLength > 10) {
+                showMsg('msg_error','收件人姓名需要2~5個字',true);
+                returnFalseAction();
+                return false;
+            }
+        }
+        //配送選擇超商-檢查超商資料
+        delivery = $('input[name=delivery]:checked').val();
+        if(delivery == 'store') {
+            if($('#store_code').val() == '') {
+                showMsg('msg_error','請選擇超商',true);
+                returnFalseAction();
+                return false;
+            }
+        }
     }
 
     if(action_type == 'delete') { //刪除
@@ -725,12 +743,97 @@ function cartChangeOriginTotal(id) {
     $('#origin_total').val(total);
     $('#origin_total_text').html(total);
 
-    //更新配送方式
-    changeDelivery(total);
+    //更新運費
+    changeDeliveryTotal();
 }
 
-//更新配送方式
-function changeDelivery(total) {
+//配送方式選擇宅配-顯示收件人地址
+function changeDeliveryAddress() {
+    isHome = false;
+    //配送方式
+    delivery = $('input[name=delivery]:checked').val();
+    if(delivery == 'home') {
+        isHome = true;
+        $('#div_address').css('display','');
+    } else {
+        $('#div_address').css('display','none');
+    }
+
+    if(delivery == 'store') {
+        $('#div_store').css('display','');
+    } else {
+        isHome = true;
+        $('#div_store').css('display','none');
+    }
+
+    //必填-收件人地址
+    if(isHome) {
+        $(".addr_class").addClass("require");
+    } else {
+        $(".addr_class").removeClass("require");
+    }
+}
+
+//更新運費
+function changeDeliveryTotal() {
+    var csrf_token = getToken();
+    origin_total = total = 0;
+    //商品金額
+    if(!isNaN(parseInt($('#origin_total').val()))) {
+        origin_total = parseInt($('#origin_total').val());
+    }
+    //配送方式
+    delivery = $('input[name=delivery]:checked').val();
+    //台灣本島或離島
+    island = $('#island').val();
+
+    $.ajax({
+        type: 'POST',
+        url: '/common/get_delivery_total',
+        dataType: 'json',
+        async: false,
+        data: { '_token':csrf_token, 'origin_total':origin_total, 'delivery':delivery, 'island':island },
+        error: function(xhr) {
+            //console.log(xhr);
+            alert('傳送錯誤！');
+            returnFalseAction();
+            return false;
+        },
+        success: function(response) {
+            //console.log(response);
+            total = response;
+        }
+    });
+    //console.log(total);
+    $('#delivery_total').val(total);
+    $('#delivery_total_text').html(total);
+
+    //更新總金額
+    cartChangeTotal();
+}
+
+//更新總金額
+function cartChangeTotal() {
+    total = origin_total = coupon_total = delivery_total = 0;
+    //商品金額
+    if(!isNaN(parseInt($('#origin_total').val()))) {
+        origin_total = parseInt($('#origin_total').val());
+    } 
+    //折價金額
+    if(!isNaN(parseInt($('#coupon_total').val()))) {
+        coupon_total = parseInt($('#coupon_total').val());
+    } 
+    //運費
+    if(!isNaN(parseInt($('#delivery_total').val()))) {
+        delivery_total = parseInt($('#delivery_total').val());
+    } 
+
+    //計算總金額
+    total = origin_total - coupon_total + delivery_total;
+    //console.log(total);
+    $('#total').val(total);
+    $('#total_text').html(total);
+
     //2萬元以上只可選擇宅配
     if(total >= 20000) {
         $('#delivery_home').prop('checked',true);
@@ -738,6 +841,9 @@ function changeDelivery(total) {
     } else {
         $('input[name=delivery]').attr('disabled',false);
     }
+
+    //配送方式選擇宅配-顯示收件人地址
+    changeDeliveryAddress();
 }
 
 //訂單-新增(立即結帳、稍後付款)、取消、付款
@@ -750,7 +856,7 @@ function orderSubmit(action_type) {
         returnFalseAction();
         return false;
     }
-
+    
     var form_name = 'form_data';
     if(action_type == 'pay' || action_type == 'cancel') { //付款、取消
         form_name = 'form_data_'+action_type;
@@ -774,11 +880,13 @@ function orderSubmit(action_type) {
         success: function(response) {
             //console.log(response);
             if(response.error == false) {
-                if(action_type == 'add' || action_type == 'add_pay') { //新增
+                if(action_type == 'add' || action_type == 'add_pay' || action_type == 'pay') { //稍後付款、立即結帳、付款
                     uuid = response.message;
                     if(action_type == 'add') { //稍後付款
                         changeForm('/orders/detail?orders_uuid=' + uuid);
-                    } else { //立即結帳
+                    } else if(action_type == 'add_pay') { //立即結帳
+                        changeForm('/orders/cart_payment?orders_uuid=' + uuid);
+                    } else { //付款
                         changeForm('/orders/cart_pay?orders_uuid=' + uuid);
                     }
                 } else if(action_type == 'cancel') { //取消
