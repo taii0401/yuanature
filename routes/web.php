@@ -61,6 +61,8 @@ Route::controller(FrontController::class)->group(function() {
 
     //排程-確認綠界訂單資料
     Route::get("cron_ecpay_orders","cronEcpayOrders");
+    //排程-確認訂單是否付款及折價劵是否到期
+    Route::get("cron_user_orders_coupon","cronUserOrdersCoupon");
 });
 
 //共用

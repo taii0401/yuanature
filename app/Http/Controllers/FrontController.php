@@ -193,4 +193,11 @@ class FrontController extends Controller
         $CommonController = new CommonController();
         $CommonController->cronCheckEcpayOrders();
     }
+
+    //排程-確認訂單是否付款及折價劵是否到期
+    public function cronUserOrdersCoupon(Request $request)
+    {
+        $CommonController = new CommonController();
+        $CommonController->cronCheckUserOrdersCoupon();
+    }
 }
