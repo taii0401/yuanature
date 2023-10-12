@@ -625,6 +625,7 @@ footer {
     color:#656565;
     font-size:medium;
     font-weight: 500;
+    margin-left: -40px;
 }
 
 .footer_menu ul {

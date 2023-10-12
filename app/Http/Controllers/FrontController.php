@@ -26,6 +26,7 @@ class FrontController extends Controller
     {
         $data = [];
         $data["title_txt"] = "廣志足白浴露";
+        $data["show_banner_menu"] = "N";
         return view("fronts.front",$data);
     }
 
