@@ -8,6 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AjaxController;
 use App\Http\Controllers\ThirdController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\EcpayController;
 
 //後台
 use App\Http\Controllers\BackEnd\AuthController as BackEndAuthController;
@@ -120,6 +121,24 @@ Route::group([
         //串接金流-待客戶付款
         Route::post("/pay_customer","payCustomer");
     });
+
+    Route::controller(EcpayController::class)->group(function() { 
+        //串接超商地圖
+        Route::get("/store_map/{store??}","storeMap");
+        //超商確認資料
+        Route::post("/store_map_callback","storeMapCallback");
+        //物流訂單資料
+        Route::post("/logistic_code_callback","logisticCodeCallback");
+        //金流訂單資料-信用卡付款
+        Route::post("/pay_callback","payCallback");
+        //金流訂單資料-ATM取得虛擬帳號
+        Route::post("/pay_info_callback","payInfoCallback");
+    });
+
+    Route::controller(ThirdController::class)->group(function() { 
+        //LinePay付款確認
+        Route::get("/line_pay_confirm","linePayConfirm");
+    });
 });
 Route::group([
     "middleware" => ["auth.user"],
@@ -132,6 +151,8 @@ Route::group([
         Route::get("/detail","detail");
         //購物車-收件人資料
         Route::get("/cart_user","cartUser");
+        //購物車-付款方式
+        Route::get("/cart_payment","cartPayment");
         //購物車-訂單資料
         Route::get("/cart_order","cartOrder");
         //購物車-訂單取消
