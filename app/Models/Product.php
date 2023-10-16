@@ -101,7 +101,7 @@ class Product extends Model
     }
 
     /**
-     * 依訂單UUID取得資料
+     * 依產品UUID取得資料
      * @param  uuid
      * @return array
      */
@@ -113,7 +113,34 @@ class Product extends Model
         if(isset($get_data) && !empty($get_data)) {
             $data = $get_data->toArray();
         }
+
+        $data["sales"] = self::getSale($data["id"],$data["price"],$data["sales"]);
         
         return $data;
+    }
+
+    /**
+     * 依產品ID和價錢取得是否優惠
+     * @param  id
+     * @param  price
+     * @param  sales
+     * @return array
+     */
+    public static function getSale($id,$price,$sales)
+    {
+        $return_sales = $sales;
+
+        $date = date("Y-m-d");
+        $date = "2023-11-30"; //測試用
+        
+        if($id == 1) {
+            //2023-11-01 ~ 2023-11-30做七折優惠
+            $discount = 70;
+            if(strtotime($date) >= strtotime("2023-11-01") && strtotime($date) <= strtotime("2023-11-30")) {
+                $return_sales = ceil($price*($discount/100));
+            }
+        }
+
+        return $return_sales;
     }
 }

@@ -36,11 +36,21 @@
                     <div class="row">
                         <div class="col-12">
                             <p class="detail-text" style="margin-top: 5px;">
-                                規格：6入/盒
+                                規格：6入/盒(保存期限：3年)
                             </p>
                         </div>  
                         <div class="col-12">
-                            <h5 style="color:black;font-weight:900;">NT ${{ @$sales }}</h5>
+                            <h6 style="color:black;font-weight:900;font-size:medium;">
+                                <span>NT&nbsp;
+                                    <span style="display:{{ @$price_none }}; text-decoration:line-through red;">
+                                        {{ @$price }}
+                                    </span> 
+                                    &nbsp;{{ @$sales }}
+                                </span>
+                            </h6>
+                            <span style="font-size: smaller;color:red;display:{{ @$sales_period }}">
+                                優惠期間：2023/11/01 ~ 2023/11/30
+                            </span>
                         </div>                                
                     </div>
                     <div class="row" style="margin-top: 15px;">
@@ -94,8 +104,8 @@
             <div class="clearfix"> </div>
             <div class="row">
                 <div class="col-12">
-                    <p class="detail-text" style="margin-top: 5px;">
-                        製造日期：2022.11 保存期限：3年
+                    <p style="font-size:smaller; margin-top: 5px;">
+                        製造日期：2022.11
                     </p>
                 </div>  
             </div>

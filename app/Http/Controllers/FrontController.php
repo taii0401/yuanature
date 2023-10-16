@@ -36,6 +36,27 @@ class FrontController extends Controller
         $data = [];
         $data = Product::getDataByUuid("8c8f7d49-2131-4a50-a02d-619f3e1f9fb9");
         $data["title_txt"] = "購買商品";
+
+        $is_sale = false;
+        $data["sales_period"] = "none";
+
+        //2023-11-01 ~ 2023-11-30做七折優惠
+        $date = date("Y-m-d");
+        $date = "2023-11-30"; //測試用
+        if(strtotime($date) >= strtotime("2023-11-01") && strtotime($date) <= strtotime("2023-11-30")) {
+            $data["sales_period"] = "";
+        }
+
+        if($data["price"] != $data["sales"]) {
+            $is_sale = true;
+        }
+
+        //是否顯示原價
+        $data["price_none"] = "none";
+        if($is_sale) {
+            $data["price_none"] = "";
+        }
+
         return view("fronts.product",$data);
     }
 

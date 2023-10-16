@@ -500,9 +500,9 @@ class AjaxController extends Controller
                                 $detail_data["orders_id"] = $orders_id;
                                 $detail_data["product_id"] = $cart_data["id"]??0;
                                 $detail_data["amount"] = $cart_data["amount"]??0;
-                                $detail_data["price"] = $cart_data["sales"]??0;
+                                $detail_data["price"] = $cart_data["price"]??0;
                                 $detail_data["total"] = $cart_data["subtotal"]??0;
-        
+
                                 try {
                                     OrdersDetail::create($detail_data);
                                 } catch(QueryException $e) {

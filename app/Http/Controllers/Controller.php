@@ -632,16 +632,11 @@ class Controller extends BaseController
                     }
                     $product_data["amount"] = $amount;
                     //售價
-                    $price = 0;
-                    $sales = isset($product_data["sales"])?$product_data["sales"]:0; //售價
-                    if($sales > 0) {
-                        $price = $sales;
-                    } else { //原價
-                        $price = isset($product_data["price"])?$product_data["price"]:0;
-                    }
-                    $product_data["price"] = $price;
+                    $sales = Product::getSale($product_data["id"],$product_data["price"],$product_data["sales"]);
+                    $product_data["sales"] = $sales;
+                    $product_data["price"] = $sales;
                     //小計
-                    $subtotal = $amount*$price;
+                    $subtotal = $amount*$sales;
                     $product_data["subtotal"] = $subtotal;
                     //合計
                     $total += $subtotal;
