@@ -36,6 +36,12 @@
                 <span style="color:red">(注意！是陰涼處，不是冰箱… )</span>
             </p>
         </div>
+        <div class="qa">
+            <p class="mb-4">
+                <span class="qa-q">Q：如何使用？</span><br/>
+                <span class="qa-a"><img src="{{ asset('img/use_method.jpg') }}" width="100%" style="margin:0 auto;"></span>
+            </p>
+        </div>
     </div>
 </div>
 @endsection

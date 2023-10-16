@@ -35,8 +35,7 @@
                     </p>
                     <div class="row">
                         <div class="col-12">
-                            <p class="detail-text" style="margin-top: 20px;">
-                                製造日期：2022.11 保存期限：3年<br>
+                            <p class="detail-text" style="margin-top: 5px;">
                                 規格：6入/盒
                             </p>
                         </div>  
@@ -50,7 +49,12 @@
                                 @csrf
                                 <input type="hidden" id="action_type" name="action_type" value="add">
                                 <input type="hidden" id="product_id" name="product_id" value="{{ @$id }}">
-                                <input type="number" min="1" id="amount" name="amount" value="1" class="form-control" width="100%;">
+
+                                <div class="div_number" id="div_number_1">
+                                    <span class="minus" onclick="number_plus_minus('minus',1)">-</span>
+                                    <input type="text" id="amount" name="amount" value="1" class="form-control">
+                                    <span class="plus" onclick="number_plus_minus('plus',1)">+</span>
+                                </div>
                             </form>
                         </div>
                         <div class="col-6" style="margin-top: 15px;">
@@ -86,6 +90,14 @@
                         </div>
                     </div>
                 </div>    
+            </div>
+            <div class="clearfix"> </div>
+            <div class="row">
+                <div class="col-12">
+                    <p class="detail-text" style="margin-top: 5px;">
+                        製造日期：2022.11 保存期限：3年
+                    </p>
+                </div>  
             </div>
         </div>
     </div>
