@@ -236,6 +236,20 @@ function changeSwitch(id) {
     }
 }
 
+//數字欄位-加減
+function number_plus_minus(type,id) {
+    var $input = $('#div_number_'+id).find('input');
+    if(type == 'minus') { //減
+        var count = parseInt($input.val())-1;
+        count = count < 1 ? 1 : count;
+        $input.val(count);
+    } else { //加
+        $input.val(parseInt($input.val())+1);
+    }
+    $input.change();
+	return false;
+}
+
 //切換選項欄位，判斷是否顯示其他輸入欄位
 function changeDataDisplay(type,id_name,display_name,check_value,isRequire) {
     if(type == 'checked') {

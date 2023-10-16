@@ -46,7 +46,11 @@
                 </td>
                 <td>
                     <span class="td-data-span">數量：</span>
-                    <input type="number" min="1" id="amount_{{ @$data["id"] }}" name="amount[]" value="{{ @$data["amount"] }}" style="width: 50px;" onchange="cartChangeOriginTotal('{{ @$data["id"] }}');cartChangeUserCoupon();">
+                    <div class="div_number" id="div_number_{{ @$data["id"] }}">
+                        <span class="minus" onclick="number_plus_minus('minus',{{ @$data["id"] }})">-</span>
+                        <input type="text" id="amount_{{ @$data["id"] }}" name="amount[]" value="{{ @$data["amount"] }}" onchange="cartChangeOriginTotal('{{ @$data["id"] }}');cartChangeUserCoupon();">
+                        <span class="plus" onclick="number_plus_minus('plus',{{ @$data["id"] }})">+</span>
+                    </div>
                 </td>
                 <td>
                     <span class="td-data-span">售價：</span>

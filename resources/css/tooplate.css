@@ -52,6 +52,30 @@ p {
     margin-inline-end: 0px;
 }
 
+.div_number {
+    display: inline-block;
+    vertical-align: middle;
+}
+.div_number .minus, .div_number .plus {
+    width:30px;
+    height:30px;
+    background:#f2f2f2;
+    border-radius:4px;
+    padding:3px 0px 5px 0px;
+    border:1px solid #ddd;
+    display: inline-block;
+    text-align: center;
+}
+.div_number input {
+	height:34px;
+    width: 100px;
+    text-align: center;
+    border:1px solid #ddd;
+    border-radius:4px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .content {
     background-color: #e4eee5;
 }
