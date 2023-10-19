@@ -38,20 +38,29 @@
                             <p class="detail-text" style="margin-top: 5px;">
                                 規格：6入/盒(保存期限：3年)
                             </p>
-                        </div>  
-                        <div class="col-12">
-                            <h6 style="color:black;font-weight:900;font-size:medium;">
-                                <span>NT&nbsp;
-                                    <span style="display:{{ @$price_none }}; text-decoration:line-through red;">
-                                        {{ @$price }}
-                                    </span> 
-                                    &nbsp;{{ @$sales }}
+                        </div>
+                        <!-- 正常 -->
+                        <div class="col-12" style="display: {{ @$price_block }};">
+                            <span style="color:black;font-weight:900;font-size:1.3em;">
+                                NT$ {{ @$price }}
+                            </span>
+                        </div>
+                        <!-- 特價 -->
+                        <div class="col-12" style="display: {{ @$sales_block }};">
+                            <span style="color:#ff6201;">
+                                <span style="font-size:1em;font-weight:900;">NT$</span>
+                                <span style="font-size:1.8em;font-weight:900;">
+                                    {{ @$sales }}
                                 </span>
-                            </h6>
+                                <span style="color:grey;font-size:1em;text-decoration:line-through red;">
+                                    ${{ @$price }}
+                                </span> 
+                            </span>
+                            <br>
                             <span style="font-size: smaller;color:red;display:{{ @$sales_period }}">
                                 優惠期間：2023/11/01 ~ 2023/11/30
                             </span>
-                        </div>                                
+                        </div>
                     </div>
                     <div class="row" style="margin-top: 15px;">
                         <div class="col-12">

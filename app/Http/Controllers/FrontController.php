@@ -38,11 +38,10 @@ class FrontController extends Controller
         $data["title_txt"] = "購買商品";
 
         $is_sale = false;
-        $data["sales_period"] = "none";
-
+        
         //2023-11-01 ~ 2023-11-30做七折優惠
         $date = date("Y-m-d");
-        $date = "2023-11-30"; //測試用
+        //$data["sales_period"] = "none";
         if(strtotime($date) >= strtotime("2023-11-01") && strtotime($date) <= strtotime("2023-11-30")) {
             $data["sales_period"] = "";
         }
@@ -52,10 +51,12 @@ class FrontController extends Controller
         }
 
         //是否顯示原價
-        $data["price_none"] = "none";
+        /*$data["price_block"] = "";
+        $data["sales_block"] = "none";
         if($is_sale) {
-            $data["price_none"] = "";
-        }
+            $data["price_block"] = "none";
+            $data["sales_block"] = "";
+        }*/
 
         return view("fronts.product",$data);
     }
