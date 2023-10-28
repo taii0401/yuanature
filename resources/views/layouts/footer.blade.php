@@ -24,7 +24,7 @@
                 </span>
                 <ul>
                     <li>客服專線：07-9721992</li>
-                    <li>客服信箱：Service@yuanture.tw</li>
+                    <li>客服信箱：service@yuanature.tw</li>
                     <li>服務時段：周一至周五 9:00 ~ 18:00</li>
                 </ul>
             </div>

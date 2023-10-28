@@ -78,7 +78,7 @@
                                             <td class="text_link">
                                                 原生學網站：https://www.yuanature.tw/ <br>
                                                 客服專線：07-9721992 <br>
-                                                客服信箱：Service@yuanture.tw <br>
+                                                客服信箱：service@yuanature.tw <br>
                                             </td>
                                         </tr>
                                     </table>
