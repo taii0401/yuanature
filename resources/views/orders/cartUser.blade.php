@@ -69,7 +69,7 @@
                             </div>
                             <div class="col-xl-7 col-lg-7 col-md-6 col-sm-12">
                                 <label><br/></label>
-                                <input type="text" id="address" name="address" class="form-control addr_class" placeholder="民族路民族街20巷10弄32號" value="{{ @$datas["assign_data"]["address"] }}">
+                                <input type="text" id="address" name="address" class="form-control addr_class" placeholder="地址請輸入路段等" value="{{ @$datas["assign_data"]["address"] }}">
                             </div>
                         </div>
                         <div id="div_store" class="row input-group" style="display:none; margin-left:20px;">

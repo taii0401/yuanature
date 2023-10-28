@@ -99,7 +99,7 @@
                                 </div>
                                 <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                                     <label><br/></label>
-                                    <input type="text" id="input_modal_address" name="address" class="form-control" placeholder="民族路民族街20巷10弄32號" value="{{ @$datas["assign_data"]["address"] }}">
+                                    <input type="text" id="input_modal_address" name="address" class="form-control" placeholder="地址請輸入路段等" value="{{ @$datas["assign_data"]["address"] }}">
                                 </div>
                             </div>
                             <div class="col-12">
