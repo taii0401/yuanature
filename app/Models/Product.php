@@ -131,7 +131,6 @@ class Product extends Model
         $return_sales = $sales;
 
         $date = date("Y-m-d");
-        $date = "2023-11-30"; //測試用
         
         if($id == 1) {
             //2023-11-01 ~ 2023-11-30做七折優惠

@@ -47,13 +47,15 @@
 @endsection
 @section('content')
 <div class="row" style="padding-top: 10px;">
-    <div class="col-12">
+    <div class="col-xl-1 col-lg-1 col-md-12 col-sm-12"></div>
+    <div class="col-xl-10 col-lg-10 col-md-12 col-sm-12">
         <section class="variable">
             @for($i = 1;$i <= 3;$i++)
                 <img src="../../img/index/indexpic0{{ $i }}.jpg">
             @endfor
         </section>
     </div>
+    <div class="col-xl-1 col-lg-1 col-md-12 col-sm-12"></div>
 </div>
 @endsection
 

@@ -83,6 +83,24 @@ p {
 .div_navbar {
     background-color: #fff;
     border:1px solid #b5b5b5;
+    font-size: small;
+}
+
+.div_navbar a {
+    color: #666;
+}
+
+.div_navbar a:hover {
+    color: #666;
+}
+
+.div_navbar_login_center img {
+    margin: 0 42%;
+}
+
+.div_navbar_login {
+    text-align: right;
+    margin: 5px auto 0px auto;
 }
 
 .banner_menu {
@@ -649,7 +667,7 @@ footer {
     color:#656565;
     font-size:medium;
     font-weight: 500;
-    /*margin-left: -40px;*/
+    margin-left: -40px;
 }
 
 .footer_menu ul {
@@ -1052,15 +1070,23 @@ footer {
     .navbar-nav .nav-link {
         padding-right: 15px;
         padding-left: 15px;
-    }
-    .nav-item {
-        margin-right: 0;
     }*/
+    .nav-item {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
 }
 
 @media (max-width: 1070px) {
     .pdt-img-area img {
         height: 55px;
+    }
+    .nav-item {
+        margin-left: 8px;
+        margin-right: 8px;
+    }
+    .div_navbar_login_center img {
+        margin: 0 39%;
     }
 }
 
@@ -1068,6 +1094,10 @@ footer {
     .navbar-light .navbar-nav .nav-link,
     .dropdown-item {
         padding: 10px;
+    }
+    .nav-item {
+        margin-left: 5px;
+        margin-right: 5px;
     }
     .tm-col-big,
     .tm-col-small {
@@ -1092,14 +1122,17 @@ footer {
     }
 }
 
+@media (max-width: 860px) {
+    .nav-item {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+}
+
 @media (max-width: 768px) {
     .navbar {
         padding-left: 5px;
         padding-right: 5px;
-    }
-    .nav-item {
-        margin-left: 5px;
-        margin-right: 5px;
     }
     .navbar-light .navbar-nav .nav-link,
     .dropdown-item {
@@ -1153,10 +1186,6 @@ footer {
 }
 
 @media (max-width: 633px) {
-    .nav-item {
-        margin-left: 0px;
-        margin-right: 0px;
-    }
     .pagination {
         flex-wrap: wrap;
     }
@@ -1204,6 +1233,9 @@ footer {
     }
     .banner_menu {
         margin-left: 0%;
+    }
+    .div_navbar_login {
+        text-align: left;
     }
 }
 
