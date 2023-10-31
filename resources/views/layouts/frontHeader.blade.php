@@ -27,63 +27,17 @@
                 <img src="{{ asset('img/icons/cart.png') }}" height="20px">&nbsp;&nbsp;購物車
             </a>
         </div>
-        <div class="col-12 div_navbar_login_center">
-            <a class="nav-link" href="/">
-                <img src="{{ asset('img/icons/logo.png') }}" height="80px">
-            </a>
-        </div>
-    
-        <!--<div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
-            <div class="div_navbar_login_left">
-            @if(UserAuth::isLoggedIn())
-                <a href="/users/edit">
-                    <img src="{{ asset('img/icons/member.png') }}" height="20px">&nbsp;&nbsp;會員中心
-                </a>
-                <a href="/users/logout">
-                    / 登出
-                </a>
-            @else
-                <a href="/users/">
-                    <img src="{{ asset('img/icons/member.png') }}" height="20px">&nbsp;&nbsp;登入
-                </a>
-                <a href="/users/create">
-                    /&nbsp;註冊 
-                </a>
-            @endif
-                &nbsp;&nbsp;
-                <a href="/orders/cart">
-                    <img src="{{ asset('img/icons/cart.png') }}" height="20px">&nbsp;&nbsp;購物車
+    </div>
+    <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8">
+            <div style="width:100px;margin:0 auto">
+                <a class="nav-link" href="/">
+                    <img src="{{ asset('img/icons/logo.png') }}" height="80px">
                 </a>
             </div>
         </div>
-        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 div_navbar_login_center">
-            <a class="nav-link" href="/">
-                <img src="{{ asset('img/icons/logo.png') }}" height="80px">
-            </a>
-        </div>
-        <div class="col-xl-3 col-lg-3 col-md-3 col-sm-12">
-            <div class="div_navbar_login_right">
-            @if(UserAuth::isLoggedIn())
-                <a href="/users/edit">
-                    <img src="{{ asset('img/icons/member.png') }}" height="20px">&nbsp;&nbsp;會員中心
-                </a>
-                <a href="/users/logout">
-                    / 登出
-                </a>
-            @else
-                <a href="/users/">
-                    <img src="{{ asset('img/icons/member.png') }}" height="20px">&nbsp;&nbsp;登入
-                </a>
-                <a href="/users/create">
-                    /&nbsp;註冊 
-                </a>
-            @endif
-                &nbsp;&nbsp;
-                <a href="/orders/cart">
-                    <img src="{{ asset('img/icons/cart.png') }}" height="20px">&nbsp;&nbsp;購物車
-                </a>
-            </div>
-        </div>-->
+        <div class="col-2"></div>
     </div>
     <div class="row">
         <div class="col-2"></div>
