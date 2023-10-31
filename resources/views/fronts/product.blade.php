@@ -100,6 +100,9 @@
                     <!-- tab內容 -->
                     <div class="tab-inner-wrap" style="margin-top:-18px;">
                         <div id="one" class="tab-inner">
+                            <iframe width="100%" height="315"
+                                src="https://www.youtube.com/embed/uM-hQkBuXw0?si=wwkcPQvUs7c3nqKK&autoplay=1&mute=1">
+                            </iframe>
                             @for($i = 1;$i <= 13;$i++)
                             <img src="../../img/product/product_detail_{{ $i }}.jpg" width="100%">
                             @endfor
