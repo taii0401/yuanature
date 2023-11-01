@@ -31,7 +31,7 @@ use App\Http\Controllers\BackEnd\OrderController as BackEndOrderController;
 //
 Route::controller(FrontController::class)->group(function() { 
     //首頁
-    Route::get("/","index");
+    Route::get("/","front");
     Route::get("/front","front");
     //商品頁(廣志足白浴露)
     Route::get("product","product");
