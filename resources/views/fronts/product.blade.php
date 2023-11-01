@@ -52,9 +52,10 @@
                                 <span style="font-size:1.8em;font-weight:900;">
                                     {{ @$sales }}
                                 </span>
-                                <span style="color:grey;font-size:1em;text-decoration:line-through red;">
+                                <del><span style="color:grey;font-size:1em;text-decoration:line-through red;">
                                     ${{ @$price }}
-                                </span> 
+                                </span>
+                                </del>
                             </span>
                             <br>
                             <span style="font-size: smaller;color:red;display:{{ @$sales_period }}">
@@ -100,8 +101,8 @@
                     <!-- tab內容 -->
                     <div class="tab-inner-wrap" style="margin-top:-18px;">
                         <div id="one" class="tab-inner">
-                            <iframe width="100%" height="315"
-                                src="https://www.youtube.com/embed/uM-hQkBuXw0?si=wwkcPQvUs7c3nqKK&autoplay=1&mute=1">
+                            <iframe width="100%" height="400"
+                                src="https://www.youtube.com/embed/3QwHq64zlYo?si=IwhI07FjOf6GDXI6&autoplay=1&mute=1">
                             </iframe>
                             @for($i = 1;$i <= 13;$i++)
                             <img src="../../img/product/product_detail_{{ $i }}.jpg" width="100%">
