@@ -16,7 +16,7 @@ class CreateOrderDetailTable extends Migration
         Schema::create('orders_detail', function (Blueprint $table) {
             $table->id();
             $table->integer('orders_id')->comment('orders.id');
-            $table->integer('product_id')->comment('product.id');
+            $table->integer('product_id')->nullable()->comment('product.id');
             $table->integer('amount')->default(0)->comment('數量');
             $table->integer('price')->default(0)->comment('價格');
             $table->integer('total')->default(0)->comment('總價');

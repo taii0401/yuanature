@@ -498,7 +498,11 @@ class AjaxController extends Controller
                             foreach($cart_datas as $cart_data) {
                                 $detail_data = [];
                                 $detail_data["orders_id"] = $orders_id;
-                                $detail_data["product_id"] = $cart_data["id"]??0;
+                                if(isset($cart_data["is_free"]) && $cart_data["is_free"] == 1) {
+                                    $detail_data["product_free_id"] = $cart_data["id"]??0;
+                                } else {
+                                    $detail_data["product_id"] = $cart_data["id"]??0;
+                                }
                                 $detail_data["amount"] = $cart_data["amount"]??0;
                                 $detail_data["price"] = $cart_data["price"]??0;
                                 $detail_data["total"] = $cart_data["subtotal"]??0;

@@ -27,6 +27,14 @@ class FrontController extends Controller
         $data = [];
         $data["title_txt"] = "廣志足白浴露";
         $data["show_banner_menu"] = "N";
+
+        $date = date("Y-m-d");
+        $imgs = ["01","02","03"];
+        if(strtotime($date) >= strtotime("2024-01-14") && strtotime($date) <= strtotime("2024-02-29")) {
+            $imgs = ["new","02","03"];
+        }
+        $data["imgs"] = $imgs;
+
         return view("fronts.front",$data);
     }
 
@@ -37,10 +45,18 @@ class FrontController extends Controller
         $data = Product::getDataByUuid("8c8f7d49-2131-4a50-a02d-619f3e1f9fb9");
         $data["title_txt"] = "購買商品";
 
+        $date = date("Y-m-d");
         $is_sale = false;
+
+        //商品圖片
+        $imgs = ["1","2","3","4","5"];
+        if(strtotime($date) >= strtotime("2024-01-14") && strtotime($date) <= strtotime("2024-02-29")) {
+            $imgs = ["new","2","3","4","5"];
+        }
+        $data["imgs"] = $imgs;
+        $data["image"] = $imgs[0];
         
         //2023-11-01 ~ 2023-11-30做七折優惠
-        $date = date("Y-m-d");
         $data["sales_period"] = "none";
         if(strtotime($date) >= strtotime("2023-11-01") && strtotime($date) <= strtotime("2023-11-30")) {
             $data["sales_period"] = "";

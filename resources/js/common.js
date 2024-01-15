@@ -727,13 +727,13 @@ function cartSubmit(action_type) {
 }
 
 //更新購物車小計、合計
-function cartChangeOriginTotal(id) {
+function cartChangeOriginTotal(id,key) {
     amount = price = 0;
-    if(!isNaN(parseInt($('#amount_' + id).val()))) {
-        amount = parseInt($('#amount_' + id).val());
+    if(!isNaN(parseInt($('#amount_' + key).val()))) {
+        amount = parseInt($('#amount_' + key).val());
     }
-    if(!isNaN(parseInt($('#price_' + id).val()))) {
-        price = parseInt($('#price_' + id).val());
+    if(!isNaN(parseInt($('#price_' + key).val()))) {
+        price = parseInt($('#price_' + key).val());
     }
 
     //更新購物車數量
@@ -741,14 +741,39 @@ function cartChangeOriginTotal(id) {
     $('#product_id').val(id);
     cartSubmit('edit');
 
-    //計算小計
-    subtotal = amount * price;
-    $('#subtotal_' + id).html(subtotal);
-    $('#subtotal_col_' + id).val(subtotal);
+    //更新贈品數量
+    product_amount = free_amount = 0;
+    if(!isNaN(parseInt($('#product_free_amount_' + id).val()))) {
+        product_amount = parseInt($('#product_free_amount_' + id).val());
+    }
+    if(product_amount > 0 && amount > 0) {
+        free_amount = parseInt(amount/product_amount);
+    }
+    $('.amount_free_' + id).each(function() {
+        $(this).val(free_amount);
+        var str = this.id;
+        str = str.replace('amount_','');
+        $('#amount_text_' + str).html(free_amount);
+    });
 
-    //計算合計
+    //計算小計、合計
     total = 0;
     $("input[name='subtotal[]']").each(function() {
+        var str = this.id;
+        str = str.replace('subtotal_col_','');
+
+        subamount = subprice = 0;
+        if(!isNaN(parseInt($('#amount_' + str).val()))) {
+            subamount = parseInt($('#amount_' + str).val());
+        }
+        if(!isNaN(parseInt($('#price_' + str).val()))) {
+            subprice = parseInt($('#price_' + str).val());
+        }
+
+        subtotal = subamount * subprice;
+        $('#subtotal_' + str).html(subtotal);
+        $('#subtotal_col_' + str).val(subtotal);
+
         if(parseInt(this.value) > 0) {
             total += parseInt(this.value);
         }

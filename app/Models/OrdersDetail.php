@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\Product;
+use App\Models\ProductFree;
 
 class OrdersDetail extends Model
 {
@@ -38,6 +39,8 @@ class OrdersDetail extends Model
                 $datas[$key]["name"] = "";
                 if(isset($val["product_id"]) && $val["product_id"] > 0) {
                     $datas[$key]["name"] = Product::getName($val["product_id"]);
+                } else if(isset($val["product_free_id"]) && $val["product_free_id"] > 0) {
+                    $datas[$key]["name"] = ProductFree::getName($val["product_free_id"]);
                 }
                 //小計
                 $datas[$key]["subtotal"] = $val["amount"]*$val["price"];
@@ -58,7 +61,7 @@ class OrdersDetail extends Model
         $all_datas = $conds = $conds_in = [];
         
         //條件欄位
-		$cols = ["id","orders_id","product_id"];
+		$cols = ["id","orders_id","product_id","product_free_id"];
 		foreach($cols as $col) {
 			if(isset($cond[$col])) {
                 if(is_array($cond[$col])) {

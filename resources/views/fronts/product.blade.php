@@ -10,16 +10,14 @@
             <div class="row">
                 <div class="col-xl-7 col-lg-7 col-md-12 col-sm-12">
                     <div class="row">
-                        <img id="img-box" src="{{ asset('img/product/product_sm_1.png') }}" width="100%" style="max-width:500px;max-height:500px;">
+                        <img id="img-box" src="../../img/product/product_sm_{{ $image }}.png" width="100%" style="max-width:500px;max-height:500px;">
                     </div>
                     <div class="row" style="margin-top: 10px;margin-bottom: 10px;max-width:500px;">
                         <div class="col-12 pdt-img-area">
                             <ul>
-                                <li class="img-item"><img src="{{ asset('img/product/product_sm_1.png') }}"></li>
-                                <li class="img-item"><img src="{{ asset('img/product/product_sm_2.png') }}"></li>
-                                <li class="img-item"><img src="{{ asset('img/product/product_sm_3.png') }}"></li>
-                                <li class="img-item"><img src="{{ asset('img/product/product_sm_4.png') }}"></li>
-                                <li class="img-item"><img src="{{ asset('img/product/product_sm_5.png') }}"></li>
+                                @foreach(@$imgs as $img)
+                                <li class="img-item" id="{{ $img }}"><img src="../../img/product/product_sm_{{ $img }}.png" width="100%"></li>
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -71,9 +69,9 @@
                                 <input type="hidden" id="product_id" name="product_id" value="{{ @$id }}">
 
                                 <div class="div_number" id="div_number_1">
-                                    <span class="minus" onclick="number_plus_minus('minus',1)">-</span>
+                                    <span class="minus" onclick="number_plus_minus('minus',{{ @$id }})">-</span>
                                     <input type="text" id="amount" name="amount" value="1" class="form-control">
-                                    <span class="plus" onclick="number_plus_minus('plus',1)">+</span>
+                                    <span class="plus" onclick="number_plus_minus('plus',{{ @$id }})">+</span>
                                 </div>
                             </form>
                         </div>
@@ -140,7 +138,7 @@
         var item = items[i];
         item.index = i + 1;
         items[i].onclick = function () {
-            document.getElementById('img-box').src = 'img/product/product_sm_'+this.index+'.png';
+            document.getElementById('img-box').src = 'img/product/product_sm_'+this.id+'.png';
         }
     }
 

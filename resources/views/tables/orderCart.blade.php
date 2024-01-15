@@ -18,7 +18,7 @@
     </thead>
     <tbody>
         @if(isset($datas["detail_data"]) && !empty($datas["detail_data"]))
-            @foreach($datas["detail_data"] as $data) 
+            @foreach($datas["detail_data"] as $key => $data) 
             <!-- 訂單 -->
             <tr style="display: {{ @$datas["assign_data"]["order_display"]}}">
                 <td>
@@ -46,27 +46,37 @@
                 </td>
                 <td>
                     <span class="td-data-span">數量：</span>
-                    <div class="div_number" id="div_number_{{ @$data["id"] }}">
-                        <span class="minus" onclick="number_plus_minus('minus',{{ @$data["id"] }})">-</span>
-                        <input type="text" id="amount_{{ @$data["id"] }}" name="amount[]" value="{{ @$data["amount"] }}" onchange="cartChangeOriginTotal('{{ @$data["id"] }}');cartChangeUserCoupon();">
-                        <span class="plus" onclick="number_plus_minus('plus',{{ @$data["id"] }})">+</span>
-                    </div>
+                    @if(@$data["is_free"] == 1)
+                        <input type="hidden" id="product_free_amount_{{ @$data["product_id"] }}" value="{{ @$data["product_amount"] }}">
+                        <input type="hidden" class="amount_free_{{ @$data["product_id"] }}" id="amount_{{ $key }}" name="amount[]" value="{{ @$data["amount"] }}">
+                        <span id="amount_text_{{ $key }}">{{ @$data["amount"] }}</span>
+                    @else
+                        <div class="div_number" id="div_number_{{ $key }}">
+                            <span class="minus" onclick="number_plus_minus('minus',{{ $key }})">-</span>
+                            <input type="text" id="amount_{{ $key }}" name="amount[]" value="{{ @$data["amount"] }}" onchange="cartChangeOriginTotal('{{ @$data["id"] }}','{{ $key }}');cartChangeUserCoupon();">
+                            <span class="plus" onclick="number_plus_minus('plus',{{ $key }})">+</span>
+                        </div>
+                    @endif
                 </td>
                 <td>
                     <span class="td-data-span">售價：</span>
-                    <input type="hidden" id="price_{{ @$data["id"] }}" value="{{ @$data["price"] }}">    
+                    <input type="hidden" id="price_{{ $key }}" value="{{ @$data["price"] }}">    
                     {{ @$data["price"] }}元
                 </td>
                 <td>
                     <span class="td-data-span">小計：</span>
-                    <input type="hidden" id="subtotal_col_{{ @$data["id"] }}" name="subtotal[]" value="{{ @$data["subtotal"] }}">
-                    <span id="subtotal_{{ @$data["id"] }}">{{ @$data["subtotal"] }}</span>元
+                    <input type="hidden" id="subtotal_col_{{ $key }}" name="subtotal[]" value="{{ @$data["subtotal"] }}">
+                    <span id="subtotal_{{ $key }}">{{ @$data["subtotal"] }}</span>元
                 </td>
                 <td class="text-center">
                     <div class="btn-action">
                         <ul>
                             <li>
-                                <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#product_id').val('{{ @$data["id"] }}');cartSubmit('delete');"></i>
+                                @if(@$data["is_free"] == 1)
+
+                                @else 
+                                    <i class="fas fa-trash-alt tm-trash-icon btn_submit" onclick="$('#product_id').val('{{ @$data["id"] }}');cartSubmit('delete');"></i>
+                                @endif
                             </li>
                         </ul>
                     </div>

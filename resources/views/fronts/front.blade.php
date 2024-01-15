@@ -50,9 +50,9 @@
     <div class="col-xl-1 col-lg-1 col-md-12 col-sm-12"></div>
     <div class="col-xl-10 col-lg-10 col-md-12 col-sm-12">
         <section class="variable">
-            @for($i = 1;$i <= 3;$i++)
-                <img src="../../img/index/indexpic0{{ $i }}.jpg">
-            @endfor
+            @foreach(@$imgs as $img)
+              <img src="../../img/index/indexpic{{ $img }}.jpg">
+            @endforeach
         </section>
     </div>
     <div class="col-xl-1 col-lg-1 col-md-12 col-sm-12"></div>

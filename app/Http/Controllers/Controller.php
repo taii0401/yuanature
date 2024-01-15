@@ -24,6 +24,7 @@ use App\Libraries\UserAuth;
 //Model
 use App\Models\LogRecord;
 use App\Models\Product;
+use App\Models\ProductFree;
 use App\Models\WebFile;
 use App\Models\WebFileData;
 use App\Models\WebUser;
@@ -603,11 +604,13 @@ class Controller extends BaseController
     public function getCartData($is_total=false)
     {
         $datas = [];
+        $date = date("Y-m-d");
 
         //合計
         $total = 0;
         //取得購物車資料
         $cart_datas = session("cart");
+        //dd($cart_datas);
         if(!empty($cart_datas)) {
             //取得商品ID
             $product_ids = array_keys($cart_datas);  
@@ -619,6 +622,17 @@ class Controller extends BaseController
             $product_datas = collect($product)->mapWithKeys(function ($value,$key) {
                 return [$value["id"] => $value];
             })->all();
+            //取得贈品資料
+            $free = [];
+            $free_datas = ProductFree::getAllDatas(["product_id" => $product_ids])->get()->toArray();
+            if(!empty($free_datas)) {
+                foreach($free_datas as $free_data) {
+                    if(!isset($free[$free_data["product_id"]])) {
+                        $free[$free_data["product_id"]] = [];
+                    }
+                    $free[$free_data["product_id"]][] = $free_data;
+                }
+            }
         
             foreach($cart_datas as $key => $val) {
                 if(isset($product_datas[$key]) && !empty($product_datas[$key])) {
@@ -642,6 +656,36 @@ class Controller extends BaseController
                     $total += $subtotal;
                     
                     $datas[] = $product_data;
+
+                    //贈品
+                    if(isset($free[$key]) && !empty($free[$key])) {
+                        foreach($free[$key] as $free_data) {
+                            if(strtotime($free_data["start_date"]) > strtotime($date) || strtotime($free_data["end_date"]) < strtotime($date)) {
+                                continue;
+                            }
+
+                            $free_amount = 0;
+                            $product_amount = $free_data["product_amount"]??0;
+                            if($amount > 0 && $product_amount > 0) {
+                                $free_amount = intdiv($amount,$product_amount);
+                            }
+
+                            if($free_amount > 0) {
+                                $product_free_data = $free_data;
+                                $product_free_data["is_free"] = 1;
+                                $product_free_data["amount"] = $free_amount;
+                                $product_free_data["sales"] = $free_data["sales"]??0;
+                                $product_free_data["price"] = $product_free_data["sales"];
+                                //小計
+                                $subtotal_free = $free_amount*$product_free_data["sales"];
+                                $product_free_data["subtotal"] = $subtotal_free;
+                                //合計
+                                $total += $subtotal_free;
+
+                                $datas[] = $product_free_data;
+                            }
+                        }
+                    }
                 }
             }
         }
