@@ -9,9 +9,9 @@
     <thead>    
         <tr class="tr-only-hide text-center tm-bg-gray">
             <th>商品名稱</th>
-            <th>數量</th>
-            <th>售價</th>
-            <th>小計</th>
+            <th width="20%">數量</th>
+            <th width="10%">售價</th>
+            <th width="10%">小計</th>
             <!-- 購物車 -->
             <th width="50" style="display: {{ @$datas["assign_data"]["cart_display"]}}"></th>
         </tr>
