@@ -966,6 +966,19 @@ footer {
     color: #0266c4;
 }
 
+.img-item {
+    display:inline;
+}
+
+.img-item a {
+    color: #5e5e5e;
+    font-weight: 500;
+}
+
+.img-item a:hover {
+    color: #0266c4;
+}
+
 /*商品圖片 END*/
 
 

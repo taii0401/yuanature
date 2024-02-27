@@ -14,11 +14,11 @@
                     </div>
                     <div class="row" style="margin-top: 10px;margin-bottom: 10px;max-width:500px;">
                         <div class="col-12 pdt-img-area">
-                            <ul>
+                            <div style="display: flex;gap: 0.5em;">
                                 @foreach(@$imgs as $img)
-                                <li class="img-item" id="{{ $img }}"><img src="../../img/product/product_sm_{{ $img }}.png" width="100%"></li>
+                                <div class="img-item" id="{{ $img }}"><img src="../../img/product/product_sm_{{ $img }}.png" width="100%"></div>
                                 @endforeach
-                            </ul>
+                            </div> 
                         </div>
                     </div>
                 </div>
