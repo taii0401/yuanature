@@ -26,7 +26,7 @@ class WebFile extends Model
     /**
      * 上傳檔案
      * @param  file_data：檔案
-     * @return boolean
+     * @return array
      */
     public static function uploadFile($file_data=[])
     {
