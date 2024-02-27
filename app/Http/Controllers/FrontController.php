@@ -144,9 +144,6 @@ class FrontController extends Controller
     //使用者回饋
     public function feedback(Request $request)
     {
-        $data = [];
-        $data["title_txt"] = "使用者回饋";
-        
         $input = $request->all();
         $datas = $assign_data = $list_data = $page_data = [];
 
