@@ -5,12 +5,12 @@
 <link rel="stylesheet" type="text/css" href="{{ asset('packages/slick/slick.css') }}"/>
 <style>
     /*圖片輪播 START*/
-    * {
+    /** {
         padding:0px;
         margin:0px;
         border:0px;
         box-sizing: border-box;
-    }
+    }*/
 
     .slider {
         width: 50%;
