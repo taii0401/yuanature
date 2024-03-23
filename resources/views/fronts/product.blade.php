@@ -57,7 +57,7 @@
                             </span>
                             <br>
                             <span style="font-size: smaller;color:red;display:{{ @$sales_period }}">
-                                優惠期間：2023/11/01 ~ 2023/11/30
+                                優惠期間：2024/03/01 ~ 2024/03/31
                             </span>
                         </div>
                     </div>

@@ -30,8 +30,8 @@ class FrontController extends Controller
 
         $date = date("Y-m-d");
         $imgs = ["01","02","03"];
-        if(strtotime($date) >= strtotime("2024-01-14") && strtotime($date) <= strtotime("2024-02-29")) {
-            $imgs = ["new","02","03"];
+        if(strtotime($date) >= strtotime("2024-03-01") && strtotime($date) <= strtotime("2024-03-31")) {
+            $imgs = ["04","02","03"];
         }
         $data["imgs"] = $imgs;
 
@@ -56,9 +56,9 @@ class FrontController extends Controller
         $data["imgs"] = $imgs;
         $data["image"] = $imgs[0];
         
-        //2023-11-01 ~ 2023-11-30做七折優惠
+        //2024-03-01 ~ 2024-03-31做優惠
         $data["sales_period"] = "none";
-        if(strtotime($date) >= strtotime("2023-11-01") && strtotime($date) <= strtotime("2023-11-30")) {
+        if(strtotime($date) >= strtotime("2024-03-01") && strtotime($date) <= strtotime("2024-03-31")) {
             $data["sales_period"] = "";
         }
 

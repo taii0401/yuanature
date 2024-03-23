@@ -133,10 +133,10 @@ class Product extends Model
         $date = date("Y-m-d");
         
         if($id == 1) {
-            //2023-11-01 ~ 2023-11-30做七折優惠
+            //2024-03-01 ~ 2024-03-31做優惠
             $discount = 70;
-            if(strtotime($date) >= strtotime("2023-11-01") && strtotime($date) <= strtotime("2023-11-30")) {
-                $return_sales = ceil($price*($discount/100));
+            if(strtotime($date) >= strtotime("2024-03-01") && strtotime($date) <= strtotime("2024-03-31")) {
+                $return_sales = 234;//ceil($price*($discount/100));
             }
         }
 
