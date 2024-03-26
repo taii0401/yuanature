@@ -29,10 +29,10 @@ class FrontController extends Controller
         $data["show_banner_menu"] = "N";
 
         $date = date("Y-m-d");
-        $imgs = ["01","02","03"];
-        if(strtotime($date) >= strtotime("2024-03-01") && strtotime($date) <= strtotime("2024-03-31")) {
+        $imgs = ["05","06","07","08"];
+        /*if(strtotime($date) >= strtotime("2024-03-01") && strtotime($date) <= strtotime("2024-03-31")) {
             $imgs = ["04","02","03"];
-        }
+        }*/
         $data["imgs"] = $imgs;
 
         return view("fronts.front",$data);
