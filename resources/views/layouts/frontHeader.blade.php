@@ -40,8 +40,7 @@
         <div class="col-2"></div>
     </div>
     <div class="row">
-        <div class="col-2"></div>
-        <div class="col-8">
+        <div class="col-12">
             <nav class="navbar navbar-expand-sm navbar-light" style="margin-top:0px;">
                 <button class="navbar-toggler ml-auto mr-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -79,6 +78,5 @@
                 </div>
             </nav>
         </div>
-        <div class="col-2"></div>
     </div>
 </div>

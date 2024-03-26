@@ -28,7 +28,7 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
-    gtag('config', 'G-Y080K8RF87');
+    gtag('config', 'G-Y080K8RF87', {'allow_display_features': true});
     </script>
 
     <!-- Google Tag Manager -->

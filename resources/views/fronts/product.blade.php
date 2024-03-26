@@ -16,7 +16,7 @@
                         <div class="col-12 pdt-img-area">
                             <div style="display: flex;gap: 0.5em;">
                                 @foreach(@$imgs as $img)
-                                <div class="img-item" id="{{ $img }}"><img src="../../img/product/product_sm_{{ $img }}.png" width="100%"></div>
+                                <div class="img-item" id="{{ $img }}"><img src="../../img/product/product_sm_{{ $img }}.png" alt="原生學 廣志足白浴露" width="100%"></div>
                                 @endforeach
                             </div> 
                         </div>

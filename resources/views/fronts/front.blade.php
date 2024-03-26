@@ -51,7 +51,9 @@
     <div class="col-xl-10 col-lg-10 col-md-12 col-sm-12">
         <section class="variable">
             @foreach(@$imgs as $img)
-              <img src="../../img/index/indexpic{{ $img }}.jpg">
+                <a href="product">    
+                    <img src="../../img/index/indexpic{{ $img }}.jpg" alt="原生學 廣志足白浴露">
+                </a>
             @endforeach
         </section>
     </div>
