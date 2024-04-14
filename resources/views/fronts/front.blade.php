@@ -52,7 +52,8 @@
         <section class="variable">
             @foreach(@$imgs as $img)
                 <a href="product">    
-                    <img src="../../img/index/indexpic{{ $img }}.jpg" alt="原生學 廣志足白浴露">
+                    <img class="img_web" src="../../img/index/indexpic{{ $img }}.jpg" alt="原生學 廣志足白浴露" style="display: block;">
+                    <img class="img_mobile" src="../../img/index/indexpic{{ $img }}_m.jpg" alt="原生學 廣志足白浴露" style="display: none;">
                 </a>
             @endforeach
         </section>
@@ -65,6 +66,13 @@
 <script type="text/javascript" src="{{ mix('packages/slick/slick.js') }}"></script>
 <script>
     $(document).ready(function(){
+        if(navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/webOS/i) || navigator.userAgent.match(/iPhone/i) || navigator.userAgent.match(/iPad/i) || navigator.userAgent.match(/iPod/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/Windows Phone/i)) {
+            $('.img_mobile').css('display', 'block');
+            $('.img_web').css('display', 'none');
+        } else {
+            $('.img_web').css('display', 'block');
+            $('.img_mobile').css('display', 'none');
+        }
         $('.variable').slick({
             autoplay: true,
             autoplaySpeed: 3000,
