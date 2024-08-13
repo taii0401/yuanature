@@ -36,8 +36,12 @@
                     @endif
                 </div>
                 <div class="col-md-2 col-sm-12 text-right" style="margin:10px 0;">
+                    <button type="button" class="btn btn-danger check_btn btn_submit" style="display:{{ @$datas["assign_data"]["admin_display"] }}" onclick="exportFile('excel','user');">匯出</button>
+                </div>
+                <div class="col-md-2 col-sm-12 text-right" style="margin:10px 0;">
                     <button type="button" class="btn btn-danger check_btn btn_submit" style="display:none" onclick="$('#input_modal_action_type').val('delete');adminSubmit('user');">刪除</button>
                 </div>
+                
             </div>
             <div class="tm-table-mt tm-table-actions-row">
                 <div class="tm-table-actions-col-left">

@@ -16,6 +16,7 @@ use App\Http\Controllers\BackEnd\AdminController as BackEndAdminController;
 use App\Http\Controllers\BackEnd\UserController as BackEndUserController;
 use App\Http\Controllers\BackEnd\AjaxController as BackEndAjaxController;;
 use App\Http\Controllers\BackEnd\OrderController as BackEndOrderController;
+use App\Http\Controllers\BackEnd\ExportController as BackEndExportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -223,6 +224,12 @@ Route::group([
         Route::get("orders","list");
         //訂單明細
         Route::get("orders/detail","detail");
+    });
+
+    //匯出
+    Route::controller(BackEndExportController::class)->group(function() {
+        //會員資料
+        Route::post("export/user","user");
     });
 });
 

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 //LOG
 use Illuminate\Support\Facades\Log;
+//使用者權限
+use App\Libraries\AdminAuth;
 //Model
 use App\Models\WebUser;
 use App\Models\Coupon;
@@ -17,6 +19,8 @@ class UserController extends Controller
     //會員列表
     public function list(Request $request) 
     {
+        $admin_id = AdminAuth::admindata()->id;
+
         $input = $request->all();
         //登入方式
         $user_register_datas = config("yuanature.user_register");
@@ -64,6 +68,12 @@ class UserController extends Controller
                 //是否驗證
                 $list_data[$key]["is_verified_name"] = WebUser::class::$isVerifiedName[$val["is_verified"]]??"";
             }
+        }
+
+        //顯示按鈕-匯出
+        $assign_data["admin_display"] = "none";
+        if($admin_id == 1) {
+            $assign_data["admin_display"] = "";
         }
         
         $datas["assign_data"] = $assign_data;

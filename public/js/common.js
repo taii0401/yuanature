@@ -1135,3 +1135,37 @@ function adminSubmit(type) {
         }
     });
 }
+
+//匯出檔案
+function exportFile(export_type,data_type) {
+    var csrf_token = getToken();
+    if(export_type == '' || data_type == '') {
+        alert('請選擇匯出檔案！');
+        returnFalseAction();
+        return false;
+    } else {
+        $.ajax({
+            type: 'POST',
+            url: '/admin/export/'+data_type,
+            dataType: 'json',
+            data: { '_token': csrf_token,'export_type':export_type },
+            error: function(xhr) {
+                //console.log(xhr);
+                alert('傳送錯誤！');
+                returnFalseAction();
+                return false;
+            },
+            success: function(response) {
+                //console.log(response);
+                if(response.error == false) {
+                    alert('匯出成功！');
+                    changeForm('/admin/list');
+                } else {
+                    alert('傳送錯誤！');
+                    returnFalseAction();
+                    return false;
+                }
+            }
+        });
+    }
+}
