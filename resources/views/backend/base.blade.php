@@ -55,7 +55,7 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent" style="font-size:18px;">
                         <ul class="navbar-nav mx-auto">
                         @if(AdminAuth::isLoggedIn())
                             <li class="nav-item dropdown">
