@@ -69,12 +69,6 @@ class UserController extends Controller
                 $list_data[$key]["is_verified_name"] = WebUser::class::$isVerifiedName[$val["is_verified"]]??"";
             }
         }
-
-        //顯示按鈕-匯出
-        $assign_data["admin_display"] = "none";
-        if($admin_id == 1) {
-            $assign_data["admin_display"] = "";
-        }
         
         $datas["assign_data"] = $assign_data;
         $datas["option_data"] = $option_data;
